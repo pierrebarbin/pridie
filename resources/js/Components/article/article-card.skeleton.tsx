@@ -1,20 +1,19 @@
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/Components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/Components/ui/card";
 import React from "react";
 import {Skeleton} from "@/Components/ui/skeleton";
 
 export default function ArticleCardSkeleton() {
     return (
-        <Card>
+        <Card className="h-[400px]">
             <CardHeader>
                 <Skeleton className="w-1/3 h-4" />
                 <Skeleton className="w-1/4 h-4" />
             </CardHeader>
             <CardContent>
-                <Skeleton className="w-full h-20" />
+                <Skeleton className="w-full h-[200px]" />
             </CardContent>
-            {/*<CardFooter>*/}
-            {/*    <p>Card Footer</p>*/}
-            {/*</CardFooter>*/}
+            <CardFooter>
+            </CardFooter>
         </Card>
     )
 }

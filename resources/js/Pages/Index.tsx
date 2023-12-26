@@ -40,7 +40,7 @@ export default function Index({ }: PageProps) {
     const rowVirtualizer = useVirtualizer({
         count: hasNextPage ? rows.length + 1 : rows.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: (i) => (rows[i]?.content?.length ?? 1) * 0.7,
+        estimateSize: () => 430,
         overscan: 5,
     })
 

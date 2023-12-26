@@ -17,17 +17,15 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', [ArticleController::class, 'index']);
-
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [ArticleController::class, 'index']);
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->name('dashboard');
+    })->middleware('can:admin')->name('dashboard');
 
     Route::post('/articles', [ArticleController::class, 'store']);
 });
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -7,12 +7,11 @@ import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {Button} from "@/Components/ui/button";
-import EditorJS from '@editorjs/editorjs';
-import {useEffect, useRef} from "react";
-// @ts-ignore
-import LinkTool from '@editorjs/link';
-// @ts-ignore
-import CodeTool from '@editorjs/code';
+import {Card, CardContent, CardHeader} from "@/Components/ui/card";
+import {Textarea} from "@/Components/ui/textarea";
+import React from "react";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/Components/ui/tabs";
+import {marked} from "marked";
 
 const formSchema = z.object({
     title: z.string().min(1, {
@@ -20,61 +19,26 @@ const formSchema = z.object({
     }).max(255, "Le titre est trop long"),
     content: z.string().min(1, {
         message: "Le contenu est requis",
-    }).max(8000, "Le contenu est trop long"),
+    }).max(500, "Le contenu est trop long"),
 })
 
 export default function Dashboard({ auth }: PageProps) {
-
-    const ejInstance = useRef<EditorJS|null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
-            content: undefined
+            content: ""
         },
     })
 
-    useEffect(() => {
-        if (ejInstance.current === null) {
-            initEditor();
-        }
-
-        return () => {
-            ejInstance?.current?.destroy();
-            ejInstance.current = null;
-        };
-    }, []);
-
-    const initEditor = () => {
-        const editor = new EditorJS({
-            holder: 'editorjs',
-            onReady: () => {
-                ejInstance.current = editor;
-            },
-            autofocus: true,
-            data: undefined,
-            onChange: async () => {
-                form.setValue('content', JSON.stringify(await editor.saver.save()));
-            },
-            tools: {
-                linkTool: {
-                    class: LinkTool,
-                    config: {
-                        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching,
-                    }
-                },
-                code: CodeTool,
-            }
-        });
-    };
+    const content = form.watch('content')
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post('/articles', values, {
             onSuccess: () => {
                 form.reset()
-                ejInstance.current?.blocks.clear()
             }
         })
     }
@@ -83,36 +47,59 @@ export default function Dashboard({ auth }: PageProps) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
 
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="mt-20 space-y-8 mx-auto max-w-[500px]">
-                    <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Titre</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="titre..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="content"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Contenu</FormLabel>
-                                <div id="editorjs" className="p-2 bg-foreground rounded text-secondary"/>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
-
+            <Card className="mt-20 mx-auto max-w-[500px]">
+                <CardHeader>
+                    Ajouter un article
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Titre</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="titre..." {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="content"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Contenu</FormLabel>
+                                        <Tabs defaultValue="markdown">
+                                            <TabsList>
+                                                <TabsTrigger value="markdown">Markdown</TabsTrigger>
+                                                <TabsTrigger value="preview">Preview</TabsTrigger>
+                                            </TabsList>
+                                            <TabsContent value="markdown">
+                                                <Textarea placeholder="Contenu..." {...field} className="min-h-[250px]"/>
+                                                <div>{content.length}/500</div>
+                                            </TabsContent>
+                                            <TabsContent value="preview">
+                                                <div
+                                                    className="prose dark:prose-invert min-h-[250px] border border-input"
+                                                    dangerouslySetInnerHTML={{__html: marked.parse(content)}}
+                                                />
+                                            </TabsContent>
+                                        </Tabs>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="flex justify-end">
+                                <Button type="submit">Ajouter</Button>
+                            </div>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
         </AuthenticatedLayout>
     );
 }

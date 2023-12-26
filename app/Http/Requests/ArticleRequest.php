@@ -23,7 +23,7 @@ class ArticleRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'content' => 'required|max:8000'
+            'content' => 'required|max:500'
         ];
     }
 }
