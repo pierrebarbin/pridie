@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleResource extends JsonResource
 {
@@ -18,6 +19,9 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
+            'bookmarked' => $this->whenLoaded('bookmarks', function () {
+                return $this->bookmarks->contains('user_id', Auth::user()->id);
+            }),
             'created_at' => $this->created_at->diffForHumans()
         ];
     }

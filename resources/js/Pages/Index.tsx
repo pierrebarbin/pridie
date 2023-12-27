@@ -22,7 +22,7 @@ export default function Index({ }: PageProps) {
     } = useInfiniteQuery<Pagination<Article>>({
         queryKey: ['articles'],
         queryFn: async ({ pageParam }) => {
-            const res = await fetch('/api/articles?page=' + pageParam)
+            const res = await fetch(route('api.articles') +'?page=' + pageParam)
             return res.json()
         },
         initialPageParam: 1,
@@ -69,51 +69,51 @@ export default function Index({ }: PageProps) {
    return (
         <>
             <Head title="For the watch" />
-            <div className="mx-auto max-w-[500px]">
+            {status === "pending" ? (
+                <div className="h-screen mx-auto max-w-[500px]">
+                    {[...Array(10).keys()].map((i) => (
+                    <ArticleCardSkeleton key={i} />
+                    ))}
+                </div>
 
-                {status === "pending" ? (
-                    [...Array(10).keys()].map((i) => (
-                        <ArticleCardSkeleton key={i} />
-                    ))
-                ) : (
-                    <>
-                        <ScrollArea
-                            ref={parentRef}
-                            className="h-screen w-full"
+            ) : (
+                <>
+                    <ScrollArea
+                        ref={parentRef}
+                        className="h-screen w-full"
+                    >
+                        <div
+                            className="relative w-full mx-auto max-w-[500px]"
+                            style={{
+                                height: `${rowVirtualizer.getTotalSize()}px`,
+                            }}
                         >
-                            <div
-                                className="relative w-full"
-                                style={{
-                                    height: `${rowVirtualizer.getTotalSize()}px`,
-                                }}
-                            >
-                                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                                    const isLoaderRow = virtualRow.index > rows.length - 1
-                                    const article = rows[virtualRow.index]
+                            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                                const isLoaderRow = virtualRow.index > rows.length - 1
+                                const article = rows[virtualRow.index]
 
-                                    return (
-                                        <div
-                                            key={virtualRow.index}
-                                            className="absolute top-0 left-0 w-full"
-                                            style={{
-                                                height: `${virtualRow.size}px`,
-                                                transform: `translateY(${virtualRow.start}px)`,
-                                            }}
-                                        >
-                                            {isLoaderRow ? (
-                                                <ArticleCardSkeleton key={virtualRow.index} />
-                                            ): (
-                                                <ArticleCard key={article.id} article={article} />
-                                            )}
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </ScrollArea >
-                        {/*{!hasNextPage ? 'Tu es arrivé au bout veilleur, bravo': null}*/}
-                    </>
-                )}
-            </div>
+                                return (
+                                    <div
+                                        key={virtualRow.index}
+                                        className="absolute top-0 left-0 w-full"
+                                        style={{
+                                            height: `${virtualRow.size}px`,
+                                            transform: `translateY(${virtualRow.start}px)`,
+                                        }}
+                                    >
+                                        {isLoaderRow ? (
+                                            <ArticleCardSkeleton key={virtualRow.index} />
+                                        ): (
+                                            <ArticleCard key={article.id} article={article} />
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </ScrollArea >
+                    {/*{!hasNextPage ? 'Tu es arrivé au bout veilleur, bravo': null}*/}
+                </>
+            )}
         </>
     )
 }

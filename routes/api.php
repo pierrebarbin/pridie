@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\ArticleController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,5 +10,3 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::get('articles', [ArticleController::class, 'index']);

@@ -34,7 +34,6 @@ export default function Dashboard({ auth }: PageProps) {
 
     const content = form.watch('content')
 
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post('/articles', values, {
             onSuccess: () => {

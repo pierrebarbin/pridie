@@ -1,56 +1,60 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import {Head, router} from '@inertiajs/react';
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
 import {Input} from "@/Components/ui/input";
 import {Button} from "@/Components/ui/button";
 
 const formSchema = z.object({
-    name: z.string().min(1, {
-        message: "Votre nom est requis",
-    }).max(255, "Votre nom est trop long"),
+    code: z.string().min(1, {
+        message: "Le code est requis",
+    }).max(6, "Le code doit faire 6 caractères"),
 })
 
-export default function Login({ status }: { status?: string }) {
+export default function Code({ token, email, errors  }: { token: string, email: string, errors: any }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: ""
+            code: ""
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        router.post(route('login'), values, {
-            onSuccess: () => {
-                form.reset()
+    useEffect(() => {
+        if (errors) {
+            for (const [key, value] of Object.entries(errors)) {
+                // @ts-ignore
+                form.setError(key, { type: 'custom', message: value })
             }
+        }
+    }, [errors])
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        router.post(route('code'), {
+            email,
+            token,
+            ...values
         })
     }
 
     return (
         <GuestLayout>
-            <Head title="Connexion" />
-
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+            <Head title="Entrez votre code" />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="code"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>Code</FormLabel>
                                 <FormControl>
-                                    <div className="flex">
-                                        <Input {...field} className="rounded-r-none"/>
-                                        <div className="text-sm flex items-center px-3 py-1 border-l-0 border boder-input">@glanum.com</div>
-                                    </div>
-
+                                    <Input {...field} />
                                 </FormControl>
+                                <FormDescription>Le code est à 6 chiffres</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -58,7 +62,7 @@ export default function Login({ status }: { status?: string }) {
 
                     <div className="flex items-center justify-center mt-4">
                         <Button type="submit">
-                            Envoyer un code de connexion
+                            Connexion
                         </Button>
                     </div>
                 </form>
