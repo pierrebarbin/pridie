@@ -20,7 +20,7 @@ class ArticleResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'bookmarked' => $this->whenLoaded('bookmarks', function () {
-                return $this->bookmarks->contains('user_id', Auth::user()->id);
+                return $this->bookmarks->contains(Auth::user());
             }),
             'created_at' => $this->created_at->diffForHumans()
         ];

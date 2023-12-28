@@ -10,6 +10,7 @@ import {
     NavigationMenu,
     NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu";
+import {Toaster} from "@/Components/ui/sonner";
 
 export default function Authenticated({ children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     return (
@@ -37,7 +38,7 @@ export default function Authenticated({ children }: PropsWithChildren<{ user: Us
                             </div>
                             <div className="ml-4 flex items-center md:ml-6">
                                <DropdownMenu>
-                                   <DropdownMenuTrigger>
+                                   <DropdownMenuTrigger asChild>
                                        <button type="button"
                                                className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                                id="user-menu-button" aria-expanded="false"
@@ -74,6 +75,7 @@ export default function Authenticated({ children }: PropsWithChildren<{ user: Us
             </nav>
 
             <main>{children}</main>
+            <Toaster />
         </div>
     );
 }

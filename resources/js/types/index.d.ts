@@ -13,6 +13,11 @@ export interface Article {
     created_at: string
 }
 
+interface Tag {
+    id: string
+    label: string
+}
+
 export interface Pagination<T> {
     data: Array<T>
     links: {

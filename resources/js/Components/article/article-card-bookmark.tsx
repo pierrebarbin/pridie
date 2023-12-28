@@ -1,11 +1,12 @@
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/Components/ui/tooltip";
 import {Button} from "@/Components/ui/button";
 import {BookmarkFilledIcon, BookmarkIcon} from "@radix-ui/react-icons";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Article} from "@/types";
-import {router} from "@inertiajs/react";
+import {usePage} from "@inertiajs/react";
 import {useDebounce} from "@/Hooks/use-debounce";
 import {useUpdateEffect} from "@/Hooks/use-updated-effect";
+import axios from "axios";
 
 interface ArticleCardBookmarkProps {
     article: Article
@@ -15,13 +16,14 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
     const [bookmarked, setBookmarked] = useState(article.bookmarked)
     const debouncedValue = useDebounce<boolean>(bookmarked, 500)
 
+    const {csrf_token} = usePage().props
+
     useUpdateEffect(() => {
         const post = async () => {
-
-
-            await fetch(route('api.bookmark.store'), {
-                method: "post",
-                body: JSON.stringify({article_id: article.id, status: !bookmarked})
+            await axios.post(route('api.bookmark.store'), {
+                article_id: article.id,
+                state: debouncedValue,
+                _token: csrf_token
             })
         }
 
@@ -45,7 +47,11 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>Ajouter à ma veille</p>
+                    {bookmarked ? (
+                        <p>Retirer de ma veille</p>
+                    ): (
+                        <p>Ajouter à ma veille</p>
+                    )}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
