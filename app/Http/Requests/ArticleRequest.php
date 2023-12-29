@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ArticleRequest extends FormRequest
@@ -23,7 +24,9 @@ class ArticleRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'content' => 'required|max:500'
+            'content' => 'required|max:500',
+            'tags' => 'array',
+            'tags.*' => 'sometimes|exists:'.Tag::class.',id'
         ];
     }
 }

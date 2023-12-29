@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
         ]);
     })->middleware('can:admin')->name('dashboard');
 
-    Route::post('/articles', [ArticleController::class, 'store']);
+    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
     Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
 });

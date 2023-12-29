@@ -70,7 +70,7 @@ export default function DashboardTagForm() {
                         <Button type="submit">Ajouter</Button>
                     </form>
                 </Form>
-                <div className="mt-4 flex gap-2">
+                <div className="mt-4 inline-flex gap-2 items-center flex-wrap p-1.5">
                     {tags.map((tag) => (
                         <Badge key={tag.id} variant="outline" className="flex items-center gap-2 pr-0.5">
                             {tag.label}

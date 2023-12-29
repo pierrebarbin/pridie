@@ -7,10 +7,9 @@ use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Throwable;
-
-use function Pest\Laravel\json;
 
 class ArticleController extends Controller
 {
@@ -19,6 +18,9 @@ class ArticleController extends Controller
         try {
             $articles = QueryBuilder::for(Article::class)
                 ->defaultSorts(['-created_at'])
+                ->allowedFilters([
+                    AllowedFilter::scope('tags','by_tags'),
+                ])
                 ->with('bookmarks')
                 ->paginate(10);
 

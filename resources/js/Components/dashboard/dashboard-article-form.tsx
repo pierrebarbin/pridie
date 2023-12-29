@@ -5,13 +5,15 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/Components/ui/tabs";
 import {Textarea} from "@/Components/ui/textarea";
 import {marked} from "marked";
 import {Button} from "@/Components/ui/button";
-import React from "react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {router, usePage} from "@inertiajs/react";
-import InputCombobox from "@/Components/form/input/input-combobox";
+import TagCombobox from "@/Components/form/tag-combobox";
 import {Tag} from "@/types";
+import {toast} from "sonner";
+import {Item} from "@/Components/form/multiple-select";
 
 const formSchema = z.object({
     title: z.string().min(1, {
@@ -20,8 +22,13 @@ const formSchema = z.object({
     content: z.string().min(1, {
         message: "Le contenu est requis",
     }).max(500, "Le contenu est trop long"),
+    tags: z.array(z.object({
+        key: z.string(),
+        value: z.string()
+    }))
 })
 export default function DashboardArticleForm() {
+    const selectedItems = useState<Array<Item>>([])
 
     const {tags} = usePage<{tags: Array<Tag>}>().props
 
@@ -29,16 +36,22 @@ export default function DashboardArticleForm() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
-            content: ""
+            content: "",
+            tags: []
         },
     })
 
     const content = form.watch('content')
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        router.post('/articles', values, {
+        router.post(route('articles.store'), {
+            ...values,
+            tags: values.tags.map((item) => item.key)
+        }, {
             onSuccess: () => {
                 form.reset()
+                selectedItems[1]([])
+                toast(`Article ${values.title} ajouté`)
             }
         })
     }
@@ -66,7 +79,24 @@ export default function DashboardArticleForm() {
                                 </FormItem>
                             )}
                         />
-                        <InputCombobox data={tagsFormatted} initialSelectedItems={[]} />
+
+                        <FormField
+                            control={form.control}
+                            name="tags"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <TagCombobox
+                                            data={tagsFormatted}
+                                            onItemSelected={(items) => form.setValue('tags', items)}
+                                            selectedItems={selectedItems}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="content"
