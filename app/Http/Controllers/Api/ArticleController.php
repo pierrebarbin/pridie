@@ -19,10 +19,11 @@ class ArticleController extends Controller
             $articles = QueryBuilder::for(Article::class)
                 ->defaultSorts(['-created_at'])
                 ->allowedFilters([
+                    'title',
                     AllowedFilter::scope('tags','by_tags'),
+                    AllowedFilter::scope('bookmark','show_bookmark'),
                 ])
-                ->with('bookmarks')
-                ->paginate(10);
+                ->cursorPaginate(10);
 
             return ArticleResource::collection($articles);
         } catch (Throwable $e) {

@@ -9,7 +9,7 @@ export interface Article {
     id:  string
     title: string
     content: string
-    bookmarked: boolean
+    bookmarked?: boolean
     created_at: string
 }
 
@@ -33,6 +33,22 @@ export interface Pagination<T> {
       per_page: number
       to: number
       total: number
+    }
+}
+
+export interface CursorPagination<T> {
+    data: Array<T>
+    links: {
+        first: string
+        last: string
+        next: string|null
+        prev: string|null
+    }
+    meta: {
+        path: string
+        next_cursor: string
+        prev_cursor: string
+        per_page: number
     }
 }
 

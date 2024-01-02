@@ -136,13 +136,12 @@ MultipleSelectLabel.displayName = "MultipleSelectLabel"
 export interface MultipleSelectBadgeProps
     extends BadgeProps{}
 
-const MultipleSelectBadge = ({ className, children, ...props }: MultipleSelectBadgeProps) => {
-    return (
-        <Badge className={cn("flex items-center gap-2 pr-0.5", className)} variant="outline" {...props}>
-            {children}
-        </Badge>
-    )
-}
+const MultipleSelectBadge = React.forwardRef<
+    HTMLDivElement,
+    MultipleSelectBadgeProps
+>(({ className, variant, ...props }, ref) => (
+    <Badge className={cn("flex items-center gap-2 pr-0.5", className)} variant="outline" {...props}/>
+))
 MultipleSelectBadge.displayName = "MultipleSelectBadge"
 
 export interface MultipleSelectInputProps

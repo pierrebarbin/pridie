@@ -13,7 +13,7 @@ interface ArticleCardBookmarkProps {
 }
 
 export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps) {
-    const [bookmarked, setBookmarked] = useState(article.bookmarked)
+    const [bookmarked, setBookmarked] = useState(article.bookmarked ?? false)
     const debouncedValue = useDebounce<boolean>(bookmarked, 500)
 
     const {csrf_token} = usePage().props

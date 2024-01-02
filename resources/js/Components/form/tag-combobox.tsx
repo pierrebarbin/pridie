@@ -45,47 +45,46 @@ export default function TagCombobox({
     }, [selectedItems])
 
     return (
-        <MultipleSelect>
-            <div className="flex flex-col gap-1">
-                <MultipleSelectLabel {...getLabelProps()}>
-                    Tags
-                </MultipleSelectLabel>
-                <div className="inline-flex gap-2 items-center flex-wrap p-1.5">
-                    {selectedItems.map(function renderSelectedItem(
-                        selectedItemForRender,
-                        index,
-                    ) {
-                        return (
-                            <MultipleSelectBadge
-                                key={`selected-item-${index}`}
-                                {...getSelectedItemProps({
-                                    selectedItem: selectedItemForRender,
-                                    index,
-                                })}
+        <MultipleSelect className="w-full">
+            <MultipleSelectLabel {...getLabelProps()}>
+                Tags
+            </MultipleSelectLabel>
+            <MultipleSelectInput
+                placeholder="Rechercher un tag..."
+                className="w-full mt-2"
+                {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
+            />
+            <div className={cn(
+                "inline-flex gap-2 items-center flex-wrap p-1.5",
+                selectedItems.length === 0 && "hidden"
+            )}>
+                {selectedItems.map(function renderSelectedItem(
+                    selectedItemForRender,
+                    index,
+                ) {
+                    return (
+                        <MultipleSelectBadge
+                            key={`selected-item-${index}`}
+                            {...getSelectedItemProps({
+                                selectedItem: selectedItemForRender,
+                                index,
+                            })}
+                        >
+                            {selectedItemForRender.value}
+                            <Button
+                                type="button"
+                                className="h-auto p-1"
+                                variant="ghost"
+                                onClick={e => {
+                                    e.stopPropagation()
+                                    removeSelectedItem(selectedItemForRender)
+                                }}
                             >
-                                {selectedItemForRender.value}
-                                <Button
-                                    type="button"
-                                    className="h-auto p-1"
-                                    variant="ghost"
-                                    onClick={e => {
-                                        e.stopPropagation()
-                                        removeSelectedItem(selectedItemForRender)
-                                    }}
-                                >
-                                    <Cross2Icon className="w-4 h-4" />
-                                </Button>
-                            </MultipleSelectBadge>
-                        )
-                    })}
-                    <div className="flex grow">
-                        <MultipleSelectInput
-                            placeholder="Ajouter un tag"
-                            className="w-full"
-                            {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
-                        />
-                    </div>
-                </div>
+                                <Cross2Icon className="w-4 h-4" />
+                            </Button>
+                        </MultipleSelectBadge>
+                    )
+                })}
             </div>
             <MultipleSelectDropdown className={cn(!(isOpen && items.length) && 'hidden')} {...getMenuProps()}>
                 {isOpen && items.map((item, index) => (

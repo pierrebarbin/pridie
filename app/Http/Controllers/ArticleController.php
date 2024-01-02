@@ -7,18 +7,31 @@ use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ArticleController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $tags = Tag::all();
 
+        $selectedTagsId = Arr::get($request->query('filter', []), 'tags', '');
+        $selectedTags = $tags
+            ->whereIn('id', explode(',', $selectedTagsId))
+            ->map(fn($item) => ['key' => $item->id, 'value' => $item->label])
+            ->toArray();
+
+        $params = $request->query();
+
+        Arr::set($params, 'filter.tags', $selectedTags);
+
         return Inertia::render('Index', [
-            'tags' => $tags
+            'tags' => $tags,
+            'filters' => $params
         ]);
     }
 
