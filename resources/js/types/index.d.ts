@@ -10,6 +10,10 @@ export interface Article {
     title: string
     content: string
     bookmarked?: boolean
+    reactions: Array<{
+        id: string
+        count: string
+    }>
     created_at: string
 }
 

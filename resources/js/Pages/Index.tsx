@@ -14,6 +14,11 @@ import {Input} from "@/Components/ui/input";
 import {Label} from "@/Components/ui/label";
 import {Separator} from "@/Components/ui/separator";
 import {ToggleGroup, ToggleGroupItem} from "@/Components/ui/toggle-group";
+import {ArchiveIcon, Cross2Icon, HamburgerMenuIcon} from "@radix-ui/react-icons";
+import {Button} from "@/Components/ui/button";
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/Components/ui/sheet";
+import {useMediaQuery} from "@/Hooks/use-media-query";
+import ArticleFilters from "@/Components/article/article-filters";
 
 export default function Index({ tags, filters }: PageProps<{
     tags: Array<Tag>
@@ -26,7 +31,7 @@ export default function Index({ tags, filters }: PageProps<{
         }
     }
 }>) {
-
+    const [currentFetchDirection, setCurrentFetchDirection] = useState<"backward"|"forward">("forward")
     const [queryKeyCache, setQueryKeyCache] = useState("")
     const [initialCursor, setInitialCursor] = useState<string|null>(filters.cursor ?? null)
     const [search, setSearch] = useState(filters.filter.title ?? "")
@@ -37,6 +42,7 @@ export default function Index({ tags, filters }: PageProps<{
 
     const debouncedSelectedTags = useDebounce(selectedTags[0], 500)
     const debouncedSearch = useDebounce(search, 500)
+    const matches = useMediaQuery('(min-width: 1130px)')
 
     const {
         data,
@@ -45,13 +51,13 @@ export default function Index({ tags, filters }: PageProps<{
         fetchNextPage,
         hasNextPage,
         hasPreviousPage,
-        isFetching,
         isFetchingNextPage,
         isFetchingPreviousPage,
-        status
+        status,
     } = useInfiniteQuery<CursorPagination<Article>>({
         queryKey: ['articles', {tags: debouncedSelectedTags, search: debouncedSearch, showBookmark}],
-        queryFn: async ({ pageParam, queryKey }) => {
+        queryFn: async ({ pageParam, queryKey, direction }) => {
+
             const key = JSON.stringify(queryKey)
             let cursor = {}
 
@@ -63,6 +69,7 @@ export default function Index({ tags, filters }: PageProps<{
             }
 
             setQueryKeyCache(key)
+            setCurrentFetchDirection(direction)
 
             const params = {
                 ...cursor,
@@ -88,11 +95,13 @@ export default function Index({ tags, filters }: PageProps<{
     })
 
     const rows = data ? data.pages.flatMap((d) => d.data) : []
+    const cardHeight = 400
+    const cardBottomMargin = 30
 
     const rowVirtualizer = useVirtualizer({
         count: hasNextPage ? rows.length + 1 : rows.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 430,
+        estimateSize: () => cardHeight + cardBottomMargin,
         overscan: 5,
     })
 
@@ -132,9 +141,10 @@ export default function Index({ tags, filters }: PageProps<{
         }
 
         if (
-            currentScroll < 100 &&
+            currentScroll < cardHeight &&
             hasPreviousPage &&
-            !isFetchingPreviousPage
+            !isFetchingPreviousPage &&
+            currentFetchDirection !== "backward"
         ) {
             fetchPreviousPage()
         }
@@ -148,60 +158,77 @@ export default function Index({ tags, filters }: PageProps<{
 
     useEffect(() => {
         if (data && data.pages.length === 1) {
-            parentRef?.current?.scrollTo(0, 100)
-        } else {
-            parentRef?.current?.scrollTo(0, parentRef?.current?.scrollTop + 430 * 10)
+            parentRef?.current?.scrollTo(0, hasPreviousPage ? cardHeight : 0)
+        } else if (currentFetchDirection === "backward") {
+            setCurrentFetchDirection("forward")
+            parentRef?.current?.scrollTo(0, parentRef?.current?.scrollTop + (cardHeight + cardBottomMargin) * 10)
         }
-    }, [data])
+    }, [data, currentFetchDirection])
+
+    const resetFilters = () => {
+        selectedTags[1]([])
+        setSearch("")
+    }
 
     const items = tags.map((tag) => ({key: tag.id, value: tag.label}))
+    const topMargin = hasPreviousPage ? cardHeight + cardBottomMargin : cardBottomMargin
 
    return (
         <div className="relative">
             <Head title="For the watch" />
-            <div className="p-8 absolute left-0 top-0 bottom-0 z-10 lg:w-80 space-y-4">
-                <div>
-                    <Label htmlFor="search">Titre</Label>
-                    <Input
-                        id="search"
-                        className="mt-2"
-                        placeholder="Rechercher un titre..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value)
-                        }}
+            {!matches ? (
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button className="absolute rounded-full right-[30px] bottom-[30px] z-40">
+                            <HamburgerMenuIcon className="w-5 h-5" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-11/12">
+                        <SheetHeader>
+                            <SheetDescription>
+                                <ArticleFilters
+                                    items={items}
+                                    search={search}
+                                    setSearch={setSearch}
+                                    selectedTags={selectedTags}
+                                    setShowBookmark={setShowBookmark}
+                                    showBookmark={showBookmark}
+                                />
+                            </SheetDescription>
+                        </SheetHeader>
+                    </SheetContent>
+                </Sheet>
+            ): (
+                <div className="p-8 absolute left-0 top-0 bottom-0 z-10 lg:w-80">
+                    <ArticleFilters
+                        items={items}
+                        search={search}
+                        setSearch={setSearch}
+                        selectedTags={selectedTags}
+                        setShowBookmark={setShowBookmark}
+                        showBookmark={showBookmark}
                     />
                 </div>
-                <Separator />
-                <TagCombobox data={items} selectedItems={selectedTags} />
-                <Separator />
-                <div>
-                    <Label>Afficher les articles ajoutés à ma veille</Label>
-                    <ToggleGroup
-                        type="single"
-                        className="m-2 gap-2 w-fit"
-                        defaultValue="yes"
-                        value={showBookmark}
-                        onValueChange={setShowBookmark}
-                    >
-                        <ToggleGroupItem variant="outline" value="yes" aria-label="Afficher les articles ajoutés à ma veille">
-                            Oui
-                        </ToggleGroupItem>
-                        <ToggleGroupItem variant="outline" value="no" aria-label="Cacher les articles ajoutés à ma veille">
-                            Non
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                </div>
-
-            </div>
+            )}
             {status === "pending" ? (
                 <div className="h-screen mx-auto max-w-[500px]">
                     {[...Array(10).keys()].map((i) => (
                         <ArticleCardSkeleton key={i} />
                     ))}
                 </div>
-            ) : (
-                <>
+            ) :  rows.length === 0 ? (
+                    <div className="text-center pt-20">
+                        <ArchiveIcon className="mx-auto h-12 w-12" />
+                        <h3 className="mt-2 text-sm font-semibold">Aucun article</h3>
+                        <p className="mt-1 text-sm text-gray-500">Recherchez avec d'autres critères.</p>
+                        <div className="mt-6">
+                            <Button type="button" className="gap-2" onClick={resetFilters}>
+                                <Cross2Icon className="w-4 h-4"/>
+                               Retirer les filtres
+                            </Button>
+                        </div>
+                    </div>
+                ): (
                     <ScrollArea
                         ref={parentRef}
                         className="h-screen w-full"
@@ -209,12 +236,15 @@ export default function Index({ tags, filters }: PageProps<{
                         <div
                             className="relative w-full mx-auto max-w-[500px]"
                             style={{
-                                height: `${rowVirtualizer.getTotalSize() + 100}px`,
+                                height: `${rowVirtualizer.getTotalSize() + cardHeight + cardBottomMargin}px`,
                             }}
                         >
-                            <div className="h-[100px] top-0 w-full absolute">
+                            {hasPreviousPage ? (
+                                <div className="top-0 w-full absolute">
+                                    <ArticleCardSkeleton />
+                                </div>
+                            ): null}
 
-                            </div>
                             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                                 const isLoaderRow = virtualRow.index > rows.length - 1
                                 const article = rows[virtualRow.index]
@@ -225,7 +255,7 @@ export default function Index({ tags, filters }: PageProps<{
                                         className="absolute top-0 left-0 w-full"
                                         style={{
                                             height: `${virtualRow.size}px`,
-                                            transform: `translateY(${virtualRow.start + 100}px)`,
+                                            transform: `translateY(${virtualRow.start + topMargin}px)`,
                                         }}
                                     >
                                         {isLoaderRow ? (
@@ -238,9 +268,9 @@ export default function Index({ tags, filters }: PageProps<{
                             })}
                         </div>
                     </ScrollArea >
-                    {/*{!hasNextPage ? 'Tu es arrivé au bout veilleur, bravo': null}*/}
-                </>
-            )}
+                )
+            }
+                {/*{!hasNextPage ? 'Tu es arrivé au bout veilleur, bravo': null}*/}
         </div>
     )
 }

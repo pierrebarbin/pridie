@@ -50,7 +50,7 @@ export default function TagCombobox({
                 Tags
             </MultipleSelectLabel>
             <MultipleSelectInput
-                placeholder="Rechercher un tag..."
+                placeholder="Recherchez un tag..."
                 className="w-full mt-2"
                 {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
             />

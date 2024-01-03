@@ -22,6 +22,14 @@ class ArticleResource extends JsonResource
             'bookmarked' => $this->whenLoaded('bookmarks', function () {
                 return $this->bookmarks->contains(Auth::user());
             }),
+            'reactions' => $this->whenLoaded('reactions', function () {
+                return $this->reactions->groupBy('reaction_id')->map(function ($group, $key) {
+                    return [
+                        'id' => $key,
+                        'count' => $group->count()
+                    ];
+                });
+            }),
             'created_at' => $this->created_at->diffForHumans()
         ];
     }
