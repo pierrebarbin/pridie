@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
     Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+    Route::post('/articles/{article}/reactions', [ReactionController::class, 'store'])
+        ->name('reactions.store');
 });
 
 Route::middleware('auth')->group(function () {

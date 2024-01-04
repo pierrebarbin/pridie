@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\Reaction;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class ArticleController extends Controller
 {
     public function index(Request $request): Response
     {
+        $reactions = Reaction::all();
         $tags = Tag::all();
 
         $selectedTagsId = Arr::get($request->query('filter', []), 'tags', '');
@@ -31,7 +33,8 @@ class ArticleController extends Controller
 
         return Inertia::render('Index', [
             'tags' => $tags,
-            'filters' => $params
+            'filters' => $params,
+            'reactions' => $reactions
         ]);
     }
 

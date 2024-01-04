@@ -22,13 +22,20 @@ class ArticleResource extends JsonResource
             'bookmarked' => $this->whenLoaded('bookmarks', function () {
                 return $this->bookmarks->contains(Auth::user());
             }),
-            'reactions' => $this->whenLoaded('reactions', function () {
-                return $this->reactions->groupBy('reaction_id')->map(function ($group, $key) {
-                    return [
+            'reactions' => $this->whenLoaded('articleReactions', function () {
+                return $this->articleReactions
+                    ->groupBy('reaction_id')
+                    ->map(fn ($group, $key) => [
                         'id' => $key,
                         'count' => $group->count()
-                    ];
-                });
+                    ])->values();
+            }),
+            'user_reactions' => $this->whenLoaded('userReactions', function () {
+                return $this->userReactions
+                    ->groupBy('reaction_id')
+                    ->map(fn ($group, $key) => [
+                        'id' => $key
+                    ])->values();
             }),
             'created_at' => $this->created_at->diffForHumans()
         ];

@@ -3,7 +3,7 @@ import React from "react";
 import {Article} from "@/types";
 import {marked} from "marked";
 import ArticleCardBookmark from "@/Components/article/article-card-bookmark";
-import ArticleCardReaction from "@/Components/article/article-card-reaction";
+import ArticleCardReaction from "@/Components/article/article-card-reaction/article-card-reaction";
 
 interface ArticleCardProps {
     article: Article

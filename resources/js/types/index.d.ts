@@ -12,7 +12,10 @@ export interface Article {
     bookmarked?: boolean
     reactions: Array<{
         id: string
-        count: string
+        count: number
+    }>
+    user_reactions: Array<{
+        id: string
     }>
     created_at: string
 }
@@ -20,6 +23,11 @@ export interface Article {
 interface Tag {
     id: string
     label: string
+}
+
+interface Reaction {
+    id: string
+    image: string
 }
 
 export interface Pagination<T> {

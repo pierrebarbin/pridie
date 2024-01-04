@@ -23,7 +23,7 @@ class ArticleController extends Controller
                     AllowedFilter::scope('tags','by_tags'),
                     AllowedFilter::scope('bookmark','show_bookmark'),
                 ])
-                ->with('reactions')
+                ->with(['articleReactions', 'userReactions'])
                 ->cursorPaginate(20);
 
             return ArticleResource::collection($articles);

@@ -28,9 +28,20 @@ class Article extends Model
         return $this->belongsToMany(Tag::class, 'article_tag', 'article_id', 'tag_id');
     }
 
-    public function reactions(): HasMany
+    public function reactions(): BelongsToMany
+    {
+        return $this->belongsToMany(Reaction::class, 'article_reaction', 'article_id', 'reaction_id');
+    }
+
+    public function articleReactions(): HasMany
     {
         return $this->hasMany(ArticleReaction::class, 'article_id', 'id');
+    }
+
+    public function userReactions(): HasMany
+    {
+        return $this->hasMany(ArticleReaction::class, 'article_id', 'id')
+            ->where('user_id', Auth::user()->id);
     }
 
     public function scopeByTags(Builder $query, ...$tags): Builder

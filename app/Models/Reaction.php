@@ -11,4 +11,6 @@ class Reaction extends Model
     use HasFactory, HasUuids;
 
     protected $table = 'reaction';
+
+    protected $guarded = [];
 }
