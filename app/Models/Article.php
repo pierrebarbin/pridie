@@ -61,4 +61,11 @@ class Article extends Model
             $query->where('user_id', Auth::user()->id);
         });
     }
+
+    public function scopeByThread(Builder $query, $value): Builder
+    {
+        return $query->whereHas('threads', function($query) use ($value) {
+            $query->where('id', $value);
+        });
+    }
 }

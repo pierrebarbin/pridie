@@ -30,9 +30,11 @@ const formSchema = z.object({
 
 interface ThreadListProps {
     threads: Array<Thread>
+    currentThread: Thread|null
+    setThread: React.Dispatch<React.SetStateAction<Thread|null>>
 }
 
-export default function ThreadList({threads}: ThreadListProps) {
+export default function ThreadList({threads, setThread, currentThread}: ThreadListProps) {
     const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -54,8 +56,8 @@ export default function ThreadList({threads}: ThreadListProps) {
                     <NavigationMenuItem>
                         <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
-                            active={route().current('home')}
-                            onSelect={() => router.visit(route('home'))}
+                            active={currentThread === null}
+                            onSelect={() => setThread(null)}
                         >
                             Veille principale <BookmarkFilledIcon className="ml-2 w-3 h-3" />
                         </NavigationMenuLink>
@@ -64,8 +66,8 @@ export default function ThreadList({threads}: ThreadListProps) {
                         <NavigationMenuItem key={thread.id}>
                             <NavigationMenuLink
                                 className={navigationMenuTriggerStyle()}
-                                active={false}
-                                onSelect={() => router.visit(route('home'))}
+                                active={thread.id === currentThread?.id}
+                                onSelect={() => setThread(thread)}
                             >
                                 {thread.name}  <BookmarkFilledIcon className="ml-2 w-3 h-3" />
                             </NavigationMenuLink>

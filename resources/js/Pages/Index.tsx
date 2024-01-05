@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Head, router} from '@inertiajs/react';
+import {Head} from '@inertiajs/react';
 import {Article, CursorPagination, PageProps, Tag, Thread} from '@/types';
 import {useInfiniteQuery} from "@tanstack/react-query";
 import ArticleCard from "@/Components/article/article-card";
@@ -9,27 +9,13 @@ import {ScrollArea} from "@/Components/ui/scroll-area";
 import {Item} from "@/Components/form/multiple-select";
 import axios from "axios";
 import {useDebounce} from "@/Hooks/use-debounce";
-import {ArchiveIcon, BookmarkFilledIcon, Cross2Icon, HamburgerMenuIcon, PlusIcon} from "@radix-ui/react-icons";
+import {ArchiveIcon, Cross2Icon, HamburgerMenuIcon} from "@radix-ui/react-icons";
 import {Button} from "@/Components/ui/button";
 import {Sheet, SheetContent, SheetTrigger} from "@/Components/ui/sheet";
 import {useMediaQuery} from "@/Hooks/use-media-query";
 import ArticleFilters from "@/Components/article/article-filters";
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
 import AppLayout from "@/Layouts/app-layout";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink, NavigationMenuList,
-    navigationMenuTriggerStyle
-} from "@/Components/ui/navigation-menu";
-import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
-    AlertDialogContent, AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger
-} from "@/Components/ui/alert-dialog";
-import {Input} from "@/Components/ui/input";
 import ThreadList from "@/Components/thread/thread-list/thread-list";
 
 export default function Index({ tags, filters, threads }: PageProps<{
@@ -50,6 +36,7 @@ export default function Index({ tags, filters, threads }: PageProps<{
     const [search, setSearch] = useState(filters.filter.title ?? "")
     const [showBookmark, setShowBookmark] = useState(filters.filter.bookmark ?? "yes")
     const selectedTags = useState<Array<Item>>(filters.filter.tags ?? [])
+    const [thread, setThread] = useState<Thread|null>(null)
 
     const parentRef = React.useRef<HTMLDivElement>(null)
 
@@ -68,7 +55,7 @@ export default function Index({ tags, filters, threads }: PageProps<{
         isFetchingPreviousPage,
         status,
     } = useInfiniteQuery<CursorPagination<Article>>({
-        queryKey: ['articles', {tags: debouncedSelectedTags, search: debouncedSearch, showBookmark}],
+        queryKey: ['articles', {tags: debouncedSelectedTags, search: debouncedSearch, showBookmark, thread: thread?.id}],
         queryFn: async ({ pageParam, queryKey, direction }) => {
 
             const key = JSON.stringify(queryKey)
@@ -88,7 +75,8 @@ export default function Index({ tags, filters, threads }: PageProps<{
                 ...cursor,
                 "filter[title]": debouncedSearch,
                 "filter[tags]": debouncedSelectedTags.reduce((acc, tag) => `${acc}${tag.key},`, '').slice(0, -1),
-                "filter[bookmark]": showBookmark
+                "filter[bookmark]": showBookmark,
+                "filter[thread]": thread?.id ?? ''
             }
 
             const cleanParams = Object.fromEntries(
@@ -181,6 +169,7 @@ export default function Index({ tags, filters, threads }: PageProps<{
     const resetFilters = () => {
         selectedTags[1]([])
         setSearch("")
+        setThread(null)
     }
 
     const items = tags.map((tag) => ({key: tag.id, value: tag.label}))
@@ -226,7 +215,7 @@ export default function Index({ tags, filters, threads }: PageProps<{
                     </div>
                     <div className="p-8 absolute right-0 top-0 z-10 lg:w-40 flex flex-col items-end">
                         <DarkModePicker />
-                        <ThreadList threads={threads} />
+                        <ThreadList threads={threads} setThread={setThread} currentThread={thread} />
                     </div>
                 </>
             )}
@@ -244,7 +233,7 @@ export default function Index({ tags, filters, threads }: PageProps<{
                         <div className="mt-6">
                             <Button type="button" className="gap-2" onClick={resetFilters}>
                                 <Cross2Icon className="w-4 h-4"/>
-                               Retirer les filtres
+                                {thread !== null ? "Flux principal" : "Retirer les filtres"}
                             </Button>
                         </div>
                     </div>
