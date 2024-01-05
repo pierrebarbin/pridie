@@ -30,6 +30,12 @@ interface Reaction {
     image: string
 }
 
+interface Thread {
+    id: string
+    name: string
+    created_at: string
+}
+
 export interface Pagination<T> {
     data: Array<T>
     links: {

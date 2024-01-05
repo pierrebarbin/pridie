@@ -31,6 +31,7 @@ export default function ArticleCardReactionList({
     if (matches) {
         return reactions.map((reaction) => (
             <ArticleCardReactionLisItem
+                key={reaction.id}
                 reaction={reaction}
                 allReactions={allReactions}
                 userReactions={userReactions}

@@ -1,26 +1,38 @@
 import React, {useEffect, useState} from 'react'
-import {Head} from '@inertiajs/react';
-import {Article, CursorPagination, PageProps, Pagination, Tag} from '@/types';
+import {Head, router} from '@inertiajs/react';
+import {Article, CursorPagination, PageProps, Tag, Thread} from '@/types';
 import {useInfiniteQuery} from "@tanstack/react-query";
 import ArticleCard from "@/Components/article/article-card";
 import ArticleCardSkeleton from "@/Components/article/article-card.skeleton";
 import {useVirtualizer} from "@tanstack/react-virtual";
 import {ScrollArea} from "@/Components/ui/scroll-area";
-import TagCombobox from "@/Components/form/tag-combobox";
 import {Item} from "@/Components/form/multiple-select";
 import axios from "axios";
 import {useDebounce} from "@/Hooks/use-debounce";
-import {Input} from "@/Components/ui/input";
-import {Label} from "@/Components/ui/label";
-import {Separator} from "@/Components/ui/separator";
-import {ToggleGroup, ToggleGroupItem} from "@/Components/ui/toggle-group";
-import {ArchiveIcon, Cross2Icon, HamburgerMenuIcon} from "@radix-ui/react-icons";
+import {ArchiveIcon, BookmarkFilledIcon, Cross2Icon, HamburgerMenuIcon, PlusIcon} from "@radix-ui/react-icons";
 import {Button} from "@/Components/ui/button";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/Components/ui/sheet";
+import {Sheet, SheetContent, SheetTrigger} from "@/Components/ui/sheet";
 import {useMediaQuery} from "@/Hooks/use-media-query";
 import ArticleFilters from "@/Components/article/article-filters";
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
+import AppLayout from "@/Layouts/app-layout";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink, NavigationMenuList,
+    navigationMenuTriggerStyle
+} from "@/Components/ui/navigation-menu";
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialogContent, AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/Components/ui/alert-dialog";
+import {Input} from "@/Components/ui/input";
+import ThreadList from "@/Components/thread/thread-list/thread-list";
 
-export default function Index({ tags, filters }: PageProps<{
+export default function Index({ tags, filters, threads }: PageProps<{
     tags: Array<Tag>
     filters: {
         cursor?: string
@@ -30,6 +42,7 @@ export default function Index({ tags, filters }: PageProps<{
             tags?: Array<Item>
         }
     }
+    threads: Array<Thread>
 }>) {
     const [currentFetchDirection, setCurrentFetchDirection] = useState<"backward"|"forward">("forward")
     const [queryKeyCache, setQueryKeyCache] = useState("")
@@ -84,7 +97,7 @@ export default function Index({ tags, filters }: PageProps<{
 
             const urlParams = new URLSearchParams(cleanParams);
 
-            window.history.replaceState({}, "", '?' + urlParams.toString())
+            // window.history.replaceState({}, "", '?' + urlParams.toString())
 
             const res = await axios.get(`${route('api.articles')}?${urlParams.toString()}`)
             return res.data
@@ -174,7 +187,7 @@ export default function Index({ tags, filters }: PageProps<{
     const topMargin = hasPreviousPage ? cardHeight + cardBottomMargin : cardBottomMargin
 
    return (
-        <div className="relative">
+        <AppLayout className="relative">
             <Head title="For the watch" />
             {!matches ? (
                 <Sheet>
@@ -184,31 +197,38 @@ export default function Index({ tags, filters }: PageProps<{
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-11/12">
-                        <SheetHeader>
-                            <SheetDescription>
-                                <ArticleFilters
-                                    items={items}
-                                    search={search}
-                                    setSearch={setSearch}
-                                    selectedTags={selectedTags}
-                                    setShowBookmark={setShowBookmark}
-                                    showBookmark={showBookmark}
-                                />
-                            </SheetDescription>
-                        </SheetHeader>
+                        <div className="relative h-full w-full">
+                            <div className="absolute bottom-0 left-0 right-0">
+                                <DarkModePicker />
+                            </div>
+                            <ArticleFilters
+                                items={items}
+                                search={search}
+                                setSearch={setSearch}
+                                selectedTags={selectedTags}
+                                setShowBookmark={setShowBookmark}
+                                showBookmark={showBookmark}
+                            />
+                        </div>
                     </SheetContent>
                 </Sheet>
             ): (
-                <div className="p-8 absolute left-0 top-0 bottom-0 z-10 lg:w-80">
-                    <ArticleFilters
-                        items={items}
-                        search={search}
-                        setSearch={setSearch}
-                        selectedTags={selectedTags}
-                        setShowBookmark={setShowBookmark}
-                        showBookmark={showBookmark}
-                    />
-                </div>
+                <>
+                    <div className="p-8 absolute left-0 top-0 z-10 lg:w-80">
+                        <ArticleFilters
+                            items={items}
+                            search={search}
+                            setSearch={setSearch}
+                            selectedTags={selectedTags}
+                            setShowBookmark={setShowBookmark}
+                            showBookmark={showBookmark}
+                        />
+                    </div>
+                    <div className="p-8 absolute right-0 top-0 z-10 lg:w-40 flex flex-col items-end">
+                        <DarkModePicker />
+                        <ThreadList threads={threads} />
+                    </div>
+                </>
             )}
             {status === "pending" ? (
                 <div className="h-screen mx-auto max-w-[500px]">
@@ -271,6 +291,6 @@ export default function Index({ tags, filters }: PageProps<{
                 )
             }
                 {/*{!hasNextPage ? 'Tu es arrivé au bout veilleur, bravo': null}*/}
-        </div>
+        </AppLayout>
     )
 }

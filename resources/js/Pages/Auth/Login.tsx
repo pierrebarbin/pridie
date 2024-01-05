@@ -1,5 +1,5 @@
 import React from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
+import GuestLayout from '@/Layouts/guest-layout';
 import {Head, router} from '@inertiajs/react';
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";

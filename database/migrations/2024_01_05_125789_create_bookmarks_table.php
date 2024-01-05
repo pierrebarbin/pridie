@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookmark', function (Blueprint $table) {
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+        Schema::create('bookmarks', function (Blueprint $table) {
+            $table->foreignUuid('thread_id')->constrained('threads')->cascadeOnDelete();
             $table->foreignUuid('article_id')->constrained('articles')->cascadeOnDelete();
         });
     }
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookmark');
+        Schema::dropIfExists('bookmarks');
     }
 };

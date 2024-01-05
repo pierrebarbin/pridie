@@ -17,7 +17,7 @@
         @inertiaHead
         @laravelPWA
     </head>
-    <body class="font-sans antialiased dark">
+    <body class="font-sans antialiased">
         @inertia
     </body>
 </html>

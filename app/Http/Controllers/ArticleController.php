@@ -34,7 +34,8 @@ class ArticleController extends Controller
         return Inertia::render('Index', [
             'tags' => $tags,
             'filters' => $params,
-            'reactions' => $reactions
+            'reactions' => $reactions,
+            'threads' => $request->user()->threads
         ]);
     }
 

@@ -1,13 +1,8 @@
 import {Article, Reaction} from "@/types";
 import {router, usePage} from "@inertiajs/react";
-import {Button} from "@/Components/ui/button";
-import {DotsHorizontalIcon, RocketIcon} from "@radix-ui/react-icons";
-import {Popover, PopoverContent, PopoverTrigger} from "@/Components/ui/popover";
 import {useState} from "react";
 import {useUpdateEffect} from "@/Hooks/use-updated-effect";
 import {useDebounce} from "@/Hooks/use-debounce";
-import {useMediaQuery} from "@/Hooks/use-media-query";
-import ArticleCardReactionLisItem from "@/Components/article/article-card-reaction/article-card-reaction-lis-item";
 import ArticleCardReactionPicker from "@/Components/article/article-card-reaction/article-card-reaction-picker";
 import ArticleCardReactionList from "@/Components/article/article-card-reaction/article-card-reaction-list";
 

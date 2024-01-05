@@ -18,9 +18,9 @@ class Article extends Model
 
     protected $guarded = [];
 
-    public function bookmarks(): BelongsToMany
+    public function threads(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'bookmark', 'article_id', 'user_id');
+        return $this->belongsToMany(Thread::class, 'bookmarks', 'article_id', 'thread_id');
     }
 
     public function tags(): BelongsToMany
@@ -54,11 +54,11 @@ class Article extends Model
     public function scopeShowBookmark(Builder $query, $value = 'yes'): Builder
     {
         if ($value === BookmarkType::Yes->value) {
-            return $query->with('bookmarks');
+            return $query->with('threads');
         }
 
-        return $query->whereDoesntHave('bookmarks', function($query) {
-            $query->where('id', Auth::user()->id);
+        return $query->whereDoesntHave('threads', function($query) {
+            $query->where('user_id', Auth::user()->id);
         });
     }
 }

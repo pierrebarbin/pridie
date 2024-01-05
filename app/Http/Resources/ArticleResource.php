@@ -19,9 +19,7 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'bookmarked' => $this->whenLoaded('bookmarks', function () {
-                return $this->bookmarks->contains(Auth::user());
-            }),
+            'bookmarked' => false,
             'reactions' => $this->whenLoaded('articleReactions', function () {
                 return $this->articleReactions
                     ->groupBy('reaction_id')

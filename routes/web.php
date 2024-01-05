@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ThreadController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,7 +20,7 @@ use Inertia\Inertia;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [ArticleController::class, 'index']);
+    Route::get('/', [ArticleController::class, 'index'])->name('home');
 
     Route::get('/dashboard', function () {
         $tags = \App\Models\Tag::all();
@@ -30,10 +31,13 @@ Route::middleware('auth')->group(function () {
     })->middleware('can:admin')->name('dashboard');
 
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
-    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
-    Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
     Route::post('/articles/{article}/reactions', [ReactionController::class, 'store'])
         ->name('reactions.store');
+
+    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
+    Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+
+    Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
 });
 
 Route::middleware('auth')->group(function () {

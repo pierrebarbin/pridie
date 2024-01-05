@@ -1,4 +1,4 @@
-import { useState, PropsWithChildren, ReactNode } from 'react';
+import React, { PropsWithChildren, ReactNode } from 'react';
 import { router} from '@inertiajs/react';
 import { User } from '@/types';
 import {
@@ -11,10 +11,12 @@ import {
     NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu";
 import {Toaster} from "@/Components/ui/sonner";
+import AppLayout from "@/Layouts/app-layout";
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
 
 export default function Authenticated({ children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     return (
-        <div className="min-h-screen">
+        <AppLayout className="min-h-screen">
             <nav>
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="border-b border-gray-700">
@@ -37,10 +39,11 @@ export default function Authenticated({ children }: PropsWithChildren<{ user: Us
                                 </div>
                             </div>
                             <div className="ml-4 flex items-center md:ml-6">
+                                <DarkModePicker />
                                <DropdownMenu>
                                    <DropdownMenuTrigger asChild>
                                        <button type="button"
-                                               className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                               className="ml-4 relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                                id="user-menu-button" aria-expanded="false"
                                                aria-haspopup="true">
                                            <span className="absolute -inset-1.5"></span>
@@ -76,6 +79,6 @@ export default function Authenticated({ children }: PropsWithChildren<{ user: Us
 
             <main>{children}</main>
             <Toaster />
-        </div>
+        </AppLayout>
     );
 }

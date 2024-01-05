@@ -1,5 +1,5 @@
 import React from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import {Head} from '@inertiajs/react';
 import { PageProps } from '@/types';
 import DashboardArticleForm from "@/Components/dashboard/dashboard-article-form";

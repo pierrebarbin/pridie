@@ -27,7 +27,7 @@ export default function ArticleCard({article}: ArticleCardProps) {
             </CardHeader>
             <CardContent className="prose dark:prose-invert overflow-hidden" dangerouslySetInnerHTML={{__html: html}}>
             </CardContent>
-            <CardFooter className="absolute p-4 pt-4 bg-card flex justify-between bottom-0 left-0 right-0 rounded-xl after:content-[''] after:absolute after:top-[-20px] after:right-0 after:left-0 after:h-[20px] after:bg-gradient-to-t after:from-neutral-900">
+            <CardFooter className="absolute p-4 pt-4 bg-card flex justify-between bottom-0 left-0 right-0 rounded-xl after:content-[''] after:absolute after:top-[-20px] after:right-0 after:left-0 after:h-[20px] after:bg-gradient-to-t after:from-gray-50 dark:after:from-neutral-900">
                 <ArticleCardReaction article={article} />
                 <ArticleCardBookmark article={article} />
             </CardFooter>
