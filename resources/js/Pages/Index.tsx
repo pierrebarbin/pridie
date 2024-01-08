@@ -9,7 +9,7 @@ import {ScrollArea} from "@/Components/ui/scroll-area";
 import {Item} from "@/Components/form/multiple-select";
 import axios from "axios";
 import {useDebounce} from "@/Hooks/use-debounce";
-import {ArchiveIcon, Cross2Icon, HamburgerMenuIcon} from "@radix-ui/react-icons";
+import {ArchiveIcon, Cross2Icon, HamburgerMenuIcon, MixerVerticalIcon} from "@radix-ui/react-icons";
 import {Button} from "@/Components/ui/button";
 import {Sheet, SheetContent, SheetTrigger} from "@/Components/ui/sheet";
 import {useMediaQuery} from "@/Hooks/use-media-query";
@@ -17,6 +17,13 @@ import ArticleFilters from "@/Components/article/article-filters";
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
 import AppLayout from "@/Layouts/app-layout";
 import ThreadList from "@/Components/thread/thread-list/thread-list";
+import {Drawer, DrawerContent, DrawerTrigger} from "@/Components/ui/drawer";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink, NavigationMenuList,
+    navigationMenuTriggerStyle
+} from "@/Components/ui/navigation-menu";
 
 export default function Index({ tags, filters, threads }: PageProps<{
     tags: Array<Tag>
@@ -179,28 +186,40 @@ export default function Index({ tags, filters, threads }: PageProps<{
         <AppLayout className="relative">
             <Head title="For the watch" />
             {!matches ? (
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button className="absolute rounded-full right-[30px] bottom-[30px] z-40">
-                            <HamburgerMenuIcon className="w-5 h-5" />
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-11/12">
-                        <div className="relative h-full w-full">
-                            <div className="absolute bottom-0 left-0 right-0">
-                                <DarkModePicker />
-                            </div>
-                            <ArticleFilters
-                                items={items}
-                                search={search}
-                                setSearch={setSearch}
-                                selectedTags={selectedTags}
-                                setShowBookmark={setShowBookmark}
-                                showBookmark={showBookmark}
-                            />
-                        </div>
-                    </SheetContent>
-                </Sheet>
+                <>
+                    <div className="p-4 z-50 absolute bottom-0 left-0 right-0 bg-background">
+                        <NavigationMenu className="w-full">
+                            <NavigationMenuList>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink
+                                        className={navigationMenuTriggerStyle()}
+                                    >
+                                        <Drawer shouldScaleBackground>
+                                            <DrawerTrigger asChild>
+                                        <MixerVerticalIcon className="h-4 w-4" />
+                                            </DrawerTrigger>
+                                            <DrawerContent className="p-4 h-[90%]">
+                                                <div className="mt-6">
+                                                    {/*<div className="absolute bottom-0 left-0 right-0">*/}
+                                                    {/*    <DarkModePicker />*/}
+                                                    {/*</div>*/}
+                                                    <ArticleFilters
+                                                        items={items}
+                                                        search={search}
+                                                        setSearch={setSearch}
+                                                        selectedTags={selectedTags}
+                                                        setShowBookmark={setShowBookmark}
+                                                        showBookmark={showBookmark}
+                                                    />
+                                                </div>
+                                            </DrawerContent>
+                                        </Drawer>
+                                    </NavigationMenuLink >
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
+                    </div>
+                </>
             ): (
                 <>
                     <div className="p-8 absolute left-0 top-0 z-10 lg:w-80">
