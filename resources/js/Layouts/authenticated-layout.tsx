@@ -13,6 +13,8 @@ import {
 import {Toaster} from "@/Components/ui/sonner";
 import AppLayout from "@/Layouts/app-layout";
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
+import DarkModePickerPopover
+    from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover";
 
 export default function Authenticated({ children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     return (
@@ -39,7 +41,7 @@ export default function Authenticated({ children }: PropsWithChildren<{ user: Us
                                 </div>
                             </div>
                             <div className="ml-4 flex items-center md:ml-6">
-                                <DarkModePicker />
+                                <DarkModePickerPopover />
                                <DropdownMenu>
                                    <DropdownMenuTrigger asChild>
                                        <button type="button"

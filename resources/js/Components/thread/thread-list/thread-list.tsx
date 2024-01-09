@@ -16,11 +16,12 @@ import {
 import {Button} from "@/Components/ui/button";
 import {Input} from "@/Components/ui/input";
 import React, {useState} from "react";
-import {Thread} from "@/types";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
+import {useShallow} from "zustand/react/shallow";
+import {useFilterStore} from "@/Stores/filter-store";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -28,13 +29,7 @@ const formSchema = z.object({
     }).max(255, "Le nom est trop long"),
 })
 
-interface ThreadListProps {
-    threads: Array<Thread>
-    currentThread: Thread|null
-    setThread: React.Dispatch<React.SetStateAction<Thread|null>>
-}
-
-export default function ThreadList({threads, setThread, currentThread}: ThreadListProps) {
+export default function ThreadList() {
     const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -43,6 +38,17 @@ export default function ThreadList({threads, setThread, currentThread}: ThreadLi
             name: "",
         },
     })
+    const {
+        threads,
+        currentThread,
+        removeCurrentThread,
+        changeCurrentThreadTo
+    } = useFilterStore(useShallow((state) => ({
+        threads: state.threads,
+        currentThread: state.currentThread,
+        removeCurrentThread: state.removeCurrentThread,
+        changeCurrentThreadTo: state.changeCurrentThreadTo
+    })))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post(route('threads.store'), values)
@@ -57,7 +63,7 @@ export default function ThreadList({threads, setThread, currentThread}: ThreadLi
                         <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                             active={currentThread === null}
-                            onSelect={() => setThread(null)}
+                            onSelect={() => removeCurrentThread()}
                         >
                             Veille principale <BookmarkFilledIcon className="ml-2 w-3 h-3" />
                         </NavigationMenuLink>
@@ -67,7 +73,7 @@ export default function ThreadList({threads, setThread, currentThread}: ThreadLi
                             <NavigationMenuLink
                                 className={navigationMenuTriggerStyle()}
                                 active={thread.id === currentThread?.id}
-                                onSelect={() => setThread(thread)}
+                                onSelect={() => changeCurrentThreadTo(thread)}
                             >
                                 {thread.name}  <BookmarkFilledIcon className="ml-2 w-3 h-3" />
                             </NavigationMenuLink>

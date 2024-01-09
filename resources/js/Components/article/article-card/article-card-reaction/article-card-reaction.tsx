@@ -3,8 +3,8 @@ import {router, usePage} from "@inertiajs/react";
 import {useState} from "react";
 import {useUpdateEffect} from "@/Hooks/use-updated-effect";
 import {useDebounce} from "@/Hooks/use-debounce";
-import ArticleCardReactionPicker from "@/Components/article/article-card-reaction/article-card-reaction-picker";
-import ArticleCardReactionList from "@/Components/article/article-card-reaction/article-card-reaction-list";
+import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker";
+import ArticleCardReactionList from "@/Components/article/article-card/article-card-reaction/article-card-reaction-list";
 
 interface ArticleCardReactionProps {
     article: Article

@@ -11,10 +11,12 @@ export interface Item {
     value: string
 }
 
+type Action = (items: Array<Item>) => void | React.Dispatch<React.SetStateAction<Item[]>>
+
 export interface useMultipleSelectProps {
     data: Array<Item>
     initialSelectedItems?: Array<Item>
-    selectedItems?: [Item[], React.Dispatch<React.SetStateAction<Item[]>>]
+    selectedItems?: [Item[], Action]
 }
 
 function getFilteredItems(items: Array<Item>, selectedItems: Array<Item>, inputValue: string) {

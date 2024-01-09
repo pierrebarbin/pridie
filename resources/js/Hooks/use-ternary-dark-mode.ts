@@ -6,7 +6,7 @@ import {useUpdateEffect} from "@/Hooks/use-updated-effect";
 const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)'
 
 type TernaryDarkMode = 'system' | 'dark' | 'light'
-interface UseTernaryDarkModeOutput {
+export interface UseTernaryDarkModeOutput {
     isDarkMode: boolean
     ternaryDarkMode: TernaryDarkMode
     setTernaryDarkMode: Dispatch<SetStateAction<TernaryDarkMode>>

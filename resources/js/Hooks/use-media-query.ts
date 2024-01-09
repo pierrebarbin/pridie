@@ -40,3 +40,11 @@ export function useMediaQuery(query: string): boolean {
 
     return matches
 }
+
+export function useIsMobileBreakpoint() {
+    const matches = useMediaQuery('(min-width: 1130px)')
+
+    return {
+        isMobile: !matches
+    }
+}

@@ -1,4 +1,4 @@
-import ArticleCardReactionLisItem from "@/Components/article/article-card-reaction/article-card-reaction-lis-item";
+import ArticleCardReactionLisItem from "@/Components/article/article-card/article-card-reaction/article-card-reaction-lis-item";
 import {Popover, PopoverContent, PopoverTrigger} from "@/Components/ui/popover";
 import {Button} from "@/Components/ui/button";
 import {DotsHorizontalIcon} from "@radix-ui/react-icons";
