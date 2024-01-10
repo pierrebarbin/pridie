@@ -19,7 +19,7 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'bookmarked' => false,
+            'threads' => ThreadResource::collection($this->whenLoaded('userThreads')),
             'reactions' => $this->whenLoaded('articleReactions', function () {
                 return $this->articleReactions
                     ->groupBy('reaction_id')

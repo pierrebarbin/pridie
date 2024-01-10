@@ -32,6 +32,7 @@ export default function ArticleList({cursor}: ArticleListProps) {
         error,
         status,
         hasPreviousPage,
+        hasNextPage,
         rowVirtualizer
     } = useArticleList({
         cursor,
@@ -45,13 +46,13 @@ export default function ArticleList({cursor}: ArticleListProps) {
 
     if (status === "pending") {
         return (
-            <div className="h-screen mx-auto max-w-[500px]">
+            <ScrollArea className="h-screen mx-auto max-w-[500px]">
                 {[...Array(10).keys()].map((i) => (
                     <div style={{marginTop: cardBottomMargin}} key={i}>
                         <ArticleCardSkeleton />
                     </div>
                 ))}
-            </div>
+            </ScrollArea>
         )
     }
 
@@ -84,12 +85,13 @@ export default function ArticleList({cursor}: ArticleListProps) {
     return (
         <ScrollArea
             ref={parentRef}
+            type="always"
             className="h-screen w-full"
         >
             <div
                 className="relative w-full mx-auto max-w-[500px]"
                 style={{
-                    height: `${rowVirtualizer.getTotalSize() + cardHeight + cardBottomMargin}px`,
+                    height: `${rowVirtualizer.getTotalSize() + topMargin }px`,
                 }}
             >
                 {hasPreviousPage ? (
@@ -111,7 +113,7 @@ export default function ArticleList({cursor}: ArticleListProps) {
                                 transform: `translateY(${virtualRow.start + topMargin}px)`,
                             }}
                         >
-                            {isLoaderRow ? (
+                            {(isLoaderRow && hasNextPage) ? (
                                 <ArticleCardSkeleton key={virtualRow.index} />
                             ): (
                                 <ArticleCard key={article.id} article={article} />

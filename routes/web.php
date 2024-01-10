@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\TagController;
@@ -38,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
 
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
+
+    Route::post('/bookmark', [BookmarkController::class, 'store'])
+        ->name('bookmark.store');
 });
 
 Route::middleware('auth')->group(function () {

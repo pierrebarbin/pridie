@@ -11,7 +11,7 @@ import {
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

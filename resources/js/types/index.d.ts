@@ -9,7 +9,7 @@ export interface Article {
     id:  string
     title: string
     content: string
-    bookmarked?: boolean
+    threads: Array<Thread>
     reactions: Array<{
         id: string
         count: number

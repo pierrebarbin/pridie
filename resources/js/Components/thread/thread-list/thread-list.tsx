@@ -22,6 +22,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
 import {useShallow} from "zustand/react/shallow";
 import {useFilterStore} from "@/Stores/filter-store";
+import {cn} from "@/lib/utils";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -61,7 +62,7 @@ export default function ThreadList() {
                 <NavigationMenuList className="flex-col gap-2 items-end ">
                     <NavigationMenuItem>
                         <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
+                            className={cn(navigationMenuTriggerStyle(), "cursor-pointer")}
                             active={currentThread === null}
                             onSelect={() => removeCurrentThread()}
                         >
@@ -71,7 +72,7 @@ export default function ThreadList() {
                     {threads.map((thread) => (
                         <NavigationMenuItem key={thread.id}>
                             <NavigationMenuLink
-                                className={navigationMenuTriggerStyle()}
+                                className={cn(navigationMenuTriggerStyle(), "cursor-pointer")}
                                 active={thread.id === currentThread?.id}
                                 onSelect={() => changeCurrentThreadTo(thread)}
                             >
@@ -100,7 +101,7 @@ export default function ThreadList() {
                                     <FormItem>
                                         <FormLabel>Nom</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="nom..." {...field} />
+                                            <Input placeholder="Nom..." {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

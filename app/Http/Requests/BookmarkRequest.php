@@ -3,7 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Article;
+use App\Models\Thread;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class BookmarkRequest extends FormRequest
 {
@@ -24,7 +27,16 @@ class BookmarkRequest extends FormRequest
     {
         return [
             'article_id' => 'required|exists:'.Article::class.',id',
-            'state' => 'required|boolean'
+            'threads' => 'array',
+            'threads.*' => [
+                'string',
+                'exists:'.Thread::class.',id',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (Auth::user()->threads()->where('id', $value)->doesntExist()) {
+                        $fail('Unknown thread');
+                    }
+                },
+            ]
         ];
     }
 }

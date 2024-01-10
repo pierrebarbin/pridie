@@ -36,12 +36,15 @@ export default function Index({ tags, filters, threads }: PageProps<{
     })))
 
     useEffect(() => {
-        setThreads(threads)
         updateTags(tags)
         updateSearch(filters.filter.title ?? "")
         updateShowBookmark(filters.filter.bookmark ?? "yes")
         updateSelectedTags(filters.filter.tags ?? [])
     }, [])
+
+    useEffect(() => {
+        setThreads(threads)
+    }, [threads])
 
    return (
         <AppLayout className="relative min-h-screen">

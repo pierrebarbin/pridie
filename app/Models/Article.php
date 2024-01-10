@@ -44,6 +44,12 @@ class Article extends Model
             ->where('user_id', Auth::user()->id);
     }
 
+    public function userThreads(): BelongsToMany
+    {
+        return $this->belongsToMany(Thread::class, 'bookmarks', 'article_id', 'thread_id')
+            ->where('user_id', Auth::user()->id);
+    }
+
     public function scopeByTags(Builder $query, ...$tags): Builder
     {
         return $query->whereHas('tags', function($query) use ($tags) {

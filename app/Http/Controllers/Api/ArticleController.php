@@ -24,7 +24,7 @@ class ArticleController extends Controller
                     AllowedFilter::scope('bookmark','show_bookmark'),
                     AllowedFilter::scope('thread','by_thread'),
                 ])
-                ->with(['articleReactions', 'userReactions'])
+                ->with(['articleReactions', 'userReactions', 'userThreads'])
                 ->cursorPaginate(20);
 
             return ArticleResource::collection($articles);

@@ -16,7 +16,7 @@ interface UseArticleProps {
 
 export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}: UseArticleProps) {
 
-    const [currentFetchDirection, setCurrentFetchDirection] = useState<"backward"|"forward">("forward")
+    const [currentFetchDirection, setCurrentFetchDirection] = useState<"backward"|"forward"|null>(null)
     const [queryKeyCache, setQueryKeyCache] = useState("")
     const [initialCursor, setInitialCursor] = useState<string|null>(cursor ?? null)
 
@@ -34,6 +34,8 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
 
     const debouncedSelectedTags = useDebounce(selectedTags, 500)
     const debouncedSearch = useDebounce(search, 500)
+
+    const maxPages = 3
 
     const infiniteProps = useInfiniteQuery<CursorPagination<Article>>({
         queryKey: ['articles', {tags: debouncedSelectedTags, search: debouncedSearch, showBookmark, thread: currentThread?.id}],
@@ -73,7 +75,8 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         },
         initialPageParam: initialCursor,
         getPreviousPageParam: (lastPage, pages) => lastPage.meta.prev_cursor,
-        getNextPageParam: (lastPage, pages) => lastPage.meta.next_cursor
+        getNextPageParam: (lastPage, pages) => lastPage.meta.next_cursor,
+        maxPages,
     })
 
     const {
@@ -95,28 +98,6 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         estimateSize: () => cardHeight + cardBottomMargin,
         overscan: 5,
     })
-
-    useEffect(() => {
-        const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
-
-        if (!lastItem) {
-            return
-        }
-
-        if (
-            lastItem.index >= rows.length - 1 &&
-            hasNextPage &&
-            !isFetchingNextPage
-        ) {
-            fetchNextPage()
-        }
-    }, [
-        hasNextPage,
-        fetchNextPage,
-        rows.length,
-        isFetchingNextPage,
-        rowVirtualizer.getVirtualItems(),
-    ])
 
     useEffect(() => {
         const firstItem = rowVirtualizer.getVirtualItems()[0]
@@ -148,10 +129,41 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
     ])
 
     useEffect(() => {
+        const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
+
+        if (!lastItem) {
+            return
+        }
+
+        const currentScroll = parentRef?.current?.scrollTop
+
+        if (!currentScroll) {
+            return
+        }
+
+        if (
+            currentScroll + parentRef?.current?.clientWidth > rowVirtualizer.getTotalSize() - cardHeight &&
+            hasNextPage &&
+            !isFetchingNextPage
+        ) {
+            fetchNextPage()
+        }
+    }, [
+        parentRef,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage,
+        rowVirtualizer.getVirtualItems(),
+    ])
+
+    useEffect(() => {
         if (data && data.pages.length === 1) {
             parentRef?.current?.scrollTo(0, hasPreviousPage ? cardHeight : 0)
+        } else if (currentFetchDirection === "forward" && data && data.pages.length === maxPages) {
+            setCurrentFetchDirection(null)
+            parentRef?.current?.scrollTo(0, parentRef?.current?.scrollTop - (cardHeight + cardBottomMargin) * 10)
         } else if (currentFetchDirection === "backward") {
-            setCurrentFetchDirection("forward")
+            setCurrentFetchDirection(null)
             parentRef?.current?.scrollTo(0, parentRef?.current?.scrollTop + (cardHeight + cardBottomMargin) * 10)
         }
     }, [data, currentFetchDirection])

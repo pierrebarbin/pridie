@@ -17,8 +17,8 @@ class ArticleFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->title,
-            'content' => '## Videre pugnae est
+            'title' => $this->faker->words,
+            'content' => '### Videre pugnae est
 
 Arma terga et iunctis tutam repetita sustinui vultus nec virgine umbras humus
 rapida, lacusque. Nemus Liber **te rogat Procne** irascentemque alvo bellique
