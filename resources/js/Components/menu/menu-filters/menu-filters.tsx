@@ -47,7 +47,7 @@ export default function MenuFilters() {
             <TagCombobox data={items} selectedItems={[selectedTags, updateSelectedTags]} />
             <Separator />
             <div>
-                <Label>Afficher les articles ajoutés à ma veille</Label>
+                <Label>Afficher les articles ajoutés à mes flux</Label>
                 <ToggleGroup
                     type="single"
                     className="m-2 gap-2 w-fit"

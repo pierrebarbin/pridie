@@ -1,6 +1,3 @@
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/Components/ui/tooltip";
-import {Button} from "@/Components/ui/button";
-import {BookmarkFilledIcon, BookmarkIcon} from "@radix-ui/react-icons";
 import React, {useState} from "react";
 import {Article} from "@/types";
 import {useIsMobileBreakpoint} from "@/Hooks/use-media-query";
@@ -11,84 +8,74 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/Components/ui/alert-dialog";
-import {ScrollArea} from "@/Components/ui/scroll-area";
-import {useFilterStore} from "@/Stores/filter-store";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Form, FormControl, FormField, FormItem, FormMessage} from "@/Components/ui/form";
-import {Checkbox} from "@/Components/ui/checkbox";
-import {cn} from "@/lib/utils";
-import {router} from "@inertiajs/react";
-import {queryClient} from "@/app";
+import ArticleCardBookmarkIndicator
+    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator";
+import ArticleCardBookmarkForm
+    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form";
+import {Button} from "@/Components/ui/button";
+import {ReloadIcon} from "@radix-ui/react-icons";
+import {
+    Drawer, DrawerClose,
+    DrawerContent,
+    DrawerDescription, DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger
+} from "@/Components/ui/drawer";
 
 interface ArticleCardBookmarkProps {
     article: Article
 }
 
-const formSchema = z.object({
-    threads: z.array(z.object({
-        id: z.string(),
-        name: z.string()
-    })),
-})
-
 export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps) {
     const [open, setOpen] = useState(false)
-    const [bookmarked, setBookmarked] = useState(article.threads.length > 0)
 
     const { isMobile } = useIsMobileBreakpoint()
 
-    const threads = useFilterStore((state) => state.threads)
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            threads: article.threads
-        },
-    })
-
-    const bookmark = async (values: z.infer<typeof formSchema>) => {
-        router.post(route('bookmark.store'), {
-            article_id: article.id,
-            threads: values.threads.map((thread) => thread.id),
-        }, {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries({queryKey: ['articles']})
-                setBookmarked(values.threads.length > 0)
-                setOpen(false)
-            }
-        })
-    }
-
     if (isMobile) {
-        return <></>
+        return (
+            <Drawer open={open} onOpenChange={setOpen} >
+                <DrawerTrigger asChild>
+                    <div>
+                        <ArticleCardBookmarkIndicator article={article} />
+                    </div>
+                </DrawerTrigger>
+                <DrawerContent>
+                    <div className="mx-auto w-full max-w-sm p-2">
+                        <DrawerHeader className="mb-6">
+                            <DrawerTitle>{article.title}</DrawerTitle>
+                            <DrawerDescription>Ajouter l'article à un ou plusieurs flux de veilles</DrawerDescription>
+                        </DrawerHeader>
+                        <ArticleCardBookmarkForm
+                            article={article}
+                            onSuccess={() => setOpen(false)}
+                            footer={({loading}) => (
+                                <DrawerFooter>
+                                    <Button type="submit" disabled={loading}>
+                                        {loading ? (
+                                            <>
+                                                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                                Mise à jour
+                                            </>
+                                        ) : "Mettre à jour"}
+                                    </Button>
+                                    <DrawerClose asChild>
+                                        <Button variant="outline">Cancel</Button>
+                                    </DrawerClose>
+                                </DrawerFooter>
+                            )}
+                        />
+                    </div>
+                </DrawerContent>
+            </Drawer>
+        )
     }
 
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 <div>
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost">
-                                    {bookmarked ? (
-                                        <BookmarkFilledIcon className="h-5 w-5"/>
-                                    ): (
-                                        <BookmarkIcon className="h-5 w-5"/>
-                                    )}
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                {bookmarked ? (
-                                    <p>Ajouté à {article.threads.map((thread) => thread.name)}</p>
-                                ): (
-                                    <p>Ajouter à ma veille</p>
-                                )}
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                   <ArticleCardBookmarkIndicator article={article} />
                 </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -98,55 +85,23 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                         Ajouter l'article à un ou plusieurs flux de veilles
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(bookmark)} className="space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="threads"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <ScrollArea className="max-h-[500px]">
-                                           {threads.map((thread) => (
-                                               <div className="mb-1" key={thread.id}>
-                                                   <label
-                                                       htmlFor={`thread-${thread.id}`}
-                                                       className={cn(
-                                                           "p-2 flex items-center justify-between space-x-2 cursor-pointer",
-                                                           field.value?.find((value) => value.id === thread.id) !== undefined && "bg-primary/10 rounded"
-                                                       )}
-                                                   >
-                                                       <span className="font-semibold">{thread.name}</span>
-
-                                                       <Checkbox
-                                                           id={`thread-${thread.id}`}
-                                                           className="rounded w-6 h-6"
-                                                           checked={field.value?.find((value) => value.id === thread.id) !== undefined}
-                                                           onCheckedChange={(checked) => {
-                                                               return checked
-                                                                   ? field.onChange([...field.value, thread])
-                                                                   : field.onChange(
-                                                                       field.value?.filter(
-                                                                           (value) => value.id !== thread.id
-                                                                       )
-                                                                   )
-                                                           }}
-                                                       />
-                                                   </label>
-                                               </div>
-                                           ))}
-                                        </ScrollArea>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                <ArticleCardBookmarkForm
+                    article={article}
+                    onSuccess={() => setOpen(false)}
+                    footer={({loading}) => (
                         <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <Button type="submit">Mettre à jour</Button>
+                            <Button type="submit" disabled={loading}>
+                                {loading ? (
+                                      <>
+                                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                          Mise à jour
+                                      </>
+                                ) : "Mettre à jour"}
+                            </Button>
                         </AlertDialogFooter>
-                    </form>
-                </Form>
+                   )}
+                />
             </AlertDialogContent>
         </AlertDialog>
     )

@@ -142,7 +142,7 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         }
 
         if (
-            currentScroll + parentRef?.current?.clientWidth > rowVirtualizer.getTotalSize() - cardHeight &&
+            currentScroll + parentRef?.current?.clientHeight > rowVirtualizer.getTotalSize() - (cardHeight * 3) &&
             hasNextPage &&
             !isFetchingNextPage
         ) {

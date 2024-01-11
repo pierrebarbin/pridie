@@ -5,7 +5,7 @@ import {
     NavigationMenuList, navigationMenuTriggerStyle
 } from "@/Components/ui/navigation-menu";
 import {router} from "@inertiajs/react";
-import {BookmarkFilledIcon, PlusIcon} from "@radix-ui/react-icons";
+import {BookmarkFilledIcon, PlusIcon, ReloadIcon} from "@radix-ui/react-icons";
 import {
     AlertDialog, AlertDialogCancel,
     AlertDialogContent, AlertDialogFooter,
@@ -31,6 +31,7 @@ const formSchema = z.object({
 })
 
 export default function ThreadList() {
+    const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -52,8 +53,16 @@ export default function ThreadList() {
     })))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        router.post(route('threads.store'), values)
-        setOpen(false)
+        setLoading(true)
+        router.post(route('threads.store'), values, {
+            onSuccess: () => {
+                setOpen(false)
+                form.reset()
+            },
+            onFinish: () => {
+                setLoading(false)
+            }
+        })
     }
 
     return (
@@ -66,7 +75,8 @@ export default function ThreadList() {
                             active={currentThread === null}
                             onSelect={() => removeCurrentThread()}
                         >
-                            Veille principale <BookmarkFilledIcon className="ml-2 w-3 h-3" />
+                            Veille principale
+                            {currentThread === null? <BookmarkFilledIcon className="ml-2 w-3 h-3" />: null}
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     {threads.map((thread) => (
@@ -76,7 +86,8 @@ export default function ThreadList() {
                                 active={thread.id === currentThread?.id}
                                 onSelect={() => changeCurrentThreadTo(thread)}
                             >
-                                {thread.name}  <BookmarkFilledIcon className="ml-2 w-3 h-3" />
+                                {thread.name}
+                                {thread.id === currentThread?.id? <BookmarkFilledIcon className="ml-2 w-3 h-3" />: null}
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     ))}
@@ -109,8 +120,13 @@ export default function ThreadList() {
                             />
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button type="submit">
-                                    Ajouter
+                                <Button type="submit" disabled={loading}>
+                                    {loading ? (
+                                        <>
+                                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                            Ajout en cours
+                                        </>
+                                    ) : "Ajouter"}
                                 </Button>
                             </AlertDialogFooter>
                         </form>

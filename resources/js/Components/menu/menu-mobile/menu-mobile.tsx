@@ -7,10 +7,11 @@ import {
 import {cn} from "@/lib/utils";
 import {Button, buttonVariants} from "@/Components/ui/button";
 import {Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger} from "@/Components/ui/drawer";
-import {BookmarkIcon, MixerVerticalIcon, PersonIcon} from "@radix-ui/react-icons";
+import { MixerVerticalIcon, PersonIcon} from "@radix-ui/react-icons";
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters";
 import React from "react";
+import ThreadListMobile from "@/Components/thread/thread-list/thread-list-mobile/thread-list-mobile";
 
 export default function MenuMobile() {
     return (
@@ -25,7 +26,7 @@ export default function MenuMobile() {
                                 <DrawerTrigger asChild>
                                     <PersonIcon className="h-5 w-5" />
                                 </DrawerTrigger>
-                                <DrawerContent className="p-4">
+                                <DrawerContent className="p-4 pt-0">
                                     <div className="mt-6">
                                         <DarkModePicker />
                                     </div>
@@ -42,27 +43,18 @@ export default function MenuMobile() {
                         <NavigationMenuLink
                             className={cn(navigationMenuTriggerStyle(), buttonVariants({size: "lg"}))}
                         >
-                            <Drawer shouldScaleBackground>
-                                <DrawerTrigger asChild>
-                                    <BookmarkIcon className="h-5 w-5" />
-                                </DrawerTrigger>
-                                <DrawerContent className="p-4 h-[90%]">
-                                    <div className="mt-6">
-                                        {/*<ThreadList />*/}
-                                    </div>
-                                </DrawerContent>
-                            </Drawer>
+                            <ThreadListMobile />
                         </NavigationMenuLink >
                     </NavigationMenuItem>
                     <NavigationMenuItem >
                         <NavigationMenuLink
                             className={cn(navigationMenuTriggerStyle(), buttonVariants({size: "lg"}))}
                         >
-                            <Drawer shouldScaleBackground>
+                            <Drawer>
                                 <DrawerTrigger asChild>
                                     <MixerVerticalIcon className="h-5 w-5" />
                                 </DrawerTrigger>
-                                <DrawerContent className="p-4 h-[90%]">
+                                <DrawerContent className="p-4 pt-0 h-[90%]">
                                     <div className="mt-6">
                                         <MenuFilters />
                                     </div>
