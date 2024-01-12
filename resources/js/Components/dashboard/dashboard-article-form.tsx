@@ -1,11 +1,9 @@
 import {Card, CardContent, CardHeader} from "@/Components/ui/card";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
 import {Input} from "@/Components/ui/input";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/Components/ui/tabs";
 import {Textarea} from "@/Components/ui/textarea";
-import {marked} from "marked";
 import {Button} from "@/Components/ui/button";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -14,6 +12,7 @@ import TagCombobox from "@/Components/form/tag-combobox";
 import {Tag} from "@/types";
 import {toast} from "sonner";
 import {Item} from "@/Components/form/multiple-select";
+import {useArticleCreationStore} from "@/Stores/article-creation-store";
 
 const formSchema = z.object({
     title: z.string().min(1, {
@@ -32,6 +31,8 @@ export default function DashboardArticleForm() {
 
     const {tags} = usePage<{tags: Array<Tag>}>().props
 
+    const updateArticle = useArticleCreationStore((state) => state.updateArticle)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,6 +41,15 @@ export default function DashboardArticleForm() {
             tags: []
         },
     })
+
+    useEffect(() => {
+        const subscription = form.watch((value, { name }) => {
+            if (name === "title" || name === "content") {
+                updateArticle({[name]: value[name]})
+            }
+        })
+        return () => subscription.unsubscribe()
+    }, [form.watch])
 
     const content = form.watch('content')
 
@@ -50,6 +60,7 @@ export default function DashboardArticleForm() {
         }, {
             onSuccess: () => {
                 form.reset()
+                updateArticle(null)
                 selectedItems[1]([])
                 toast(`Article ${values.title} ajouté`)
             }
@@ -103,22 +114,8 @@ export default function DashboardArticleForm() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Contenu</FormLabel>
-                                    <Tabs defaultValue="markdown">
-                                        <TabsList>
-                                            <TabsTrigger value="markdown">Markdown</TabsTrigger>
-                                            <TabsTrigger value="preview">Preview</TabsTrigger>
-                                        </TabsList>
-                                        <TabsContent value="markdown">
-                                            <Textarea placeholder="Contenu..." {...field} className="min-h-[250px]"/>
-                                            <div>{content.length}/500</div>
-                                        </TabsContent>
-                                        <TabsContent value="preview">
-                                            <div
-                                                className="prose dark:prose-invert min-h-[250px] border border-input"
-                                                dangerouslySetInnerHTML={{__html: marked.parse(content)}}
-                                            />
-                                        </TabsContent>
-                                    </Tabs>
+                                        <Textarea placeholder="Contenu..." {...field} className="min-h-[250px]"/>
+                                        <div>{content.length}/500</div>
                                     <FormMessage />
                                 </FormItem>
                             )}
