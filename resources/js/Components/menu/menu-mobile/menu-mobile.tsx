@@ -15,14 +15,14 @@ import ThreadListMobile from "@/Components/thread/thread-list/thread-list-mobile
 import {useFilterStore} from "@/Stores/filter-store";
 import {useShallow} from "zustand/react/shallow";
 import {useMediaQuery} from "@/Hooks/use-media-query";
+import {Switch} from "@/Components/ui/switch";
+import {Label} from "@/Components/ui/label";
 
 export default function MenuMobile() {
 
     const {
-        currentThread,
         removeCurrentThread
     } = useFilterStore(useShallow((state) => ({
-        currentThread: state.currentThread,
         removeCurrentThread: state.removeCurrentThread
     })))
 
@@ -47,15 +47,22 @@ export default function MenuMobile() {
                                         <span className="text-xs">Config</span>
                                     </div>
                                 </DrawerTrigger>
-                                <DrawerContent className="p-4 pt-0">
-                                    <div className="mt-6">
-                                        <DarkModePicker />
+                                <DrawerContent className="p-4 pt-0 h-[90%]">
+                                    <div className="mt-6 space-y-6">
+                                        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <Label htmlFor="default-tags">Tags par défaut</Label>
+                                                <div className="text-[0.8rem] text-muted-foreground">
+                                                    Des tags sont automatiquement assignés à votre compte pour préfiltrer les articles
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Switch
+                                                    id="default-tags"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <DrawerFooter>
-                                        <form action={route('logout')} method="post">
-                                            <Button variant="destructive" className="w-full">Déconnexion</Button>
-                                        </form>
-                                    </DrawerFooter>
                                 </DrawerContent>
                             </Drawer>
                         </NavigationMenuLink >
@@ -75,7 +82,7 @@ export default function MenuMobile() {
                                         <span className="text-xs">Profil</span>
                                     </div>
                                 </DrawerTrigger>
-                                <DrawerContent className="p-4 pt-0">
+                                <DrawerContent className="p-4 pt-0 h-1/3">
                                     <div className="mt-6">
                                         <DarkModePicker />
                                     </div>

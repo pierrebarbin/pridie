@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\UserTagController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/bookmark', [BookmarkController::class, 'store'])
         ->name('bookmark.store');
+
+    Route::put('/config/tags', [UserTagController::class, 'update'])->name('config.tags.update');
 });
 
 Route::middleware('auth')->group(function () {

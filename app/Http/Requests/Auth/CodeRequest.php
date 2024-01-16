@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Models\OneTimeCode;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,6 +67,8 @@ class CodeRequest extends FormRequest
                     'email_verified_at' => now(),
                     'password' => Hash::make(Str::random(32))
                 ]);
+
+                event(new Registered($account));
             }
 
             Auth::login($account, true);

@@ -47,6 +47,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function config(): HasOne
+    {
+        return $this->hasOne(Config::class, 'user_id', 'id');
+    }
+
     public function oneTimeCode(): HasOne
     {
         return $this->hasOne(OneTimeCode::class, 'email', 'email');
@@ -60,5 +65,10 @@ class User extends Authenticatable
     public function threads(): HasMany
     {
         return $this->hasMany(Thread::class, 'user_id', 'id');
+    }
+
+    public function defaultTags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'user_default_tags', 'user_id', 'tag_id');
     }
 }

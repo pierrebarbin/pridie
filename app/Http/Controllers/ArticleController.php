@@ -18,6 +18,7 @@ class ArticleController extends Controller
 {
     public function index(Request $request): Response
     {
+        $config = $request->user()->config;
         $reactions = Reaction::all();
         $tags = Tag::all();
 
@@ -35,7 +36,9 @@ class ArticleController extends Controller
             'tags' => $tags,
             'filters' => $params,
             'reactions' => $reactions,
-            'threads' => $request->user()->threads
+            'threads' => $request->user()->threads,
+            'defaultTags' => $config->use_default_tags ? $request->user()->defaultTags : [],
+            'config' => $config
         ]);
     }
 
