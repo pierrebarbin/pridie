@@ -13,7 +13,6 @@ import {useShallow} from "zustand/react/shallow";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/Components/ui/drawer";
 import {ScrollArea} from "@/Components/ui/scroll-area";
 import {Separator} from "@/Components/ui/separator";
-import {useMediaQuery} from "@/Hooks/use-media-query";
 
 export default function ThreadListMobile() {
     const [open, setOpen] = useState(false)

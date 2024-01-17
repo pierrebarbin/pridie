@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\CreateAccountConfig;
+use App\Listeners\CreatePersonalThread;
 use App\Listeners\LinkDefaultTagsToAccount;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,7 +21,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
             LinkDefaultTagsToAccount::class,
-            CreateAccountConfig::class
+            CreateAccountConfig::class,
+            CreatePersonalThread::class
         ],
     ];
 

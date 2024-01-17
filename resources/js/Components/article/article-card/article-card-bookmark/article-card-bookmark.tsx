@@ -49,9 +49,9 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                         <ArticleCardBookmarkForm
                             article={article}
                             onSuccess={() => setOpen(false)}
-                            footer={({loading}) => (
+                            footer={({loading, cannotSubmit}) => (
                                 <DrawerFooter>
-                                    <Button type="submit" disabled={loading}>
+                                    <Button type="submit" disabled={cannotSubmit}>
                                         {loading ? (
                                             <>
                                                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -88,10 +88,10 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                 <ArticleCardBookmarkForm
                     article={article}
                     onSuccess={() => setOpen(false)}
-                    footer={({loading}) => (
+                    footer={({loading, cannotSubmit}) => (
                         <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <Button type="submit" disabled={loading}>
+                            <Button type="submit" disabled={cannotSubmit}>
                                 {loading ? (
                                       <>
                                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />

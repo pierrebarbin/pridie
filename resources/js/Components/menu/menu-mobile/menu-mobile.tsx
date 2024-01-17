@@ -15,8 +15,7 @@ import ThreadListMobile from "@/Components/thread/thread-list/thread-list-mobile
 import {useFilterStore} from "@/Stores/filter-store";
 import {useShallow} from "zustand/react/shallow";
 import {useMediaQuery} from "@/Hooks/use-media-query";
-import {Switch} from "@/Components/ui/switch";
-import {Label} from "@/Components/ui/label";
+import ConfigDefaultTags from "@/Components/config/config-default-tags/config-default-tags";
 
 export default function MenuMobile() {
 
@@ -48,20 +47,8 @@ export default function MenuMobile() {
                                     </div>
                                 </DrawerTrigger>
                                 <DrawerContent className="p-4 pt-0 h-[90%]">
-                                    <div className="mt-6 space-y-6">
-                                        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                                            <div className="space-y-0.5">
-                                                <Label htmlFor="default-tags">Tags par défaut</Label>
-                                                <div className="text-[0.8rem] text-muted-foreground">
-                                                    Des tags sont automatiquement assignés à votre compte pour préfiltrer les articles
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <Switch
-                                                    id="default-tags"
-                                                />
-                                            </div>
-                                        </div>
+                                    <div className="mt-4">
+                                        <ConfigDefaultTags />
                                     </div>
                                 </DrawerContent>
                             </Drawer>

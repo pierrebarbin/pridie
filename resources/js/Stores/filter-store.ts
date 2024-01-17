@@ -7,10 +7,12 @@ interface FilterState {
     search: string
     showBookmark: string
     selectedTags: Array<Item>
+    defaultTags: Array<Tag>
     updateSearch: (search: string) => void
     updateTags: (tags: Array<Tag>) => void
     updateSelectedTags: (tags: Array<Item>) => void
     updateShowBookmark: (show: string) => void
+    updateDefaultTags: (tags: Array<Tag>) => void
     resetFilters: () => void
 }
 
@@ -22,10 +24,11 @@ export interface ThreadState {
     setThreads: (threads: Array<Thread>) => void
 }
 
-export const useFilterStore = create<FilterState & ThreadState>((set) => ({
+export const useFilterStore = create<FilterState & ThreadState>((set, get) => ({
     currentThread: null,
     threads: [],
     tags: [],
+    defaultTags: [],
     search: "",
     showBookmark: "yes",
     selectedTags: [],
@@ -33,8 +36,21 @@ export const useFilterStore = create<FilterState & ThreadState>((set) => ({
     updateTags: (tags) => set({tags}),
     updateSelectedTags: (tags) => set({selectedTags: tags}),
     updateShowBookmark: (show) => set({showBookmark: show}),
-    changeCurrentThreadTo: (thread) => set({ currentThread: thread }),
-    removeCurrentThread: () => set({ currentThread: null }),
+    updateDefaultTags: (tags) => set({defaultTags: tags}),
+    changeCurrentThreadTo: (thread) => {
+        set({
+            currentThread: thread,
+            search: "",
+            selectedTags: []
+        })
+    },
+    removeCurrentThread: () => {
+        set({
+            currentThread: null,
+            search: "",
+            selectedTags: get().defaultTags.map((tag) => ({key: tag.id, value: tag.label})),
+        })
+    },
     setThreads: (threads) => set({ threads }),
     resetFilters: () => {
         set({

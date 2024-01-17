@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $casts = [
+        'use_default_tags' => 'boolean'
+    ];
 }

@@ -2,7 +2,7 @@ import React from "react";
 import {useFilterStore} from "@/Stores/filter-store";
 import {useShallow} from "zustand/react/shallow";
 import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton";
-import {ArchiveIcon, Cross2Icon} from "@radix-ui/react-icons";
+import {ArchiveIcon, Cross2Icon, PinLeftIcon} from "@radix-ui/react-icons";
 import {Button} from "@/Components/ui/button";
 import {ScrollArea} from "@/Components/ui/scroll-area";
 import ArticleCard from "@/Components/article/article-card/article-card";
@@ -18,10 +18,12 @@ export default function ArticleList({cursor}: ArticleListProps) {
 
     const {
         currentThread,
-        resetFilters
+        resetFilters,
+        removeCurrentThread
     } = useFilterStore(useShallow((state) => ({
         currentThread: state.currentThread,
         resetFilters: state.resetFilters,
+        removeCurrentThread: state.removeCurrentThread
     })))
 
     const cardHeight = 400
@@ -73,10 +75,18 @@ export default function ArticleList({cursor}: ArticleListProps) {
                 <h3 className="mt-2 text-sm font-semibold">Aucun article</h3>
                 <p className="mt-1 text-sm text-gray-500">Recherchez avec d'autres critères.</p>
                 <div className="mt-6">
-                    <Button type="button" className="gap-2" onClick={resetFilters}>
-                        <Cross2Icon className="w-4 h-4"/>
-                        {currentThread !== null ? "Flux principal" : "Retirer les filtres"}
-                    </Button>
+                    {currentThread !== null ? (
+                        <Button type="button" className="gap-2" onClick={removeCurrentThread}>
+                            <PinLeftIcon className="w-4 h-4"/>
+                            Flux principal
+                        </Button>
+                    ): (
+                        <Button type="button" className="gap-2" onClick={resetFilters}>
+                            <Cross2Icon className="w-4 h-4"/>
+                            Retirer les filtres
+                        </Button>
+                    )}
+
                 </div>
             </div>
         )

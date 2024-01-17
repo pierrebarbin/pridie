@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserTagRequest extends FormRequest
+class ConfigUserTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +22,7 @@ class UserTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tags' => 'required|array',
-            'tags.*' => 'string|exists:'.Tag::class.',id'
+            'state' => 'required|boolean'
         ];
     }
 }

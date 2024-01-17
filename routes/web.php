@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
         ->name('bookmark.store');
 
     Route::put('/config/tags', [UserTagController::class, 'update'])->name('config.tags.update');
+    Route::post('/config/tags', [UserTagController::class, 'store'])->name('config.tags.store');
 });
 
 Route::middleware('auth')->group(function () {

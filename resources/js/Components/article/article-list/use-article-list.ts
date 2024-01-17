@@ -32,13 +32,12 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         selectedTags: state.selectedTags
     })))
 
-    const debouncedSelectedTags = useDebounce(selectedTags, 500)
     const debouncedSearch = useDebounce(search, 500)
 
     const maxPages = 3
 
     const infiniteProps = useInfiniteQuery<CursorPagination<Article>>({
-        queryKey: ['articles', {tags: debouncedSelectedTags, search: debouncedSearch, showBookmark, thread: currentThread?.id}],
+        queryKey: ['articles', {tags: selectedTags, search: debouncedSearch, showBookmark, thread: currentThread?.id}],
         queryFn: async ({ pageParam, queryKey, direction }) => {
 
             const key = JSON.stringify(queryKey)
@@ -57,7 +56,7 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
             const params = {
                 ...cursor,
                 "filter[title]": debouncedSearch,
-                "filter[tags]": debouncedSelectedTags.reduce((acc, tag) => `${acc}${tag.key},`, '').slice(0, -1),
+                "filter[tags]": selectedTags.reduce((acc, tag) => `${acc}${tag.key},`, '').slice(0, -1),
                 "filter[bookmark]": showBookmark,
                 "filter[thread]": currentThread?.id ?? ''
             }

@@ -10,6 +10,8 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useQueryClient} from "@tanstack/react-query";
 import {Article} from "@/types";
+import {Simulate} from "react-dom/test-utils";
+import load = Simulate.load;
 
 const formSchema = z.object({
     threads: z.array(z.object({
@@ -21,7 +23,7 @@ const formSchema = z.object({
 interface ArticleCardBookmarkFormProps {
     article: Article
     onSuccess?: () => void
-    footer: (props: {loading: boolean}) => ReactElement
+    footer: (props: {loading: boolean, cannotSubmit: boolean}) => ReactElement
 }
 
 export default function ArticleCardBookmarkForm({article, onSuccess, footer}: ArticleCardBookmarkFormProps) {
@@ -56,6 +58,7 @@ export default function ArticleCardBookmarkForm({article, onSuccess, footer}: Ar
     const itemHeight = 44
     const maxItemsVisible = 7
     const scrollAreaHeight =  (threads.length < maxItemsVisible ? threads.length : maxItemsVisible) * itemHeight
+    const cannotSubmit = loading || threads.length === 0
 
     return (
         <Form {...form}>
@@ -101,7 +104,7 @@ export default function ArticleCardBookmarkForm({article, onSuccess, footer}: Ar
                         </FormItem>
                     )}
                 />
-                {footer({loading})}
+                {footer({loading, cannotSubmit})}
             </form>
         </Form>
     )
