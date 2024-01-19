@@ -48,6 +48,7 @@
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
         "downshift": "^8.2.4",
+        "framer-motion": "^10.18.0",
         "marked": "^11.1.0",
         "next-themes": "^0.2.1",
         "react-hook-form": "^7.49.2",
