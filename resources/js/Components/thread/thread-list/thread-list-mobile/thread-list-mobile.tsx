@@ -70,39 +70,41 @@ export default function ThreadListMobile() {
         })
     }
 
-    const listMotion = tab === "list" ? 0 : -width
-    const createMotion = tab === "create" ? 0 : width
+    const x = tab === "list" ? 0 : -width
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
                 <BookmarkIcon className="h-5 w-5" />
             </DrawerTrigger>
-            <DrawerContent className="h-[90%]">
-                <div className="flex" style={{width: width * 2}}>
-                    <motion.div
-                        className="h-full"
-                        initial={{width: width, x: listMotion}}
-                        animate={{ x: listMotion}}
-                        transition={{
-                            damping: 10,
-                            stiffness: 100
-                        }}
-                    >
-                        <ScrollArea className="mt-6">
-                            <NavigationMenu className="max-w-full block">
+            <DrawerContent className="h-[90%] block">
+                <motion.div
+                    className="flex h-full pt-4"
+                    style={{width: width * 2}}
+                    animate={{ x }}
+                    transition={{
+                        damping: 10,
+                        stiffness: 100
+                    }}
+                >
+                    <ScrollArea className="w-1/2 h-full pb-6">
+                        <NavigationMenu className="max-w-full block">
+                            <NavigationMenuList className="flex-col">
+                                <NavigationMenuItem className="w-full mb-2">
+                                    <NavigationMenuLink
+                                        className={cn(navigationMenuTriggerStyle(), "relative py-3 w-full cursor-pointer h-auto gap-2")}
+                                        onSelect={() => {
+                                            setTab('create')
+                                        }}
+                                    >
+                                        Ajouter un flux <ChevronRightIcon className="absolute w-4 h-4 right-[30px]" />
+                                    </NavigationMenuLink>
+                                    <Separator />
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
+                        <NavigationMenu className="max-w-full block">
                                 <NavigationMenuList className="flex-col">
-                                    <NavigationMenuItem className="w-full mb-2">
-                                        <NavigationMenuLink
-                                            className={cn(navigationMenuTriggerStyle(), "relative py-3 w-full cursor-pointer h-auto gap-2")}
-                                            onSelect={() => {
-                                                setTab('create')
-                                            }}
-                                        >
-                                            Ajouter un flux <ChevronRightIcon className="absolute w-4 h-4 right-[30px]" />
-                                        </NavigationMenuLink>
-                                        <Separator />
-                                    </NavigationMenuItem>
                                     <NavigationMenuItem className="w-full">
                                         <Separator />
                                         <NavigationMenuLink
@@ -135,17 +137,8 @@ export default function ThreadListMobile() {
                                     ))}
                                 </NavigationMenuList>
                             </NavigationMenu>
-                        </ScrollArea>
-                    </motion.div>
-                    <motion.div
-                        className="p-4"
-                        initial={{width, x: createMotion}}
-                        animate={{x: createMotion}}
-                        transition={{
-                            damping: 10,
-                            stiffness: 100
-                        }}
-                    >
+                    </ScrollArea >
+                    <div className="w-1/2 p-4">
                         <div className="relative text-center h-10">
                             <Button variant="ghost" className="absolute left-0" onClick={() => setTab('list')}>
                                 <ChevronLeftIcon className="w-5 h-5"/>
@@ -178,8 +171,8 @@ export default function ThreadListMobile() {
                                 </Button>
                             </form>
                         </Form>
-                    </motion.div>
-                </div>
+                    </div>
+                </motion.div>
             </DrawerContent>
         </Drawer>
     )
