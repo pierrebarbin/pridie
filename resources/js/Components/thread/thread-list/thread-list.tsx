@@ -23,6 +23,8 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {useShallow} from "zustand/react/shallow";
 import {useFilterStore} from "@/Stores/filter-store";
 import {cn} from "@/lib/utils";
+import {toast} from "sonner";
+import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thread-list-item";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -44,12 +46,10 @@ export default function ThreadList() {
         threads,
         currentThread,
         removeCurrentThread,
-        changeCurrentThreadTo
     } = useFilterStore(useShallow((state) => ({
         threads: state.threads,
         currentThread: state.currentThread,
         removeCurrentThread: state.removeCurrentThread,
-        changeCurrentThreadTo: state.changeCurrentThreadTo
     })))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -58,6 +58,7 @@ export default function ThreadList() {
             onSuccess: () => {
                 setOpen(false)
                 form.reset()
+                toast(`Flux ${values.name} créé`)
             },
             onFinish: () => {
                 setLoading(false)
@@ -80,16 +81,7 @@ export default function ThreadList() {
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     {threads.map((thread) => (
-                        <NavigationMenuItem key={thread.id}>
-                            <NavigationMenuLink
-                                className={cn(navigationMenuTriggerStyle(), "cursor-pointer")}
-                                active={thread.id === currentThread?.id}
-                                onSelect={() => changeCurrentThreadTo(thread)}
-                            >
-                                {thread.name}
-                                {thread.id === currentThread?.id? <BookmarkFilledIcon className="ml-2 w-3 h-3" />: null}
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
+                        <ThreadListItem thread={thread} key={thread.id} />
                     ))}
                 </NavigationMenuList>
             </NavigationMenu>

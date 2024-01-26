@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
 
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
+    Route::delete('/threads/{thread}', [ThreadController::class, 'destroy'])->name('threads.destroy');
 
     Route::post('/bookmark', [BookmarkController::class, 'store'])
         ->name('bookmark.store');
