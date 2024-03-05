@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -11,6 +13,6 @@ class Config extends Model
     use HasFactory, HasUuids;
 
     protected $casts = [
-        'use_default_tags' => 'boolean'
+        'use_default_tags' => 'boolean',
     ];
 }

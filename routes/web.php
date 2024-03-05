@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ProfileController;
@@ -28,7 +30,7 @@ Route::middleware('auth')->group(function () {
         $tags = \App\Models\Tag::all();
 
         return Inertia::render('Dashboard', [
-            'tags' => $tags
+            'tags' => $tags,
         ]);
     })->middleware('can:admin')->name('dashboard');
 

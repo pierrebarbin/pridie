@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class ArticleResource extends JsonResource
 {
@@ -25,17 +26,17 @@ class ArticleResource extends JsonResource
                     ->groupBy('reaction_id')
                     ->map(fn ($group, $key) => [
                         'id' => $key,
-                        'count' => $group->count()
+                        'count' => $group->count(),
                     ])->values();
             }),
             'user_reactions' => $this->whenLoaded('userReactions', function () {
                 return $this->userReactions
                     ->groupBy('reaction_id')
                     ->map(fn ($group, $key) => [
-                        'id' => $key
+                        'id' => $key,
                     ])->values();
             }),
-            'created_at' => $this->created_at->diffForHumans()
+            'created_at' => $this->created_at->diffForHumans(),
         ];
     }
 }

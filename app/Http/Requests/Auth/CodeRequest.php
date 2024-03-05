@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Auth;
 
 use App\Models\OneTimeCode;
@@ -34,7 +36,7 @@ class CodeRequest extends FormRequest
         return [
             'email' => 'required|string|max:255',
             'code' => 'required|string|max:6',
-            'token' => 'required|string|max:32'
+            'token' => 'required|string|max:32',
         ];
     }
 
@@ -65,7 +67,7 @@ class CodeRequest extends FormRequest
                     'name' => $data->get('email'),
                     'email' => $data->get('email'),
                     'email_verified_at' => now(),
-                    'password' => Hash::make(Str::random(32))
+                    'password' => Hash::make(Str::random(32)),
                 ]);
 
                 event(new Registered($account));

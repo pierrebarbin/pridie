@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Reaction;
@@ -24,7 +26,7 @@ class ReactionRequest extends FormRequest
     {
         return [
             'reactions' => 'array',
-            'reactions.*' => 'string|exists:'.Reaction::class.',id'
+            'reactions.*' => 'string|exists:'.Reaction::class.',id',
         ];
     }
 }

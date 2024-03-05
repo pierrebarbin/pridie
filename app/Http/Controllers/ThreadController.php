@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ThreadRequest;
 use App\Models\Thread;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
@@ -13,7 +14,7 @@ class ThreadController extends Controller
     {
         Thread::query()->create([
             ...$request->safe()->all(),
-            'user_id' => $request->user()->id
+            'user_id' => $request->user()->id,
         ]);
 
         return redirect()->back();
@@ -21,7 +22,6 @@ class ThreadController extends Controller
 
     public function update(Thread $thread)
     {
-
 
         return redirect()->back();
     }

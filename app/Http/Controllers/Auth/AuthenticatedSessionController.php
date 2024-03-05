@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -11,9 +13,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -47,7 +46,7 @@ class AuthenticatedSessionController extends Controller
         if ($oneTimeCode !== null) {
             return redirect()->temporarySignedRoute('code', $oneTimeCode->expire_at, [
                 'email' => $email,
-                'token' => $oneTimeCode->token
+                'token' => $oneTimeCode->token,
             ]);
         }
 
@@ -57,14 +56,14 @@ class AuthenticatedSessionController extends Controller
             'email' => $email,
             'code' => str((string) rand(1, 999999))->padLeft(6, '0'),
             'expire_at' => now()->addMinutes(15),
-            'token' => $token
+            'token' => $token,
         ]);
 
         $oneTimeCode->notify(new SendOneTimeCodeNotification());
 
         return redirect()->temporarySignedRoute('code', now()->addMinutes(10), [
             'email' => $email,
-            'token' => $token
+            'token' => $token,
         ]);
     }
 
@@ -72,7 +71,7 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Code', [
             'email' => $request->get('email'),
-            'token' => $request->get('token')
+            'token' => $request->get('token'),
         ]);
     }
 

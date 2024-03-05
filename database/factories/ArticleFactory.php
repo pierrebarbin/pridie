@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +26,7 @@ Arma terga et iunctis tutam repetita sustinui vultus nec virgine umbras humus
 rapida, lacusque. Nemus Liber **te rogat Procne** irascentemque alvo bellique
 currum cervice mens rictus tellus **primis**! Me fecit quamvis veteres
 fluctusque *Thebis*, dum incepti quae.
-'
+',
         ];
     }
 }

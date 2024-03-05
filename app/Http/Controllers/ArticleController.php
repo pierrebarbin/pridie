@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
-use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\Reaction;
 use App\Models\Tag;
@@ -25,7 +26,7 @@ class ArticleController extends Controller
         $selectedTagsId = Arr::get($request->query('filter', []), 'tags', '');
         $selectedTags = $tags
             ->whereIn('id', explode(',', $selectedTagsId))
-            ->map(fn($item) => ['key' => $item->id, 'value' => $item->label])
+            ->map(fn ($item) => ['key' => $item->id, 'value' => $item->label])
             ->toArray();
 
         $params = $request->query();
@@ -38,7 +39,7 @@ class ArticleController extends Controller
             'reactions' => $reactions,
             'threads' => $request->user()->threads,
             'defaultTags' => $config->use_default_tags ? $request->user()->defaultTags : [],
-            'config' => $config
+            'config' => $config,
         ]);
     }
 

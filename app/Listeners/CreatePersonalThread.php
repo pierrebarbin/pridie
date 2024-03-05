@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Models\Thread;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class CreatePersonalThread
 {
@@ -23,7 +23,7 @@ class CreatePersonalThread
     public function handle(Registered $event): void
     {
         $event->user->threads()->save(new Thread([
-            'name' => 'Ma veille'
+            'name' => 'Ma veille',
         ]));
     }
 }

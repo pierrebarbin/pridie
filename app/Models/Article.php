@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\BookmarkType;
@@ -52,7 +54,7 @@ class Article extends Model
 
     public function scopeByTags(Builder $query, ...$tags): Builder
     {
-        return $query->whereHas('tags', function($query) use ($tags) {
+        return $query->whereHas('tags', function ($query) use ($tags) {
             $query->whereIn('id', Arr::wrap($tags));
         });
     }
@@ -63,14 +65,14 @@ class Article extends Model
             return $query->with('threads');
         }
 
-        return $query->whereDoesntHave('threads', function($query) {
+        return $query->whereDoesntHave('threads', function ($query) {
             $query->where('user_id', Auth::user()->id);
         });
     }
 
     public function scopeByThread(Builder $query, $value): Builder
     {
-        return $query->whereHas('threads', function($query) use ($value) {
+        return $query->whereHas('threads', function ($query) use ($value) {
             $query->where('id', $value);
         });
     }

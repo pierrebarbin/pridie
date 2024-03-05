@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +16,9 @@ class OneTimeCode extends Model
     use HasFactory, HasUuids, Notifiable;
 
     protected $guarded = [];
+
     protected $casts = [
-        'expire_at' => 'datetime'
+        'expire_at' => 'datetime',
     ];
 
     public function account(): HasOne

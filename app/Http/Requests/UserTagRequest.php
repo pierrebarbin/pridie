@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Tag;
@@ -24,7 +26,7 @@ class UserTagRequest extends FormRequest
     {
         return [
             'tags' => 'required|array',
-            'tags.*' => 'string|exists:'.Tag::class.',id'
+            'tags.*' => 'string|exists:'.Tag::class.',id',
         ];
     }
 }

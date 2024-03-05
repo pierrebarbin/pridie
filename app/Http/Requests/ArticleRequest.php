@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Tag;
@@ -26,7 +28,7 @@ class ArticleRequest extends FormRequest
             'title' => 'required|max:255',
             'content' => 'required|max:500',
             'tags' => 'array',
-            'tags.*' => 'sometimes|exists:'.Tag::class.',id'
+            'tags.*' => 'sometimes|exists:'.Tag::class.',id',
         ];
     }
 }

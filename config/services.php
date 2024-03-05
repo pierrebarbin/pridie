@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -32,6 +34,6 @@ return [
     ],
 
     'admin' => [
-        'emails' => env('ADMIN_EMAILS', [])
-    ]
+        'emails' => env('ADMIN_EMAILS', []),
+    ],
 ];

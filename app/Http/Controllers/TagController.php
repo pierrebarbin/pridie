@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TagRequest;
@@ -11,7 +13,7 @@ class TagController extends Controller
     public function store(TagRequest $request): RedirectResponse
     {
         Tag::query()->create([
-            'label' => $request->safe()->label
+            'label' => $request->safe()->label,
         ]);
 
         return redirect()->back();

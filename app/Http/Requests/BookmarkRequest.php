@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Article;
@@ -36,7 +38,7 @@ class BookmarkRequest extends FormRequest
                         $fail('Unknown thread');
                     }
                 },
-            ]
+            ],
         ];
     }
 }

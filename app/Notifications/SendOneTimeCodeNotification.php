@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\OneTimeCode;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -36,9 +37,9 @@ class SendOneTimeCodeNotification extends Notification
     public function toMail(OneTimeCode $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('Voici votre code d\'authentification')
-                    ->line($notifiable->code)
-                    ->line('Bonne veille!');
+            ->line('Voici votre code d\'authentification')
+            ->line($notifiable->code)
+            ->line('Bonne veille!');
     }
 
     /**
