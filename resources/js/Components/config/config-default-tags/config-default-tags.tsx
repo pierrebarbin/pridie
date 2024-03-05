@@ -7,15 +7,12 @@ import TagCombobox from "@/Components/form/tag-combobox";
 import {useFilterStore} from "@/Stores/filter-store";
 import {useShallow} from "zustand/react/shallow";
 import {Item} from "@/Components/form/multiple-select";
-import {useDebounce} from "@/Hooks/use-debounce";
-import {useUpdateEffect} from "@/Hooks/use-updated-effect";
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
 
 export default function ConfigDefaultTags() {
     const { config: { use_default_tags } } = usePage<{config: Config}>().props
 
     const [selectedTags, setSelectedTags] = useState<Array<Item>>([])
-    const debouncedSelectedTags = useDebounce(selectedTags, 500)
-
     const {
         tags,
         defaultTags
@@ -23,18 +20,22 @@ export default function ConfigDefaultTags() {
         tags: state.tags,
         defaultTags: state.defaultTags
     })))
-
-    useUpdateEffect(() => {
-        if (debouncedSelectedTags.length === defaultTags.length) {
+    const debounced = useDebounceCallback<(selectedTags: Item[]) => void>((selectedTags) => {
+        if (selectedTags.length === defaultTags.length) {
             return
         }
         router.put(route('config.tags.update'), {
-            tags: debouncedSelectedTags.map((tag) => tag.key)
+            tags: selectedTags.map((tag) => tag.key)
         })
-    }, [debouncedSelectedTags])
+    }, 500)
+
+    const updateTags = (tags) => {
+        setSelectedTags(tags)
+        debounced(tags)
+    }
 
     useEffect(() => {
-        setSelectedTags(defaultTags.map((tag) => ({key: tag.id, value: tag.label})))
+        updateTags(defaultTags.map((tag) => ({key: tag.id, value: tag.label})))
     }, [defaultTags])
 
     const toggle = (checked: boolean) => {
@@ -64,7 +65,7 @@ export default function ConfigDefaultTags() {
             </div>
             <div className="mt-6 relative flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                 {!use_default_tags ? (<div className="absolute inset-0 z-10 bg-muted/50"/>): null}
-                <TagCombobox data={items} selectedItems={[selectedTags, setSelectedTags]} />
+                <TagCombobox data={items} selectedItems={[selectedTags, updateTags]} />
             </div>
         </div>
     )

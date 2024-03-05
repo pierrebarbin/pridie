@@ -1,10 +1,9 @@
 import {Article, Reaction} from "@/types";
 import {router, usePage} from "@inertiajs/react";
 import {useState} from "react";
-import {useUpdateEffect} from "@/Hooks/use-updated-effect";
-import {useDebounce} from "@/Hooks/use-debounce";
 import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker";
 import ArticleCardReactionList from "@/Components/article/article-card/article-card-reaction/article-card-reaction-list";
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
 
 interface ArticleCardReactionProps {
     article: Article
@@ -16,13 +15,12 @@ export default function ArticleCardReaction({article}: ArticleCardReactionProps)
     const [reactions, setReactions] = useState(article.reactions)
 
     const { reactions: allReactions } = usePage<{reactions: Array<Reaction>}>().props
-    const debouncedUserReactions = useDebounce(userReactions, 1000)
 
-    useUpdateEffect(() => {
+    const debounced = useDebounceCallback<(reactions: {id: string}[]) => void>((reactions) => {
         router.post(route('reactions.store', {article: article.id}), {
-            reactions: debouncedUserReactions.map((reaction) => reaction.id)
+            reactions: reactions.map((reaction) => reaction.id)
         })
-    }, [debouncedUserReactions])
+    }, 1000)
 
     const reactTo = (reaction: Reaction, add: boolean) => {
         setUserReactions((reactions) => {
@@ -32,7 +30,11 @@ export default function ArticleCardReaction({article}: ArticleCardReactionProps)
                 return reactions.filter((react) => react.id !== reaction.id)
             }
 
-            return [...reactions, {id: reaction.id}]
+            const newReactions = [...reactions, {id: reaction.id}]
+
+            debounced(newReactions)
+
+            return newReactions
         })
         setReactions((reactions) => {
             const react = reactions.find((react) => react.id === reaction.id)

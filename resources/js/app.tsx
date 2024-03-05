@@ -21,7 +21,5 @@ createInertiaApp({
 
         root.render( <QueryClientProvider client={queryClient}><App {...props} /></QueryClientProvider>);
     },
-    progress: {
-        color: '#4B5563',
-    },
+    progress: false,
 });

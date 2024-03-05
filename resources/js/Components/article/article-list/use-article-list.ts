@@ -5,7 +5,7 @@ import {useVirtualizer} from "@tanstack/react-virtual";
 import {RefObject, useEffect, useState} from "react";
 import {useFilterStore} from "@/Stores/filter-store";
 import {useShallow} from "zustand/react/shallow";
-import {useDebounce} from "@/Hooks/use-debounce";
+import { useDebounceValue } from "@/Hooks/use-debounce-value";
 
 interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
@@ -32,7 +32,7 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         selectedTags: state.selectedTags
     })))
 
-    const debouncedSearch = useDebounce(search, 500)
+    const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
 
     const maxPages = 3
 
@@ -97,6 +97,10 @@ export function useArticleList({parentRef, cardHeight, cardBottomMargin, cursor}
         estimateSize: () => cardHeight + cardBottomMargin,
         overscan: 5,
     })
+
+    useEffect(() => {
+        setDebouncedSearch(search)
+    }, [search])
 
     useEffect(() => {
         const firstItem = rowVirtualizer.getVirtualItems()[0]

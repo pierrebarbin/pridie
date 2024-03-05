@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@glanum.fr',
         ]);
 
-        Article::factory(10000)->create();
+        //Article::factory(100)->create();
 
         Reaction::query()->create([
             'image' => '👍',
