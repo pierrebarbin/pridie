@@ -1,6 +1,5 @@
 import { router, usePage } from "@inertiajs/react";
 import Avatar from "boring-avatars";
-import React from "react";
 
 import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover";
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters";
@@ -16,6 +15,8 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { useIsMobileBreakpoint } from "@/Hooks/use-media-query";
 import { User } from "@/types";
+import ConfigModal from "@/Components/config/config-modal/config-modal";
+import ProfileModal from "../profile/profile-modal/profile-modal";
 
 export default function Menu() {
     const { user } = usePage().props.auth as unknown as { user: User };
@@ -52,8 +53,16 @@ export default function Menu() {
                     <DropdownMenuContent>
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profil</DropdownMenuItem>
-                        <DropdownMenuItem>Config</DropdownMenuItem>
+                        <ProfileModal>
+                            <DropdownMenuItem  onSelect={(e) => e.preventDefault()}>
+                                Profil
+                            </DropdownMenuItem>
+                        </ProfileModal>
+                        <ConfigModal>
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                Config
+                            </DropdownMenuItem>
+                        </ConfigModal>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onSelect={(e) => router.post(route("logout"))}
