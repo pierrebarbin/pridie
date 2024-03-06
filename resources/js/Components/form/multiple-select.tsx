@@ -17,6 +17,7 @@ export interface useMultipleSelectProps {
     data: Array<Item>
     initialSelectedItems?: Array<Item>
     selectedItems?: [Item[], Action]
+    onSelectedItems?: (items: Item[]) => void
 }
 
 function getFilteredItems(items: Array<Item>, selectedItems: Array<Item>, inputValue: string) {
@@ -30,7 +31,12 @@ function getFilteredItems(items: Array<Item>, selectedItems: Array<Item>, inputV
     })
 }
 
-const useMultipleSelect = ({data, initialSelectedItems, selectedItems: controlledSelectedItems}: useMultipleSelectProps) => {
+const useMultipleSelect = ({
+    data,
+    initialSelectedItems,
+    selectedItems: controlledSelectedItems,
+    onSelectedItems
+}: useMultipleSelectProps) => {
     const [inputValue, setInputValue] = useState('')
     const [selectedItems, setSelectedItems] = controlledSelectedItems ?? useState(initialSelectedItems ?? [])
 
@@ -51,6 +57,7 @@ const useMultipleSelect = ({data, initialSelectedItems, selectedItems: controlle
                 case useMultipleSelection.stateChangeTypes
                     .FunctionRemoveSelectedItem:
                     setSelectedItems(newSelectedItems ?? [])
+                    onSelectedItems && onSelectedItems(newSelectedItems ?? [])
                     break
 
                 default:
@@ -93,6 +100,7 @@ const useMultipleSelect = ({data, initialSelectedItems, selectedItems: controlle
                 case useCombobox.stateChangeTypes.InputBlur:
                     if (newSelectedItem) {
                         setSelectedItems([...selectedItems, newSelectedItem])
+                        onSelectedItems && onSelectedItems([...selectedItems, newSelectedItem])
                         setInputValue('')
                     }
                     break

@@ -99,7 +99,7 @@ export default function DashboardArticleForm() {
                                     <FormControl>
                                         <TagCombobox
                                             data={tagsFormatted}
-                                            onItemSelected={(items) => form.setValue('tags', items)}
+                                            onSelectedItems={(items) => form.setValue('tags', items)}
                                             selectedItems={selectedItems}
                                         />
                                     </FormControl>

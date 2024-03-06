@@ -9,17 +9,16 @@ import {
 import {Cross2Icon} from "@radix-ui/react-icons";
 import {Button} from "@/Components/ui/button";
 import React from "react";
-import {useUpdateEffect} from "@/Hooks/use-updated-effect";
 
 interface TagComboboxProps extends useMultipleSelectProps {
-    onItemSelected?: (items: Array<Item>) => void
+    onSelectedItems?: (items: Item[]) => void
 }
 
 export default function TagCombobox({
     data,
     selectedItems: controlledSelectedItems,
     initialSelectedItems,
-    onItemSelected
+    onSelectedItems
 }: TagComboboxProps) {
 
     const {
@@ -37,12 +36,9 @@ export default function TagCombobox({
     } = useMultipleSelect({
         data,
         initialSelectedItems,
-        selectedItems: controlledSelectedItems
+        selectedItems: controlledSelectedItems,
+        onSelectedItems
     })
-
-    useUpdateEffect(() => {
-        onItemSelected && onItemSelected(selectedItems)
-    }, [selectedItems])
 
     return (
         <MultipleSelect className="w-full">

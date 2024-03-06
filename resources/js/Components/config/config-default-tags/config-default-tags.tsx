@@ -12,7 +12,7 @@ import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
 export default function ConfigDefaultTags() {
     const { config: { use_default_tags } } = usePage<{config: Config}>().props
 
-    const [selectedTags, setSelectedTags] = useState<Array<Item>>([])
+    const [selectedTags, setSelectedTags] = useState<Item[]>([])
     const {
         tags,
         defaultTags
@@ -29,7 +29,7 @@ export default function ConfigDefaultTags() {
         })
     }, 500)
 
-    const updateTags = (tags) => {
+    const updateTags = (tags: Item[]) => {
         setSelectedTags(tags)
         debounced(tags)
     }
