@@ -1,40 +1,46 @@
-import React, {useState} from "react";
-import {Article} from "@/types";
-import {useIsMobileBreakpoint} from "@/Hooks/use-media-query";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import React, { useState } from "react";
+
+import ArticleCardBookmarkForm from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form";
+import ArticleCardBookmarkIndicator from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator";
 import {
-    AlertDialog, AlertDialogCancel,
-    AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger
+    AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
-import ArticleCardBookmarkIndicator
-    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator";
-import ArticleCardBookmarkForm
-    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form";
-import {Button} from "@/Components/ui/button";
-import {ReloadIcon} from "@radix-ui/react-icons";
+import { Button } from "@/Components/ui/button";
 import {
-    Drawer, DrawerClose,
+    Drawer,
+    DrawerClose,
     DrawerContent,
-    DrawerDescription, DrawerFooter,
+    DrawerDescription,
+    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-    DrawerTrigger
+    DrawerTrigger,
 } from "@/Components/ui/drawer";
+import { useIsMobileBreakpoint } from "@/Hooks/use-media-query";
+import { Article } from "@/types";
 
 interface ArticleCardBookmarkProps {
-    article: Article
+    article: Article;
 }
 
-export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps) {
-    const [open, setOpen] = useState(false)
+export default function ArticleCardBookmark({
+    article,
+}: ArticleCardBookmarkProps) {
+    const [open, setOpen] = useState(false);
 
-    const { isMobile } = useIsMobileBreakpoint()
+    const { isMobile } = useIsMobileBreakpoint();
 
     if (isMobile) {
         return (
-            <Drawer open={open} onOpenChange={setOpen} >
+            <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild>
                     <div>
                         <ArticleCardBookmarkIndicator article={article} />
@@ -44,23 +50,33 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                     <div className="mx-auto w-full max-w-sm p-2">
                         <DrawerHeader className="mb-6">
                             <DrawerTitle>{article.title}</DrawerTitle>
-                            <DrawerDescription>Ajouter l'article à un ou plusieurs flux de veilles</DrawerDescription>
+                            <DrawerDescription>
+                                Ajouter l'article à un ou plusieurs flux de
+                                veilles
+                            </DrawerDescription>
                         </DrawerHeader>
                         <ArticleCardBookmarkForm
                             article={article}
                             onSuccess={() => setOpen(false)}
-                            footer={({loading, cannotSubmit}) => (
+                            footer={({ loading, cannotSubmit }) => (
                                 <DrawerFooter>
-                                    <Button type="submit" disabled={cannotSubmit}>
+                                    <Button
+                                        type="submit"
+                                        disabled={cannotSubmit}
+                                    >
                                         {loading ? (
                                             <>
                                                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                                                 Mise à jour
                                             </>
-                                        ) : "Mettre à jour"}
+                                        ) : (
+                                            "Mettre à jour"
+                                        )}
                                     </Button>
                                     <DrawerClose asChild>
-                                        <Button variant="outline">Cancel</Button>
+                                        <Button variant="outline">
+                                            Cancel
+                                        </Button>
                                     </DrawerClose>
                                 </DrawerFooter>
                             )}
@@ -68,14 +84,14 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                     </div>
                 </DrawerContent>
             </Drawer>
-        )
+        );
     }
 
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 <div>
-                   <ArticleCardBookmarkIndicator article={article} />
+                    <ArticleCardBookmarkIndicator article={article} />
                 </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -88,21 +104,23 @@ export default function ArticleCardBookmark({article}: ArticleCardBookmarkProps)
                 <ArticleCardBookmarkForm
                     article={article}
                     onSuccess={() => setOpen(false)}
-                    footer={({loading, cannotSubmit}) => (
+                    footer={({ loading, cannotSubmit }) => (
                         <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
                             <Button type="submit" disabled={cannotSubmit}>
                                 {loading ? (
-                                      <>
-                                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                          Mise à jour
-                                      </>
-                                ) : "Mettre à jour"}
+                                    <>
+                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                        Mise à jour
+                                    </>
+                                ) : (
+                                    "Mettre à jour"
+                                )}
                             </Button>
                         </AlertDialogFooter>
-                   )}
+                    )}
                 />
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }

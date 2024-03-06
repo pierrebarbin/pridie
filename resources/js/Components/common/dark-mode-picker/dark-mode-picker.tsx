@@ -1,26 +1,42 @@
-import {useTernaryDarkMode, UseTernaryDarkModeOutput} from "@/Hooks/use-ternary-dark-mode";
-import {DesktopIcon, MoonIcon, SunIcon} from "@radix-ui/react-icons";
-import {ToggleGroup, ToggleGroupItem} from "@/Components/ui/toggle-group";
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
+import {
+    useTernaryDarkMode,
+    TernaryDarkModeResult,
+} from "@/Hooks/use-ternary-dark-mode";
 
 interface DarkModePickerProps {
-    useTernaryDarkModeOutput?: UseTernaryDarkModeOutput
+    useTernaryDarkModeOutput?: TernaryDarkModeResult;
 }
 
-export default function DarkModePicker({ useTernaryDarkModeOutput }: DarkModePickerProps) {
+export default function DarkModePicker({
+    useTernaryDarkModeOutput,
+}: DarkModePickerProps) {
+    const { ternaryDarkMode, setTernaryDarkMode } =
+        useTernaryDarkModeOutput ?? useTernaryDarkMode();
 
-    const {ternaryDarkMode, setTernaryDarkMode} = useTernaryDarkModeOutput ?? useTernaryDarkMode()
-
-    type TernaryDarkMode = typeof ternaryDarkMode
+    type TernaryDarkMode = typeof ternaryDarkMode;
 
     const onChange = (value: string) => {
-        setTernaryDarkMode(value as TernaryDarkMode)
-    }
+        setTernaryDarkMode(value as TernaryDarkMode);
+    };
 
     return (
-        <ToggleGroup type="single" value={ternaryDarkMode} onValueChange={onChange}>
-            <ToggleGroupItem value="dark"><MoonIcon className="w-4 h-4" /></ToggleGroupItem>
-            <ToggleGroupItem value="system"><DesktopIcon className="w-4 h-4" /></ToggleGroupItem>
-            <ToggleGroupItem value="light"><SunIcon className="w-4 h-4" /></ToggleGroupItem>
+        <ToggleGroup
+            type="single"
+            value={ternaryDarkMode}
+            onValueChange={onChange}
+        >
+            <ToggleGroupItem value="dark">
+                <MoonIcon className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="system">
+                <DesktopIcon className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="light">
+                <SunIcon className="h-4 w-4" />
+            </ToggleGroupItem>
         </ToggleGroup>
-    )
+    );
 }

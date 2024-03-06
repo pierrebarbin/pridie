@@ -1,56 +1,66 @@
-import {Article, Reaction} from "@/types";
-import {router, usePage} from "@inertiajs/react";
-import {useState} from "react";
-import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker";
+import { router, usePage } from "@inertiajs/react";
+import { useState } from "react";
+
 import ArticleCardReactionList from "@/Components/article/article-card/article-card-reaction/article-card-reaction-list";
+import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker";
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
+import { Article, Reaction } from "@/types";
 
 interface ArticleCardReactionProps {
-    article: Article
+    article: Article;
 }
 
-export default function ArticleCardReaction({article}: ArticleCardReactionProps) {
+export default function ArticleCardReaction({
+    article,
+}: ArticleCardReactionProps) {
+    const [userReactions, setUserReactions] = useState(article.user_reactions);
+    const [reactions, setReactions] = useState(article.reactions);
 
-    const [userReactions, setUserReactions] = useState(article.user_reactions)
-    const [reactions, setReactions] = useState(article.reactions)
+    const { reactions: allReactions } = usePage<{ reactions: Reaction[] }>()
+        .props;
 
-    const { reactions: allReactions } = usePage<{reactions: Array<Reaction>}>().props
-
-    const debounced = useDebounceCallback<(reactions: {id: string}[]) => void>((reactions) => {
-        router.post(route('reactions.store', {article: article.id}), {
-            reactions: reactions.map((reaction) => reaction.id)
-        })
-    }, 1000)
+    const debounced = useDebounceCallback<
+        (reactions: { id: string }[]) => void
+    >((reactions) => {
+        router.post(route("reactions.store", { article: article.id }), {
+            reactions: reactions.map((reaction) => reaction.id),
+        });
+    }, 1000);
 
     const reactTo = (reaction: Reaction, add: boolean) => {
         setUserReactions((reactions) => {
-            const exists = reactions.find((react) => react.id === reaction.id) !== undefined
+            const exists =
+                reactions.find((react) => react.id === reaction.id) !==
+                undefined;
 
             if (exists) {
-                return reactions.filter((react) => react.id !== reaction.id)
+                return reactions.filter((react) => react.id !== reaction.id);
             }
 
-            const newReactions = [...reactions, {id: reaction.id}]
+            const newReactions = [...reactions, { id: reaction.id }];
 
-            debounced(newReactions)
+            debounced(newReactions);
 
-            return newReactions
-        })
+            return newReactions;
+        });
         setReactions((reactions) => {
-            const react = reactions.find((react) => react.id === reaction.id)
+            const react = reactions.find((react) => react.id === reaction.id);
 
             if (react !== undefined) {
                 return reactions.map((react) => {
                     if (react.id === reaction.id) {
-                        return {...react, count: add ? react.count + 1 : react.count - 1}
+                        return {
+                            ...react,
+                            count: add ? react.count + 1 : react.count - 1,
+                        };
                     }
-                    return react
-                })
+                    return react;
+                });
             }
 
-            return [...reactions, {id: reaction.id, count: 1}]
-        })
-    }
+            return [...reactions, { id: reaction.id, count: 1 }];
+        });
+    };
 
     return (
         <div className="flex gap-2">
@@ -66,5 +76,5 @@ export default function ArticleCardReaction({article}: ArticleCardReactionProps)
                 reactTo={reactTo}
             />
         </div>
-    )
+    );
 }

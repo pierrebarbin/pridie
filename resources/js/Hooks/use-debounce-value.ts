@@ -1,6 +1,9 @@
-import { useRef, useState } from 'react'
-import { DebouncedState, useDebounceCallback } from '@/Hooks/use-debounce-callback'
+import { useRef, useState } from "react";
 
+import {
+    DebouncedState,
+    useDebounceCallback,
+} from "@/Hooks/use-debounce-callback";
 
 /**
  * Returns a debounced version of the provided value, along with a function to update it.
@@ -18,32 +21,34 @@ import { DebouncedState, useDebounceCallback } from '@/Hooks/use-debounce-callba
  * const [debouncedValue, updateDebouncedValue] = useDebounceValue(inputValue, 500, { leading: true });
  */
 export function useDebounceValue<T>(
-  initialValue: T | (() => T),
-  delay: number,
-  options?: {
-    leading?: boolean
-    maxWait?: number
-    trailing?: boolean
-    equalityFn?: (left: T, right: T) => boolean
-  },
+    initialValue: T | (() => T),
+    delay: number,
+    options?: {
+        leading?: boolean;
+        maxWait?: number;
+        trailing?: boolean;
+        equalityFn?: (left: T, right: T) => boolean;
+    },
 ): [T, DebouncedState<(value: T) => void>] {
-  const eq = options?.equalityFn ?? ((left: T, right: T) => left === right)
-  const unwrappedInitialValue =
-    initialValue instanceof Function ? initialValue() : initialValue
-  const [debouncedValue, setDebouncedValue] = useState<T>(unwrappedInitialValue)
-  const previousValueRef = useRef<T | undefined>(unwrappedInitialValue)
+    const eq = options?.equalityFn ?? ((left: T, right: T) => left === right);
+    const unwrappedInitialValue =
+        initialValue instanceof Function ? initialValue() : initialValue;
+    const [debouncedValue, setDebouncedValue] = useState<T>(
+        unwrappedInitialValue,
+    );
+    const previousValueRef = useRef<T | undefined>(unwrappedInitialValue);
 
-  const updateDebouncedValue = useDebounceCallback(
-    setDebouncedValue,
-    delay,
-    options,
-  )
+    const updateDebouncedValue = useDebounceCallback(
+        setDebouncedValue,
+        delay,
+        options,
+    );
 
-  // Update the debounced value if the initial value changes
-  if (!eq(previousValueRef.current as T, unwrappedInitialValue)) {
-    updateDebouncedValue(unwrappedInitialValue)
-    previousValueRef.current = unwrappedInitialValue
-  }
+    // Update the debounced value if the initial value changes
+    if (!eq(previousValueRef.current as T, unwrappedInitialValue)) {
+        updateDebouncedValue(unwrappedInitialValue);
+        previousValueRef.current = unwrappedInitialValue;
+    }
 
-  return [debouncedValue, updateDebouncedValue]
+    return [debouncedValue, updateDebouncedValue];
 }

@@ -1,27 +1,28 @@
-import {create} from "zustand";
-import {Tag, Thread} from "@/types";
-import {Item} from "@/Components/form/multiple-select";
+import { create } from "zustand";
+
+import { Item } from "@/Components/form/multiple-select";
+import { Tag, Thread } from "@/types";
 
 interface FilterState {
-    tags: Array<Tag>
-    search: string
-    showBookmark: string
-    selectedTags: Array<Item>
-    defaultTags: Array<Tag>
-    updateSearch: (search: string) => void
-    updateTags: (tags: Array<Tag>) => void
-    updateSelectedTags: (tags: Array<Item>) => void
-    updateShowBookmark: (show: string) => void
-    updateDefaultTags: (tags: Array<Tag>) => void
-    resetFilters: () => void
+    tags: Tag[];
+    search: string;
+    showBookmark: string;
+    selectedTags: Item[];
+    defaultTags: Tag[];
+    updateSearch: (search: string) => void;
+    updateTags: (tags: Tag[]) => void;
+    updateSelectedTags: (tags: Item[]) => void;
+    updateShowBookmark: (show: string) => void;
+    updateDefaultTags: (tags: Tag[]) => void;
+    resetFilters: () => void;
 }
 
 export interface ThreadState {
-    currentThread: Thread|null
-    threads: Array<Thread>
-    changeCurrentThreadTo: (tread: Thread) => void
-    removeCurrentThread: () => void
-    setThreads: (threads: Array<Thread>) => void
+    currentThread: Thread | null;
+    threads: Thread[];
+    changeCurrentThreadTo: (tread: Thread) => void;
+    removeCurrentThread: () => void;
+    setThreads: (threads: Thread[]) => void;
 }
 
 export const useFilterStore = create<FilterState & ThreadState>((set, get) => ({
@@ -33,30 +34,33 @@ export const useFilterStore = create<FilterState & ThreadState>((set, get) => ({
     showBookmark: "yes",
     selectedTags: [],
     updateSearch: (search) => set({ search }),
-    updateTags: (tags) => set({tags}),
-    updateSelectedTags: (tags) => set({selectedTags: tags}),
-    updateShowBookmark: (show) => set({showBookmark: show}),
-    updateDefaultTags: (tags) => set({defaultTags: tags}),
+    updateTags: (tags) => set({ tags }),
+    updateSelectedTags: (tags) => set({ selectedTags: tags }),
+    updateShowBookmark: (show) => set({ showBookmark: show }),
+    updateDefaultTags: (tags) => set({ defaultTags: tags }),
     changeCurrentThreadTo: (thread) => {
         set({
             currentThread: thread,
             search: "",
-            selectedTags: []
-        })
+            selectedTags: [],
+        });
     },
     removeCurrentThread: () => {
         set({
             currentThread: null,
             search: "",
-            selectedTags: get().defaultTags.map((tag) => ({key: tag.id, value: tag.label})),
-        })
+            selectedTags: get().defaultTags.map((tag) => ({
+                key: tag.id,
+                value: tag.label,
+            })),
+        });
     },
     setThreads: (threads) => set({ threads }),
     resetFilters: () => {
         set({
             search: "",
             selectedTags: [],
-            currentThread: null
-        })
-    }
-}))
+            currentThread: null,
+        });
+    },
+}));

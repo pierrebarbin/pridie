@@ -1,16 +1,23 @@
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/Components/ui/card";
+import { marked } from "marked";
 import React from "react";
-import {Article} from "@/types";
-import {marked} from "marked";
+
 import ArticleCardBookmark from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark";
 import ArticleCardReaction from "@/Components/article/article-card/article-card-reaction/article-card-reaction";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/Components/ui/card";
+import { Article } from "@/types";
 
 interface ArticleCardProps {
-    article: Article
+    article: Article;
 }
 
-export default function ArticleCard({article}: ArticleCardProps) {
-
+export default function ArticleCard({ article }: ArticleCardProps) {
     const renderer = new marked.Renderer();
     const linkRenderer = renderer.link;
     renderer.link = (href, title, text) => {
@@ -22,15 +29,19 @@ export default function ArticleCard({article}: ArticleCardProps) {
     return (
         <Card className="relative h-[400px]">
             <CardHeader>
-                <CardTitle className="truncate" title={article.title}>{article.title}</CardTitle>
+                <CardTitle className="truncate" title={article.title}>
+                    {article.title}
+                </CardTitle>
                 <CardDescription>{article.created_at}</CardDescription>
             </CardHeader>
-            <CardContent className="prose dark:prose-invert overflow-hidden" dangerouslySetInnerHTML={{__html: html}}>
-            </CardContent>
-            <CardFooter className="absolute p-4 pt-4 bg-card flex justify-between bottom-0 left-0 right-0 rounded-xl after:content-[''] after:absolute after:top-[-20px] after:right-0 after:left-0 after:h-[20px] after:bg-gradient-to-t after:from-gray-50 dark:after:from-neutral-900">
+            <CardContent
+                className="prose overflow-hidden dark:prose-invert"
+                dangerouslySetInnerHTML={{ __html: html }}
+            ></CardContent>
+            <CardFooter className="absolute bottom-0 left-0 right-0 flex justify-between rounded-xl bg-card p-4 pt-4 after:absolute after:left-0 after:right-0 after:top-[-20px] after:h-[20px] after:bg-gradient-to-t after:from-gray-50 after:content-[''] dark:after:from-neutral-900">
                 <ArticleCardReaction article={article} />
                 <ArticleCardBookmark article={article} />
             </CardFooter>
         </Card>
-    )
+    );
 }

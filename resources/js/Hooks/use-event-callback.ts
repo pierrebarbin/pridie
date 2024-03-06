@@ -1,6 +1,6 @@
-import { useCallback, useRef } from 'react'
-import { useIsomorphicLayoutEffect } from '@/Hooks/use-isomorphic-layout-effect'
+import { useCallback, useRef } from "react";
 
+import { useIsomorphicLayoutEffect } from "@/Hooks/use-isomorphic-layout-effect";
 
 /**
  * A hook for creating a memoized event callback.
@@ -15,15 +15,15 @@ import { useIsomorphicLayoutEffect } from '@/Hooks/use-isomorphic-layout-effect'
  * });
  */
 export function useEventCallback<Args extends unknown[], R>(
-  fn: (...args: Args) => R,
+    fn: (...args: Args) => R,
 ): (...args: Args) => R {
-  const ref = useRef<typeof fn>(() => {
-    throw new Error('Cannot call an event handler while rendering.')
-  })
+    const ref = useRef<typeof fn>(() => {
+        throw new Error("Cannot call an event handler while rendering.");
+    });
 
-  useIsomorphicLayoutEffect(() => {
-    ref.current = fn
-  }, [fn])
+    useIsomorphicLayoutEffect(() => {
+        ref.current = fn;
+    }, [fn]);
 
-  return useCallback((...args: Args) => ref.current(...args), [ref])
+    return useCallback((...args: Args) => ref.current(...args), [ref]);
 }

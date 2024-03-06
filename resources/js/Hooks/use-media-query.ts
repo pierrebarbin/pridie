@@ -1,18 +1,18 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import { useIsomorphicLayoutEffect } from '@/Hooks/use-isomorphic-layout-effect'
+import { useIsomorphicLayoutEffect } from "@/Hooks/use-isomorphic-layout-effect";
 
-export type UseMediaQueryOptions = {
-  defaultValue?: boolean
-  initializeWithValue?: boolean
+export interface UseMediaQueryOptions {
+    defaultValue?: boolean;
+    initializeWithValue?: boolean;
 }
 
-const IS_SERVER = typeof window === 'undefined'
+const IS_SERVER = typeof window === "undefined";
 
 export function useMediaQuery(
-  query: string,
-  options?: UseMediaQueryOptions,
-): boolean
+    query: string,
+    options?: UseMediaQueryOptions,
+): boolean;
 /**
  * Custom hook for tracking the state of a media query.
  * @deprecated - this useMediaQuery's signature is deprecated, it now accepts an query parameter and an options object.
@@ -25,7 +25,7 @@ export function useMediaQuery(
  * const isSmallScreen = useMediaQuery('(max-width: 600px)');
  * // Use `isSmallScreen` to conditionally apply styles or logic based on the screen size.
  */
-export function useMediaQuery(query: string, defaultValue: boolean): boolean // defaultValue should be false by default
+export function useMediaQuery(query: string, defaultValue: boolean): boolean; // defaultValue should be false by default
 /**
  * Custom hook for tracking the state of a media query.
  * @param {string} query - The media query to track.
@@ -40,65 +40,65 @@ export function useMediaQuery(query: string, defaultValue: boolean): boolean // 
  * // Use `isSmallScreen` to conditionally apply styles or logic based on the screen size.
  */
 export function useMediaQuery(
-  query: string,
-  options?: boolean | UseMediaQueryOptions,
+    query: string,
+    options?: boolean | UseMediaQueryOptions,
 ): boolean {
-  // TODO: Refactor this code after the deprecated signature has been removed.
-  const defaultValue =
-    typeof options === 'boolean' ? options : options?.defaultValue ?? false
-  const initializeWithValue =
-    typeof options === 'boolean'
-      ? undefined
-      : options?.initializeWithValue ?? undefined
+    // TODO: Refactor this code after the deprecated signature has been removed.
+    const defaultValue =
+        typeof options === "boolean" ? options : options?.defaultValue ?? false;
+    const initializeWithValue =
+        typeof options === "boolean"
+            ? undefined
+            : options?.initializeWithValue ?? undefined;
 
-  const getMatches = (query: string): boolean => {
-    if (IS_SERVER) {
-      return defaultValue
-    }
-    return window.matchMedia(query).matches
-  }
+    const getMatches = (query: string): boolean => {
+        if (IS_SERVER) {
+            return defaultValue;
+        }
+        return window.matchMedia(query).matches;
+    };
 
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (initializeWithValue) {
-      return getMatches(query)
-    }
-    return defaultValue
-  })
+    const [matches, setMatches] = useState<boolean>(() => {
+        if (initializeWithValue) {
+            return getMatches(query);
+        }
+        return defaultValue;
+    });
 
-  /** Handles the change event of the media query. */
-  function handleChange() {
-    setMatches(getMatches(query))
-  }
-
-  useIsomorphicLayoutEffect(() => {
-    const matchMedia = window.matchMedia(query)
-
-    // Triggered at the first client-side load and if query changes
-    handleChange()
-
-    // Use deprecated `addListener` and `removeListener` to support Safari < 14 (#135)
-    if (matchMedia.addListener) {
-      matchMedia.addListener(handleChange)
-    } else {
-      matchMedia.addEventListener('change', handleChange)
+    /** Handles the change event of the media query. */
+    function handleChange() {
+        setMatches(getMatches(query));
     }
 
-    return () => {
-      if (matchMedia.removeListener) {
-        matchMedia.removeListener(handleChange)
-      } else {
-        matchMedia.removeEventListener('change', handleChange)
-      }
-    }
-  }, [query])
+    useIsomorphicLayoutEffect(() => {
+        const matchMedia = window.matchMedia(query);
 
-  return matches
+        // Triggered at the first client-side load and if query changes
+        handleChange();
+
+        // Use deprecated `addListener` and `removeListener` to support Safari < 14 (#135)
+        if (matchMedia.addListener) {
+            matchMedia.addListener(handleChange);
+        } else {
+            matchMedia.addEventListener("change", handleChange);
+        }
+
+        return () => {
+            if (matchMedia.removeListener) {
+                matchMedia.removeListener(handleChange);
+            } else {
+                matchMedia.removeEventListener("change", handleChange);
+            }
+        };
+    }, [query]);
+
+    return matches;
 }
 
 export function useIsMobileBreakpoint() {
-    const matches = useMediaQuery('(min-width: 1130px)')
+    const matches = useMediaQuery("(min-width: 1130px)");
 
     return {
-        isMobile: !matches
-    }
+        isMobile: !matches,
+    };
 }

@@ -1,40 +1,55 @@
-import {Popover, PopoverContent, PopoverTrigger} from "@/Components/ui/popover";
-import {Button} from "@/Components/ui/button";
-import {RocketIcon} from "@radix-ui/react-icons";
-import {Reaction} from "@/types";
-import {useState} from "react";
+import { RocketIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+
+import { Button } from "@/Components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/Components/ui/popover";
+import { Reaction } from "@/types";
 
 interface ArticleCardReactionPickerProps {
-    allReactions: Array<Reaction>
-    userReactions: Array<{id: string}>
-    reactTo: (reaction: Reaction, add: boolean) => void
+    allReactions: Reaction[];
+    userReactions: { id: string }[];
+    reactTo: (reaction: Reaction, add: boolean) => void;
 }
 
-export default function ArticleCardReactionPicker({allReactions, userReactions, reactTo}: ArticleCardReactionPickerProps) {
-    const [open, setOpen] = useState(false)
+export default function ArticleCardReactionPicker({
+    allReactions,
+    userReactions,
+    reactTo,
+}: ArticleCardReactionPickerProps) {
+    const [open, setOpen] = useState(false);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button variant={open ? "secondary" : "ghost"} size="sm">
-                    <RocketIcon className="w-4 h-4" />
+                    <RocketIcon className="h-4 w-4" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="flex gap-2 w-fit p-1" side="top">
+            <PopoverContent className="flex w-fit gap-2 p-1" side="top">
                 {allReactions.map((reaction) => {
-                    const reacted = userReactions.find((userReaction) => userReaction.id === reaction.id)
+                    const reacted = userReactions.find(
+                        (userReaction) => userReaction.id === reaction.id,
+                    );
                     return (
                         <Button
                             key={reaction.id}
-                            variant={reacted !== undefined ? "secondary" : "ghost"}
+                            variant={
+                                reacted !== undefined ? "secondary" : "ghost"
+                            }
                             size="sm"
-                            onClick={() => reactTo(reaction, reacted === undefined)}
+                            onClick={() =>
+                                reactTo(reaction, reacted === undefined)
+                            }
                         >
                             {reaction.image}
                         </Button>
-                    )
+                    );
                 })}
             </PopoverContent>
         </Popover>
-    )
+    );
 }

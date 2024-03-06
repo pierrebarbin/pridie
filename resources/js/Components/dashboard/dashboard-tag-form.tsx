@@ -1,59 +1,70 @@
-import {Card, CardContent, CardHeader} from "@/Components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { router, usePage } from "@inertiajs/react";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import React from "react";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/Components/ui/form";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {router, usePage} from "@inertiajs/react";
-import {Tag} from "@/types";
-import {Input} from "@/Components/ui/input";
-import {Button} from "@/Components/ui/button";
-import {Badge} from "@/Components/ui/badge";
-import {Cross2Icon} from "@radix-ui/react-icons";
-import {toast} from "sonner";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/Components/ui/form";
+import { Input } from "@/Components/ui/input";
+import { Tag } from "@/types";
 
 const formSchema = z.object({
-    label: z.string().min(1, {
-        message: "Le titre est requis",
-    }).max(255, "Le titre est trop long")
-})
+    label: z
+        .string()
+        .min(1, {
+            message: "Le titre est requis",
+        })
+        .max(255, "Le titre est trop long"),
+});
 
 export default function DashboardTagForm() {
-
-    const {tags} = usePage<{tags: Array<Tag>}>().props
+    const { tags } = usePage<{ tags: Tag[] }>().props;
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            label: ""
+            label: "",
         },
-    })
+    });
 
     function create(values: z.infer<typeof formSchema>) {
-        router.post(route('tags.store'), values, {
+        router.post(route("tags.store"), values, {
             onSuccess: () => {
-                form.reset()
-                toast(`Article ${values.label} ajouté`)
-            }
-        })
+                form.reset();
+                toast(`Article ${values.label} ajouté`);
+            },
+        });
     }
 
     function remove(tag: Tag) {
-        router.post(route('tags.destroy', {tag: tag.id}), undefined, {
+        router.post(route("tags.destroy", { tag: tag.id }), undefined, {
             onSuccess: () => {
-                toast(`Tag ${tag.label} supprimé`)
-            }
-        })
+                toast(`Tag ${tag.label} supprimé`);
+            },
+        });
     }
 
     return (
         <Card>
-            <CardHeader>
-                Tags
-            </CardHeader>
+            <CardHeader>Tags</CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(create)} className="space-y-4">
+                    <form
+                        onSubmit={form.handleSubmit(create)}
+                        className="space-y-4"
+                    >
                         <FormField
                             control={form.control}
                             name="label"
@@ -61,7 +72,10 @@ export default function DashboardTagForm() {
                                 <FormItem>
                                     <FormLabel>Label</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="label..." {...field} />
+                                        <Input
+                                            placeholder="label..."
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -70,17 +84,25 @@ export default function DashboardTagForm() {
                         <Button type="submit">Ajouter</Button>
                     </form>
                 </Form>
-                <div className="mt-4 inline-flex gap-2 items-center flex-wrap p-1.5">
+                <div className="mt-4 inline-flex flex-wrap items-center gap-2 p-1.5">
                     {tags.map((tag) => (
-                        <Badge key={tag.id} variant="outline" className="flex items-center gap-2 pr-0.5">
+                        <Badge
+                            key={tag.id}
+                            variant="outline"
+                            className="flex items-center gap-2 pr-0.5"
+                        >
                             {tag.label}
-                            <Button className="h-auto p-1" variant="ghost" onClick={() => remove(tag)}>
-                                <Cross2Icon className="w-4 h-4" />
+                            <Button
+                                className="h-auto p-1"
+                                variant="ghost"
+                                onClick={() => remove(tag)}
+                            >
+                                <Cross2Icon className="h-4 w-4" />
                             </Button>
                         </Badge>
                     ))}
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }
