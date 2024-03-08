@@ -1,16 +1,14 @@
 import { create } from "zustand";
 
 import { Item } from "@/Components/form/multiple-select";
-import { Tag, Thread } from "@/types";
+import { Pagination, Tag, Thread } from "@/types";
 
 interface FilterState {
-    tags: Tag[];
     search: string;
     showBookmark: string;
     selectedTags: Item[];
     defaultTags: Tag[];
     updateSearch: (search: string) => void;
-    updateTags: (tags: Tag[]) => void;
     updateSelectedTags: (tags: Item[]) => void;
     updateShowBookmark: (show: string) => void;
     updateDefaultTags: (tags: Tag[]) => void;
@@ -28,14 +26,13 @@ export interface ThreadState {
 export const useFilterStore = create<FilterState & ThreadState>((set, get) => ({
     currentThread: null,
     threads: [],
-    tags: [],
     defaultTags: [],
     search: "",
     showBookmark: "yes",
     selectedTags: [],
     updateSearch: (search) => set({ search }),
-    updateTags: (tags) => set({ tags }),
     updateSelectedTags: (tags) => set({ selectedTags: tags }),
+    updateTagsMeta: (meta) => set({tagsMeta: meta}),
     updateShowBookmark: (show) => set({ showBookmark: show }),
     updateDefaultTags: (tags) => set({ defaultTags: tags }),
     changeCurrentThreadTo: (thread) => {

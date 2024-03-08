@@ -21,11 +21,11 @@ class ArticleController extends Controller
     {
         $config = $request->user()->config;
         $reactions = Reaction::all();
-        $tags = Tag::all();
 
         $selectedTagsId = Arr::get($request->query('filter', []), 'tags', '');
-        $selectedTags = $tags
+        $selectedTags = Tag::query()
             ->whereIn('id', explode(',', $selectedTagsId))
+            ->get()
             ->map(fn ($item) => ['key' => $item->id, 'value' => $item->label])
             ->toArray();
 
@@ -34,12 +34,11 @@ class ArticleController extends Controller
         Arr::set($params, 'filter.tags', $selectedTags);
 
         return Inertia::render('Index', [
-            'tags' => $tags,
-            'filters' => $params,
-            'reactions' => $reactions,
-            'threads' => $request->user()->threads,
-            'defaultTags' => $config->use_default_tags ? $request->user()->defaultTags : [],
-            'config' => $config,
+            'filters' =>  fn () => $params,
+            'reactions' =>  fn () => $reactions,
+            'threads' =>  fn () => $request->user()->threads,
+            'defaultTags' =>  fn () => $config->use_default_tags ? $request->user()->defaultTags : [],
+            'config' =>  fn () => $config,
         ]);
     }
 

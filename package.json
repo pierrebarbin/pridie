@@ -12,6 +12,9 @@
         "/node_modules",
         "/public/build"
     ],
+    "prettier": {
+        "semi": false
+    },
     "devDependencies": {
         "@headlessui/react": "^1.7.18",
         "@inertiajs/react": "^1.0.15",

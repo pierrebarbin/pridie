@@ -38,20 +38,19 @@ interface Thread {
 
 export interface Pagination<T> {
     data: T[];
-    links: {
-        first: string;
-        last: string;
-        next: string | null;
-        prev: string | null;
-    };
-    meta: {
-        current_page: number;
-        from: number;
-        last_page: number;
-        per_page: number;
-        to: number;
-        total: number;
-    };
+    links: string[]
+    path: string
+    current_page: number;
+    from: number;
+    last_page: number;
+    per_page: number;
+    to: number;
+    total: number;
+    next: number
+    first_page_url: string
+    last_page_url: string
+    next_page_url: string|null
+    last_page_url: string|null
 }
 
 export interface CursorPagination<T> {

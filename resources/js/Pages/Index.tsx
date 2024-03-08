@@ -7,7 +7,7 @@ import { Item } from "@/Components/form/multiple-select";
 import Menu from "@/Components/menu/menu";
 import AppLayout from "@/Layouts/app-layout";
 import { useFilterStore } from "@/Stores/filter-store";
-import { PageProps, Tag, Thread } from "@/types";
+import { PageProps, Pagination, Tag, Thread } from "@/types";
 
 export default function Index({
     tags,
@@ -15,7 +15,6 @@ export default function Index({
     threads,
     defaultTags,
 }: PageProps<{
-    tags: Tag[];
     filters: {
         cursor?: string;
         filter: {
@@ -29,7 +28,6 @@ export default function Index({
 }>) {
     const {
         setThreads,
-        updateTags,
         updateSearch,
         updateShowBookmark,
         updateSelectedTags,
@@ -38,7 +36,6 @@ export default function Index({
         useShallow((state) => ({
             setThreads: state.setThreads,
             updateSearch: state.updateSearch,
-            updateTags: state.updateTags,
             updateShowBookmark: state.updateShowBookmark,
             updateSelectedTags: state.updateSelectedTags,
             updateDefaultTags: state.updateDefaultTags,
@@ -46,7 +43,6 @@ export default function Index({
     );
 
     useEffect(() => {
-        updateTags(tags);
         updateSearch(filters.filter.title ?? "");
         updateShowBookmark(filters.filter.bookmark ?? "yes");
     }, []);

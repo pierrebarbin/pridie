@@ -7,11 +7,14 @@ import { Label } from "@/Components/ui/label";
 import { Separator } from "@/Components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import { useFilterStore } from "@/Stores/filter-store";
+import { router } from "@inertiajs/react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { CursorPagination, Pagination, Tag } from "@/types";
 
 export default function MenuFilters() {
     const {
         search,
-        tags,
         updateSearch,
         updateSelectedTags,
         showBookmark,
@@ -20,7 +23,6 @@ export default function MenuFilters() {
     } = useFilterStore(
         useShallow((state) => ({
             search: state.search,
-            tags: state.tags,
             updateSearch: state.updateSearch,
             updateSelectedTags: state.updateSelectedTags,
             updateShowBookmark: state.updateShowBookmark,
@@ -29,7 +31,23 @@ export default function MenuFilters() {
         })),
     );
 
-    const items = tags.map((tag) => ({ key: tag.id, value: tag.label }));
+    const {
+        data,
+        fetchNextPage,
+      } = useInfiniteQuery<CursorPagination<Tag>>({
+        queryKey: ["tags"],
+        queryFn: async ({ pageParam }) => {
+            const result = await axios.get(`${route("api.tags")}?cursor=${pageParam}`)
+
+            return result.data
+        },
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+      })
+
+    const rows = data ? data.pages.flatMap((d) => d.data) : [];
+console.log(data)
+    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }));
 
     return (
         <div className="space-y-4">
@@ -49,6 +67,9 @@ export default function MenuFilters() {
             <TagCombobox
                 data={items}
                 selectedItems={[selectedTags, updateSelectedTags]}
+                onEndReached={() => {
+                   fetchNextPage()
+                }}
             />
             <Separator />
             <div>

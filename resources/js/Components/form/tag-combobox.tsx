@@ -16,7 +16,8 @@ import { Button } from "@/Components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface TagComboboxProps extends useMultipleSelectProps {
-    onSelectedItems?: (items: Item[]) => void;
+    onSelectedItems?: (items: Item[]) => void
+    onEndReached?: () => void
 }
 
 export default function TagCombobox({
