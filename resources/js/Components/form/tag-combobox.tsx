@@ -1,5 +1,5 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
-import React from "react";
+import { UIEvent, useCallback, useEffect } from "react";
 
 import {
     Item,
@@ -14,9 +14,11 @@ import {
 } from "@/Components/form/multiple-select";
 import { Button } from "@/Components/ui/button";
 import { cn } from "@/lib/utils";
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
 
 interface TagComboboxProps extends useMultipleSelectProps {
     onSelectedItems?: (items: Item[]) => void
+    onSearch?: (value: string) => void
     onEndReached?: () => void
 }
 
@@ -25,7 +27,17 @@ export default function TagCombobox({
     selectedItems: controlledSelectedItems,
     initialSelectedItems,
     onSelectedItems,
+    onSearch,
+    onEndReached
 }: TagComboboxProps) {
+
+    const debounceCallback = useCallback((value: string) => {
+        console.log('???')
+        onSearch && onSearch(value)
+    }, [])
+
+    const debounced = useDebounceCallback(debounceCallback)
+
     const {
         getLabelProps,
         getSelectedItemProps,
@@ -37,13 +49,23 @@ export default function TagCombobox({
         getMenuProps,
         getItemProps,
         highlightedIndex,
-        items,
+        items
     } = useMultipleSelect({
         data,
         initialSelectedItems,
         selectedItems: controlledSelectedItems,
         onSelectedItems,
-    });
+        remoteSearch: true,
+        onInput: debounced
+    })
+
+    const handleScroll = (e: UIEvent<HTMLUListElement>) => {
+        const target = (e.target as HTMLUListElement)
+        const bottom = target.scrollHeight - target.scrollTop < (target.clientHeight + 20);
+        if (bottom) {
+            onEndReached && onEndReached()
+         }
+    }
 
     return (
         <MultipleSelect className="w-full">
@@ -52,7 +74,7 @@ export default function TagCombobox({
                 placeholder="Recherchez un tag..."
                 className="mt-2 w-full"
                 {...getInputProps(
-                    getDropdownProps({ preventKeyAction: isOpen }),
+                    getDropdownProps({ preventKeyAction: isOpen,  }),
                 )}
             />
             <div
@@ -91,20 +113,19 @@ export default function TagCombobox({
                 )}
             </div>
             <MultipleSelectDropdown
-                className={cn(!(isOpen && items.length) && "hidden")}
+                className={cn("max-h-32", !(isOpen && items.length) && "hidden")}
+                onScroll={handleScroll}
                 {...getMenuProps()}
             >
-                {isOpen
-                    ? items.map((item, index) => (
-                          <MultipleSelectDropdownItem
-                              highlighted={highlightedIndex === index}
-                              key={`${item.value}${index}`}
-                              {...getItemProps({ item, index })}
-                          >
-                              <span>{item.value}</span>
-                          </MultipleSelectDropdownItem>
-                      ))
-                    : null}
+                {items.map((item, index) => (
+                    <MultipleSelectDropdownItem
+                        highlighted={highlightedIndex === index}
+                        key={`${item.value}${index}`}
+                        {...getItemProps({ item, index })}
+                    >
+                        <span>{item.value}</span>
+                    </MultipleSelectDropdownItem>
+                ))}
             </MultipleSelectDropdown>
         </MultipleSelect>
     );

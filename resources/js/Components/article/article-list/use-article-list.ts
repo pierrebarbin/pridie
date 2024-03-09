@@ -78,7 +78,7 @@ export function useArticleList({
             };
 
             const cleanParams = Object.fromEntries(
-                Object.entries(params).filter(([key, value]) => value !== ""),
+                Object.entries(params).filter(([value]) => value !== ""),
             );
 
             const urlParams = new URLSearchParams(cleanParams);

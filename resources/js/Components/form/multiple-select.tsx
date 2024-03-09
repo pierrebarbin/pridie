@@ -21,6 +21,8 @@ export interface useMultipleSelectProps {
     initialSelectedItems?: Item[];
     selectedItems?: [Item[], Action];
     onSelectedItems?: (items: Item[]) => void;
+    remoteSearch?: boolean
+    onInput?: (value: string) => void
 }
 
 function getFilteredItems(
@@ -43,14 +45,16 @@ const useMultipleSelect = ({
     initialSelectedItems,
     selectedItems: controlledSelectedItems,
     onSelectedItems,
+    remoteSearch = false,
+    onInput
 }: useMultipleSelectProps) => {
     const [inputValue, setInputValue] = useState("");
     const [selectedItems, setSelectedItems] =
         controlledSelectedItems ?? useState(initialSelectedItems ?? []);
 
     const items = useMemo(
-        () => getFilteredItems(data, selectedItems, inputValue),
-        [data, selectedItems, inputValue],
+        () => remoteSearch ? data : getFilteredItems(data, selectedItems, inputValue),
+        [remoteSearch, data, selectedItems, inputValue],
     );
 
     const multipleSelection = useMultipleSelection({
@@ -115,11 +119,13 @@ const useMultipleSelect = ({
                                 newSelectedItem,
                             ]);
                         setInputValue("");
+                        onInput && onInput("")
                     }
                     break;
 
                 case useCombobox.stateChangeTypes.InputChange:
                     setInputValue(newInputValue ?? "");
+                    onInput && onInput(newInputValue ?? "")
                     break;
                 default:
                     break;

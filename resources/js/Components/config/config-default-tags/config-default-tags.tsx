@@ -1,5 +1,5 @@
 import { router, usePage } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { Item } from "@/Components/form/multiple-select";
@@ -8,31 +8,61 @@ import { Label } from "@/Components/ui/label";
 import { Switch } from "@/Components/ui/switch";
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
 import { useFilterStore } from "@/Stores/filter-store";
-import { Config, Tag } from "@/types";
+import { Config, CursorPagination, Tag } from "@/types";
+import axios from "axios";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export default function ConfigDefaultTags() {
+    const [tagSearch, setTagSearch] = useState("")
+
     const {
         config: { use_default_tags },
     } = usePage<{ config: Config }>().props;
 
     const [selectedTags, setSelectedTags] = useState<Item[]>([]);
-    const { tags, defaultTags } = useFilterStore(
+    const { defaultTags } = useFilterStore(
         useShallow((state) => ({
-            tags: state.tags,
             defaultTags: state.defaultTags,
         })),
     );
-    const debounced = useDebounceCallback<(selectedTags: Item[]) => void>(
-        (selectedTags) => {
-            if (selectedTags.length === defaultTags.length) {
-                return;
-            }
-            router.put(route("config.tags.update"), {
-                tags: selectedTags.map((tag) => tag.key),
-            });
+
+    const debounceCallback = useCallback((selectedTags: Item[]) => {
+        if (selectedTags.length === defaultTags.length) {
+            return;
+        }
+        router.put(route("config.tags.update"), {
+            tags: selectedTags.map((tag) => tag.key),
+        });
+    }, [selectedTags, defaultTags])
+
+    const debounced = useDebounceCallback(debounceCallback,500);
+
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+      } = useInfiniteQuery<CursorPagination<Tag>>({
+        queryKey: ["tags", {tagSearch}],
+        queryFn: async ({ pageParam }) => {
+            const params = {
+                cursor: (pageParam as string),
+                "filter[label]": tagSearch,
+            };
+
+            const cleanParams = Object.fromEntries(
+                Object.entries(params).filter(([value]) => value !== ""),
+            );
+
+            const urlParams = new URLSearchParams(cleanParams);
+
+            const result = await axios.get(`${route("api.tags")}?${urlParams.toString()}`)
+
+            return result.data
         },
-        500,
-    );
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+      })
 
     const updateTags = (tags: Item[]) => {
         setSelectedTags(tags);
@@ -49,9 +79,18 @@ export default function ConfigDefaultTags() {
         router.post(route("config.tags.store"), {
             state: checked,
         });
-    };
+    }
 
-    const items = tags.map((tag) => ({ key: tag.id, value: tag.label }));
+    const handleEndReached = () => {
+        if (!hasNextPage || isFetchingNextPage) {
+            return
+        }
+       fetchNextPage()
+      }
+
+    const rows = data ? data.pages.flatMap((d) => d.data) : [];
+
+    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }));
 
     return (
         <div className="rounded-lg border p-3 shadow-sm">
@@ -78,6 +117,8 @@ export default function ConfigDefaultTags() {
                 <TagCombobox
                     data={items}
                     selectedItems={[selectedTags, updateTags]}
+                    onSearch={setTagSearch}
+                    onEndReached={handleEndReached}
                 />
             </div>
         </div>

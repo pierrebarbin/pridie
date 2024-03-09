@@ -1,5 +1,5 @@
 import { router, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import ArticleCardReactionList from "@/Components/article/article-card/article-card-reaction/article-card-reaction-list";
 import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker";
@@ -19,13 +19,13 @@ export default function ArticleCardReaction({
     const { reactions: allReactions } = usePage<{ reactions: Reaction[] }>()
         .props;
 
-    const debounced = useDebounceCallback<
-        (reactions: { id: string }[]) => void
-    >((reactions) => {
+    const debounceCallback = useCallback((reactions: { id: string }[]) => {
         router.post(route("reactions.store", { article: article.id }), {
             reactions: reactions.map((reaction) => reaction.id),
         });
-    }, 1000);
+    }, [article])
+
+    const debounced = useDebounceCallback(debounceCallback, 1000);
 
     const reactTo = (reaction: Reaction, add: boolean) => {
         setUserReactions((reactions) => {

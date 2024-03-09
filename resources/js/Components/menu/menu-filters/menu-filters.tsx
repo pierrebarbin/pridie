@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import TagCombobox from "@/Components/form/tag-combobox";
@@ -7,12 +7,13 @@ import { Label } from "@/Components/ui/label";
 import { Separator } from "@/Components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import { useFilterStore } from "@/Stores/filter-store";
-import { router } from "@inertiajs/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { CursorPagination, Pagination, Tag } from "@/types";
+import { CursorPagination, Tag } from "@/types";
 
 export default function MenuFilters() {
+    const [tagSearch, setTagSearch] = useState("")
+
     const {
         search,
         updateSearch,
@@ -34,19 +35,39 @@ export default function MenuFilters() {
     const {
         data,
         fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
       } = useInfiniteQuery<CursorPagination<Tag>>({
-        queryKey: ["tags"],
+        queryKey: ["tags", {tagSearch}],
         queryFn: async ({ pageParam }) => {
-            const result = await axios.get(`${route("api.tags")}?cursor=${pageParam}`)
+            const params = {
+                cursor: (pageParam as string),
+                "filter[label]": tagSearch,
+            };
+
+            const cleanParams = Object.fromEntries(
+                Object.entries(params).filter(([value]) => value !== ""),
+            );
+
+            const urlParams = new URLSearchParams(cleanParams);
+
+            const result = await axios.get(`${route("api.tags")}?${urlParams.toString()}`)
 
             return result.data
         },
-        initialPageParam: 1,
+        initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
       })
 
+      const handleEndReached = () => {
+        if (!hasNextPage || isFetchingNextPage) {
+            return
+        }
+       fetchNextPage()
+      }
+
     const rows = data ? data.pages.flatMap((d) => d.data) : [];
-console.log(data)
+
     const items = rows.map((tag) => ({ key: tag.id, value: tag.label }));
 
     return (
@@ -67,9 +88,8 @@ console.log(data)
             <TagCombobox
                 data={items}
                 selectedItems={[selectedTags, updateSelectedTags]}
-                onEndReached={() => {
-                   fetchNextPage()
-                }}
+                onSearch={setTagSearch}
+                onEndReached={handleEndReached}
             />
             <Separator />
             <div>
