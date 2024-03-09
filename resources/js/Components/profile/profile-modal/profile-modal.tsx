@@ -9,6 +9,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
+import ProfileDeleteForm from "../profile-delete-form/profile-delete-form"
 
 interface ProfileModalProps {
     children: ReactElement
@@ -23,8 +24,10 @@ export default function ProfileModal({ children }: ProfileModalProps) {
                     <AlertDialogTitle>Profile</AlertDialogTitle>
                 </AlertDialogHeader>
 
+                <ProfileDeleteForm />
+
                 <AlertDialogFooter>
-                    <AlertDialogAction>Valider</AlertDialogAction>
+                    <AlertDialogAction>Fermer</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
