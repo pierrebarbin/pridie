@@ -1,16 +1,16 @@
-import React from "react";
+import React from "react"
 
-import ArticleCardPreview from "@/Components/article/article-card/article-card.preview";
-import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton";
+import ArticleCardPreview from "@/Components/article/article-card/article-card.preview"
+import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton"
 import {
     ResizableHandle,
     ResizablePanel,
     ResizablePanelGroup,
-} from "@/Components/ui/resizable";
-import { useArticleCreationStore } from "@/Stores/article-creation-store";
+} from "@/Components/ui/resizable"
+import { useArticleCreationStore } from "@/Stores/article-creation-store"
 
 export default function DashboardArticlePreview() {
-    const article = useArticleCreationStore((state) => state.article);
+    const article = useArticleCreationStore((state) => state.article)
 
     return (
         <ResizablePanelGroup
@@ -35,5 +35,5 @@ export default function DashboardArticlePreview() {
                 className="bg-muted/30"
             />
         </ResizablePanelGroup>
-    );
+    )
 }

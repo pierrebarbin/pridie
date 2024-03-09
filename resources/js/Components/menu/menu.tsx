@@ -1,10 +1,11 @@
-import { router, usePage } from "@inertiajs/react";
-import Avatar from "boring-avatars";
+import { router, usePage } from "@inertiajs/react"
+import Avatar from "boring-avatars"
 
-import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover";
-import MenuFilters from "@/Components/menu/menu-filters/menu-filters";
-import MenuMobile from "@/Components/menu/menu-mobile/menu-mobile";
-import ThreadList from "@/Components/thread/thread-list/thread-list";
+import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
+import ConfigModal from "@/Components/config/config-modal/config-modal"
+import MenuFilters from "@/Components/menu/menu-filters/menu-filters"
+import MenuMobile from "@/Components/menu/menu-mobile/menu-mobile"
+import ThreadList from "@/Components/thread/thread-list/thread-list"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,18 +13,18 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
-import { useIsMobileBreakpoint } from "@/Hooks/use-media-query";
-import { User } from "@/types";
-import ConfigModal from "@/Components/config/config-modal/config-modal";
-import ProfileModal from "../profile/profile-modal/profile-modal";
+} from "@/Components/ui/dropdown-menu"
+import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
+import { User } from "@/types"
+
+import ProfileModal from "../profile/profile-modal/profile-modal"
 
 export default function Menu() {
-    const { user } = usePage().props.auth as unknown as { user: User };
-    const { isMobile } = useIsMobileBreakpoint();
+    const { user } = usePage().props.auth as unknown as { user: User }
+    const { isMobile } = useIsMobileBreakpoint()
 
     if (isMobile) {
-        return <MenuMobile />;
+        return <MenuMobile />
     }
 
     return (
@@ -54,12 +55,16 @@ export default function Menu() {
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <ProfileModal>
-                            <DropdownMenuItem  onSelect={(e) => e.preventDefault()}>
+                            <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                            >
                                 Profil
                             </DropdownMenuItem>
                         </ProfileModal>
                         <ConfigModal>
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                            >
                                 Config
                             </DropdownMenuItem>
                         </ConfigModal>
@@ -77,5 +82,5 @@ export default function Menu() {
                 <ThreadList />
             </div>
         </>
-    );
+    )
 }

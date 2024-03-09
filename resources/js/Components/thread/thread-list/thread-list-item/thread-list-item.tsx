@@ -1,8 +1,8 @@
-import { router } from "@inertiajs/react";
-import { BookmarkFilledIcon } from "@radix-ui/react-icons";
-import React from "react";
-import { toast } from "sonner";
-import { useShallow } from "zustand/react/shallow";
+import { router } from "@inertiajs/react"
+import { BookmarkFilledIcon } from "@radix-ui/react-icons"
+import React from "react"
+import { toast } from "sonner"
+import { useShallow } from "zustand/react/shallow"
 
 import {
     ContextMenu,
@@ -11,18 +11,18 @@ import {
     ContextMenuLabel,
     ContextMenuSeparator,
     ContextMenuTrigger,
-} from "@/Components/ui/context-menu";
+} from "@/Components/ui/context-menu"
 import {
     NavigationMenuItem,
     NavigationMenuLink,
     navigationMenuTriggerStyle,
-} from "@/Components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import { useFilterStore } from "@/Stores/filter-store";
-import { Thread } from "@/types";
+} from "@/Components/ui/navigation-menu"
+import { cn } from "@/lib/utils"
+import { useFilterStore } from "@/Stores/filter-store"
+import { Thread } from "@/types"
 
 interface ThreadListItemProps {
-    thread: Thread;
+    thread: Thread
 }
 
 export default function ThreadListItem({ thread }: ThreadListItemProps) {
@@ -31,15 +31,15 @@ export default function ThreadListItem({ thread }: ThreadListItemProps) {
             currentThread: state.currentThread,
             changeCurrentThreadTo: state.changeCurrentThreadTo,
         })),
-    );
+    )
 
     const remove = () => {
         router.delete(route("threads.destroy", { thread: thread.id }), {
             onSuccess: () => {
-                toast(`Flux ${thread.name} supprimé`);
+                toast(`Flux ${thread.name} supprimé`)
             },
-        });
-    };
+        })
+    }
 
     return (
         <ContextMenu>
@@ -68,5 +68,5 @@ export default function ThreadListItem({ thread }: ThreadListItemProps) {
                 <ContextMenuItem onClick={remove}>Supprimer</ContextMenuItem>
             </ContextMenuContent>
         </ContextMenu>
-    );
+    )
 }

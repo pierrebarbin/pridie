@@ -1,37 +1,37 @@
-import { Head, useForm } from "@inertiajs/react";
-import { useEffect, FormEventHandler } from "react";
+import { Head, useForm } from "@inertiajs/react"
+import { useEffect, FormEventHandler } from "react"
 
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
-import GuestLayout from "@/Layouts/guest-layout";
+import InputError from "@/Components/InputError"
+import InputLabel from "@/Components/InputLabel"
+import PrimaryButton from "@/Components/PrimaryButton"
+import TextInput from "@/Components/TextInput"
+import GuestLayout from "@/Layouts/guest-layout"
 
 export default function ResetPassword({
     token,
     email,
 }: {
-    token: string;
-    email: string;
+    token: string
+    email: string
 }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
         email: email,
         password: "",
         password_confirmation: "",
-    });
+    })
 
     useEffect(() => {
         return () => {
-            reset("password", "password_confirmation");
-        };
-    }, []);
+            reset("password", "password_confirmation")
+        }
+    }, [])
 
     const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        post(route("password.store"));
-    };
+        post(route("password.store"))
+    }
 
     return (
         <GuestLayout>
@@ -101,5 +101,5 @@ export default function ResetPassword({
                 </div>
             </form>
         </GuestLayout>
-    );
+    )
 }

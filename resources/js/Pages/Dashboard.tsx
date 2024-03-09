@@ -1,11 +1,11 @@
-import { Head } from "@inertiajs/react";
-import React from "react";
+import { Head } from "@inertiajs/react"
+import React from "react"
 
-import DashboardArticleForm from "@/Components/dashboard/dashboard-article-form";
-import DashboardArticlePreview from "@/Components/dashboard/dashboard-article-preview";
-import DashboardTagForm from "@/Components/dashboard/dashboard-tag-form";
-import AuthenticatedLayout from "@/Layouts/authenticated-layout";
-import { PageProps } from "@/types";
+import DashboardArticleForm from "@/Components/dashboard/dashboard-article-form"
+import DashboardArticlePreview from "@/Components/dashboard/dashboard-article-preview"
+import DashboardTagForm from "@/Components/dashboard/dashboard-tag-form"
+import AuthenticatedLayout from "@/Layouts/authenticated-layout"
+import { PageProps } from "@/types"
 
 export default function Dashboard({ auth }: PageProps) {
     return (
@@ -18,5 +18,5 @@ export default function Dashboard({ auth }: PageProps) {
                 <DashboardTagForm />
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }

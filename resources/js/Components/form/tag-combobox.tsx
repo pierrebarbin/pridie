@@ -1,5 +1,5 @@
-import { Cross2Icon } from "@radix-ui/react-icons";
-import { UIEvent, useCallback, useEffect } from "react";
+import { Cross2Icon } from "@radix-ui/react-icons"
+import { UIEvent, useCallback, useEffect } from "react"
 
 import {
     Item,
@@ -11,10 +11,10 @@ import {
     MultipleSelectLabel,
     useMultipleSelect,
     useMultipleSelectProps,
-} from "@/Components/form/multiple-select";
-import { Button } from "@/Components/ui/button";
-import { cn } from "@/lib/utils";
-import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
+} from "@/Components/form/multiple-select"
+import { Button } from "@/Components/ui/button"
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
+import { cn } from "@/lib/utils"
 
 interface TagComboboxProps extends useMultipleSelectProps {
     onSelectedItems?: (items: Item[]) => void
@@ -28,11 +28,10 @@ export default function TagCombobox({
     initialSelectedItems,
     onSelectedItems,
     onSearch,
-    onEndReached
+    onEndReached,
 }: TagComboboxProps) {
-
     const debounceCallback = useCallback((value: string) => {
-        console.log('???')
+        console.log("???")
         onSearch && onSearch(value)
     }, [])
 
@@ -49,22 +48,23 @@ export default function TagCombobox({
         getMenuProps,
         getItemProps,
         highlightedIndex,
-        items
+        items,
     } = useMultipleSelect({
         data,
         initialSelectedItems,
         selectedItems: controlledSelectedItems,
         onSelectedItems,
         remoteSearch: true,
-        onInput: debounced
+        onInput: debounced,
     })
 
     const handleScroll = (e: UIEvent<HTMLUListElement>) => {
-        const target = (e.target as HTMLUListElement)
-        const bottom = target.scrollHeight - target.scrollTop < (target.clientHeight + 20);
+        const target = e.target as HTMLUListElement
+        const bottom =
+            target.scrollHeight - target.scrollTop < target.clientHeight + 20
         if (bottom) {
             onEndReached && onEndReached()
-         }
+        }
     }
 
     return (
@@ -74,7 +74,7 @@ export default function TagCombobox({
                 placeholder="Recherchez un tag..."
                 className="mt-2 w-full"
                 {...getInputProps(
-                    getDropdownProps({ preventKeyAction: isOpen,  }),
+                    getDropdownProps({ preventKeyAction: isOpen }),
                 )}
             />
             <div
@@ -99,21 +99,24 @@ export default function TagCombobox({
                                     className="h-auto p-1"
                                     variant="ghost"
                                     onClick={(e) => {
-                                        e.stopPropagation();
+                                        e.stopPropagation()
                                         removeSelectedItem(
                                             selectedItemForRender,
-                                        );
+                                        )
                                     }}
                                 >
                                     <Cross2Icon className="h-4 w-4" />
                                 </Button>
                             </MultipleSelectBadge>
-                        );
+                        )
                     },
                 )}
             </div>
             <MultipleSelectDropdown
-                className={cn("max-h-32", !(isOpen && items.length) && "hidden")}
+                className={cn(
+                    "max-h-32",
+                    !(isOpen && items.length) && "hidden",
+                )}
                 onScroll={handleScroll}
                 {...getMenuProps()}
             >
@@ -128,5 +131,5 @@ export default function TagCombobox({
                 ))}
             </MultipleSelectDropdown>
         </MultipleSelect>
-    );
+    )
 }

@@ -1,21 +1,21 @@
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons"
+import { useState } from "react"
 
-import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
-import { Button } from "@/Components/ui/button";
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
+import { Button } from "@/Components/ui/button"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/Components/ui/popover";
-import { useTernaryDarkMode } from "@/Hooks/use-ternary-dark-mode";
+} from "@/Components/ui/popover"
+import { useTernaryDarkMode } from "@/Hooks/use-ternary-dark-mode"
 
 export default function DarkModePickerPopover() {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
-    const ternaryProps = useTernaryDarkMode();
+    const ternaryProps = useTernaryDarkMode()
 
-    const { ternaryDarkMode } = ternaryProps;
+    const { ternaryDarkMode } = ternaryProps
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -36,5 +36,5 @@ export default function DarkModePickerPopover() {
                 <DarkModePicker useTernaryDarkModeOutput={ternaryProps} />
             </PopoverContent>
         </Popover>
-    );
+    )
 }

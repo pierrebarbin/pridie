@@ -1,20 +1,20 @@
-import { ArchiveIcon, Cross2Icon, PinLeftIcon } from "@radix-ui/react-icons";
-import React from "react";
-import { useShallow } from "zustand/react/shallow";
+import { ArchiveIcon, Cross2Icon, PinLeftIcon } from "@radix-ui/react-icons"
+import React from "react"
+import { useShallow } from "zustand/react/shallow"
 
-import ArticleCard from "@/Components/article/article-card/article-card";
-import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton";
-import { useArticleList } from "@/Components/article/article-list/use-article-list";
-import { Button } from "@/Components/ui/button";
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { useFilterStore } from "@/Stores/filter-store";
+import ArticleCard from "@/Components/article/article-card/article-card"
+import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton"
+import { useArticleList } from "@/Components/article/article-list/use-article-list"
+import { Button } from "@/Components/ui/button"
+import { ScrollArea } from "@/Components/ui/scroll-area"
+import { useFilterStore } from "@/Stores/filter-store"
 
 interface ArticleListProps {
-    cursor?: string;
+    cursor?: string
 }
 
 export default function ArticleList({ cursor }: ArticleListProps) {
-    const parentRef = React.useRef<HTMLDivElement>(null);
+    const parentRef = React.useRef<HTMLDivElement>(null)
 
     const { currentThread, resetFilters, removeCurrentThread } = useFilterStore(
         useShallow((state) => ({
@@ -22,10 +22,10 @@ export default function ArticleList({ cursor }: ArticleListProps) {
             resetFilters: state.resetFilters,
             removeCurrentThread: state.removeCurrentThread,
         })),
-    );
+    )
 
-    const cardHeight = 400;
-    const cardBottomMargin = 30;
+    const cardHeight = 400
+    const cardBottomMargin = 30
 
     const {
         data,
@@ -39,12 +39,12 @@ export default function ArticleList({ cursor }: ArticleListProps) {
         parentRef,
         cardBottomMargin,
         cardHeight,
-    });
+    })
 
-    const rows = data ? data.pages.flatMap((d) => d.data) : [];
+    const rows = data ? data.pages.flatMap((d) => d.data) : []
     const topMargin = hasPreviousPage
         ? cardHeight + cardBottomMargin
-        : cardBottomMargin;
+        : cardBottomMargin
 
     if (status === "pending") {
         return (
@@ -55,7 +55,7 @@ export default function ArticleList({ cursor }: ArticleListProps) {
                     </div>
                 ))}
             </ScrollArea>
-        );
+        )
     }
 
     if (error) {
@@ -69,7 +69,7 @@ export default function ArticleList({ cursor }: ArticleListProps) {
                     Si elle persiste, contactez un administrateur
                 </p>
             </div>
-        );
+        )
     }
 
     if (rows.length === 0) {
@@ -102,7 +102,7 @@ export default function ArticleList({ cursor }: ArticleListProps) {
                     )}
                 </div>
             </div>
-        );
+        )
     }
 
     return (
@@ -120,8 +120,8 @@ export default function ArticleList({ cursor }: ArticleListProps) {
                 ) : null}
 
                 {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                    const isLoaderRow = virtualRow.index > rows.length - 1;
-                    const article = rows[virtualRow.index];
+                    const isLoaderRow = virtualRow.index > rows.length - 1
+                    const article = rows[virtualRow.index]
 
                     return (
                         <div
@@ -141,9 +141,9 @@ export default function ArticleList({ cursor }: ArticleListProps) {
                                 />
                             )}
                         </div>
-                    );
+                    )
                 })}
             </div>
         </ScrollArea>
-    );
+    )
 }

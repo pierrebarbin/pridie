@@ -1,8 +1,8 @@
-import { BookmarkIcon, RocketIcon } from "@radix-ui/react-icons";
-import { marked } from "marked";
-import React from "react";
+import { BookmarkIcon, RocketIcon } from "@radix-ui/react-icons"
+import { marked } from "marked"
+import React from "react"
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/button"
 import {
     Card,
     CardContent,
@@ -10,23 +10,23 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/Components/ui/card";
-import { Article } from "@/types";
+} from "@/Components/ui/card"
+import { Article } from "@/types"
 
 interface ArticleCardPreviewProps {
-    article: Partial<Article> | null;
+    article: Partial<Article> | null
 }
 
 export default function ArticleCardPreview({
     article,
 }: ArticleCardPreviewProps) {
-    const renderer = new marked.Renderer();
-    const linkRenderer = renderer.link;
+    const renderer = new marked.Renderer()
+    const linkRenderer = renderer.link
     renderer.link = (href, title, text) => {
-        const html = linkRenderer.call(renderer, href, title, text);
-        return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
-    };
-    const html = marked(article?.content ?? "", { renderer });
+        const html = linkRenderer.call(renderer, href, title, text)
+        return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+    }
+    const html = marked(article?.content ?? "", { renderer })
 
     return (
         <Card className="relative h-[400px]">
@@ -51,5 +51,5 @@ export default function ArticleCardPreview({
                 </Button>
             </CardFooter>
         </Card>
-    );
+    )
 }

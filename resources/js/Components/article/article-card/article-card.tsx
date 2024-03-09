@@ -1,8 +1,8 @@
-import { marked } from "marked";
-import React from "react";
+import { marked } from "marked"
+import React from "react"
 
-import ArticleCardBookmark from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark";
-import ArticleCardReaction from "@/Components/article/article-card/article-card-reaction/article-card-reaction";
+import ArticleCardBookmark from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark"
+import ArticleCardReaction from "@/Components/article/article-card/article-card-reaction/article-card-reaction"
 import {
     Card,
     CardContent,
@@ -10,21 +10,21 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/Components/ui/card";
-import { Article } from "@/types";
+} from "@/Components/ui/card"
+import { Article } from "@/types"
 
 interface ArticleCardProps {
-    article: Article;
+    article: Article
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
-    const renderer = new marked.Renderer();
-    const linkRenderer = renderer.link;
+    const renderer = new marked.Renderer()
+    const linkRenderer = renderer.link
     renderer.link = (href, title, text) => {
-        const html = linkRenderer.call(renderer, href, title, text);
-        return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
-    };
-    const html = marked(article.content, { renderer });
+        const html = linkRenderer.call(renderer, href, title, text)
+        return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+    }
+    const html = marked(article.content, { renderer })
 
     return (
         <Card className="relative h-[400px]">
@@ -43,5 +43,5 @@ export default function ArticleCard({ article }: ArticleCardProps) {
                 <ArticleCardBookmark article={article} />
             </CardFooter>
         </Card>
-    );
+    )
 }

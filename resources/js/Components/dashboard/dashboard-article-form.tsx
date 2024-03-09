@@ -1,14 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router, usePage } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router, usePage } from "@inertiajs/react"
+import React, { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-import { Item } from "@/Components/form/multiple-select";
-import TagCombobox from "@/Components/form/tag-combobox";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import { Item } from "@/Components/form/multiple-select"
+import TagCombobox from "@/Components/form/tag-combobox"
+import { Button } from "@/Components/ui/button"
+import { Card, CardContent, CardHeader } from "@/Components/ui/card"
 import {
     Form,
     FormControl,
@@ -16,11 +16,11 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { useArticleCreationStore } from "@/Stores/article-creation-store";
-import { Tag } from "@/types";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import { Textarea } from "@/Components/ui/textarea"
+import { useArticleCreationStore } from "@/Stores/article-creation-store"
+import { Tag } from "@/types"
 
 const formSchema = z.object({
     title: z
@@ -41,15 +41,15 @@ const formSchema = z.object({
             value: z.string(),
         }),
     ),
-});
+})
 export default function DashboardArticleForm() {
-    const selectedItems = useState<Item[]>([]);
+    const selectedItems = useState<Item[]>([])
 
-    const { tags } = usePage<{ tags: Tag[] }>().props;
+    const { tags } = usePage<{ tags: Tag[] }>().props
 
     const updateArticle = useArticleCreationStore(
         (state) => state.updateArticle,
-    );
+    )
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -58,18 +58,18 @@ export default function DashboardArticleForm() {
             content: "",
             tags: [],
         },
-    });
+    })
 
     useEffect(() => {
         const subscription = form.watch((value, { name }) => {
             if (name === "title" || name === "content") {
-                updateArticle({ [name]: value[name] });
+                updateArticle({ [name]: value[name] })
             }
-        });
-        return () => subscription.unsubscribe();
-    }, [form.watch]);
+        })
+        return () => subscription.unsubscribe()
+    }, [form.watch])
 
-    const content = form.watch("content");
+    const content = form.watch("content")
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post(
@@ -80,19 +80,19 @@ export default function DashboardArticleForm() {
             },
             {
                 onSuccess: () => {
-                    form.reset();
-                    updateArticle(null);
-                    selectedItems[1]([]);
-                    toast(`Article ${values.title} ajouté`);
+                    form.reset()
+                    updateArticle(null)
+                    selectedItems[1]([])
+                    toast(`Article ${values.title} ajouté`)
                 },
             },
-        );
+        )
     }
 
     const tagsFormatted = tags.map((tag) => ({
         key: tag.id,
         value: tag.label,
-    }));
+    }))
 
     return (
         <Card>
@@ -162,5 +162,5 @@ export default function DashboardArticleForm() {
                 </Form>
             </CardContent>
         </Card>
-    );
+    )
 }

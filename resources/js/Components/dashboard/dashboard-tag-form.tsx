@@ -1,14 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router, usePage } from "@inertiajs/react";
-import { Cross2Icon } from "@radix-ui/react-icons";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router, usePage } from "@inertiajs/react"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge"
+import { Button } from "@/Components/ui/button"
+import { Card, CardContent, CardHeader } from "@/Components/ui/card"
 import {
     Form,
     FormControl,
@@ -16,9 +16,9 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
-import { Tag } from "@/types";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import { Tag } from "@/types"
 
 const formSchema = z.object({
     label: z
@@ -27,33 +27,33 @@ const formSchema = z.object({
             message: "Le titre est requis",
         })
         .max(255, "Le titre est trop long"),
-});
+})
 
 export default function DashboardTagForm() {
-    const { tags } = usePage<{ tags: Tag[] }>().props;
+    const { tags } = usePage<{ tags: Tag[] }>().props
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             label: "",
         },
-    });
+    })
 
     function create(values: z.infer<typeof formSchema>) {
         router.post(route("tags.store"), values, {
             onSuccess: () => {
-                form.reset();
-                toast(`Article ${values.label} ajouté`);
+                form.reset()
+                toast(`Article ${values.label} ajouté`)
             },
-        });
+        })
     }
 
     function remove(tag: Tag) {
         router.post(route("tags.destroy", { tag: tag.id }), undefined, {
             onSuccess: () => {
-                toast(`Tag ${tag.label} supprimé`);
+                toast(`Tag ${tag.label} supprimé`)
             },
-        });
+        })
     }
 
     return (
@@ -104,5 +104,5 @@ export default function DashboardTagForm() {
                 </div>
             </CardContent>
         </Card>
-    );
+    )
 }

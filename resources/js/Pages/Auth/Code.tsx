@@ -1,10 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Head, router } from "@inertiajs/react";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Head, router } from "@inertiajs/react"
+import React, { useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/button"
 import {
     Form,
     FormControl,
@@ -13,9 +13,9 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
-import GuestLayout from "@/Layouts/guest-layout";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import GuestLayout from "@/Layouts/guest-layout"
 
 const formSchema = z.object({
     code: z
@@ -24,39 +24,39 @@ const formSchema = z.object({
             message: "Le code est requis",
         })
         .max(6, "Le code doit faire 6 caractères"),
-});
+})
 
 export default function Code({
     token,
     email,
     errors,
 }: {
-    token: string;
-    email: string;
-    errors: any;
+    token: string
+    email: string
+    errors: any
 }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             code: "",
         },
-    });
+    })
 
     useEffect(() => {
         if (errors) {
             for (const [key, value] of Object.entries(errors)) {
                 // @ts-ignore
-                form.setError(key, { type: "custom", message: value });
+                form.setError(key, { type: "custom", message: value })
             }
         }
-    }, [errors]);
+    }, [errors])
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post(route("code"), {
             email,
             token,
             ...values,
-        });
+        })
     }
 
     return (
@@ -88,5 +88,5 @@ export default function Code({
                 </form>
             </Form>
         </GuestLayout>
-    );
+    )
 }

@@ -1,23 +1,23 @@
-import { router } from "@inertiajs/react";
-import React, { PropsWithChildren, ReactNode } from "react";
+import { router } from "@inertiajs/react"
+import React, { PropsWithChildren, ReactNode } from "react"
 
-import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker";
-import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover";
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
+import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu"
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuLink,
     navigationMenuTriggerStyle,
-} from "@/Components/ui/navigation-menu";
-import { Toaster } from "@/Components/ui/sonner";
-import AppLayout from "@/Layouts/app-layout";
-import { User } from "@/types";
+} from "@/Components/ui/navigation-menu"
+import { Toaster } from "@/Components/ui/sonner"
+import AppLayout from "@/Layouts/app-layout"
+import { User } from "@/types"
 
 export default function Authenticated({
     children,
@@ -82,10 +82,8 @@ export default function Authenticated({
                                         <DropdownMenuItem asChild>
                                             <form
                                                 onSubmit={(e) => {
-                                                    e.preventDefault();
-                                                    router.post(
-                                                        route("logout"),
-                                                    );
+                                                    e.preventDefault()
+                                                    router.post(route("logout"))
                                                 }}
                                                 method="post"
                                             >
@@ -106,5 +104,5 @@ export default function Authenticated({
             <main>{children}</main>
             <Toaster />
         </AppLayout>
-    );
+    )
 }

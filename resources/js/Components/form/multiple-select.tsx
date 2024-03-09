@@ -1,26 +1,26 @@
-import { useCombobox, useMultipleSelection } from "downshift";
-import { useMemo, useState } from "react";
-import * as React from "react";
+import { useCombobox, useMultipleSelection } from "downshift"
+import { useMemo, useState } from "react"
+import * as React from "react"
 
-import { Badge, BadgeProps } from "@/Components/ui/badge";
-import { Input, InputProps } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { cn } from "@/lib/utils";
+import { Badge, BadgeProps } from "@/Components/ui/badge"
+import { Input, InputProps } from "@/Components/ui/input"
+import { Label } from "@/Components/ui/label"
+import { cn } from "@/lib/utils"
 
 export interface Item {
-    key: string;
-    value: string;
+    key: string
+    value: string
 }
 
 type Action = (
     items: Item[],
-) => void | React.Dispatch<React.SetStateAction<Item[]>>;
+) => void | React.Dispatch<React.SetStateAction<Item[]>>
 
 export interface useMultipleSelectProps {
-    data: Item[];
-    initialSelectedItems?: Item[];
-    selectedItems?: [Item[], Action];
-    onSelectedItems?: (items: Item[]) => void;
+    data: Item[]
+    initialSelectedItems?: Item[]
+    selectedItems?: [Item[], Action]
+    onSelectedItems?: (items: Item[]) => void
     remoteSearch?: boolean
     onInput?: (value: string) => void
 }
@@ -30,14 +30,14 @@ function getFilteredItems(
     selectedItems: Item[],
     inputValue: string,
 ) {
-    const lowerCasedInputValue = inputValue.toLowerCase();
+    const lowerCasedInputValue = inputValue.toLowerCase()
 
     return items.filter((item) => {
         return (
             !selectedItems.find((selected) => selected.key === item.key) &&
             item.value.toLowerCase().includes(lowerCasedInputValue)
-        );
-    });
+        )
+    })
 }
 
 const useMultipleSelect = ({
@@ -46,16 +46,19 @@ const useMultipleSelect = ({
     selectedItems: controlledSelectedItems,
     onSelectedItems,
     remoteSearch = false,
-    onInput
+    onInput,
 }: useMultipleSelectProps) => {
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState("")
     const [selectedItems, setSelectedItems] =
-        controlledSelectedItems ?? useState(initialSelectedItems ?? []);
+        controlledSelectedItems ?? useState(initialSelectedItems ?? [])
 
     const items = useMemo(
-        () => remoteSearch ? data : getFilteredItems(data, selectedItems, inputValue),
+        () =>
+            remoteSearch
+                ? data
+                : getFilteredItems(data, selectedItems, inputValue),
         [remoteSearch, data, selectedItems, inputValue],
-    );
+    )
 
     const multipleSelection = useMultipleSelection({
         selectedItems,
@@ -69,26 +72,26 @@ const useMultipleSelect = ({
                     .DropdownKeyDownBackspace:
                 case useMultipleSelection.stateChangeTypes
                     .FunctionRemoveSelectedItem:
-                    setSelectedItems(newSelectedItems ?? []);
-                    onSelectedItems && onSelectedItems(newSelectedItems ?? []);
-                    break;
+                    setSelectedItems(newSelectedItems ?? [])
+                    onSelectedItems && onSelectedItems(newSelectedItems ?? [])
+                    break
 
                 default:
-                    break;
+                    break
             }
         },
-    });
+    })
 
     const combobox = useCombobox({
         items,
         itemToString(item: Item | null) {
-            return item ? item.value : "";
+            return item ? item.value : ""
         },
         defaultHighlightedIndex: 0,
         selectedItem: null,
         inputValue,
         stateReducer(state, actionAndChanges) {
-            const { changes, type } = actionAndChanges;
+            const { changes, type } = actionAndChanges
 
             switch (type) {
                 case useCombobox.stateChangeTypes.InputKeyDownEnter:
@@ -97,9 +100,9 @@ const useMultipleSelect = ({
                         ...changes,
                         isOpen: true,
                         highlightedIndex: 0,
-                    };
+                    }
                 default:
-                    return changes;
+                    return changes
             }
         },
         onStateChange({
@@ -112,31 +115,28 @@ const useMultipleSelect = ({
                 case useCombobox.stateChangeTypes.ItemClick:
                 case useCombobox.stateChangeTypes.InputBlur:
                     if (newSelectedItem) {
-                        setSelectedItems([...selectedItems, newSelectedItem]);
+                        setSelectedItems([...selectedItems, newSelectedItem])
                         onSelectedItems &&
-                            onSelectedItems([
-                                ...selectedItems,
-                                newSelectedItem,
-                            ]);
-                        setInputValue("");
+                            onSelectedItems([...selectedItems, newSelectedItem])
+                        setInputValue("")
                         onInput && onInput("")
                     }
-                    break;
+                    break
 
                 case useCombobox.stateChangeTypes.InputChange:
-                    setInputValue(newInputValue ?? "");
+                    setInputValue(newInputValue ?? "")
                     onInput && onInput(newInputValue ?? "")
-                    break;
+                    break
                 default:
-                    break;
+                    break
             }
         },
-    });
+    })
 
-    return { ...multipleSelection, ...combobox, items };
-};
+    return { ...multipleSelection, ...combobox, items }
+}
 
-export type MultipleSelectProps = React.HTMLAttributes<HTMLDivElement>;
+export type MultipleSelectProps = React.HTMLAttributes<HTMLDivElement>
 
 const MultipleSelect = React.forwardRef<HTMLDivElement, MultipleSelectProps>(
     ({ className, children, ...props }, ref) => (
@@ -144,11 +144,11 @@ const MultipleSelect = React.forwardRef<HTMLDivElement, MultipleSelectProps>(
             {children}
         </div>
     ),
-);
-MultipleSelect.displayName = "MultipleSelect";
+)
+MultipleSelect.displayName = "MultipleSelect"
 
 export type MultipleSelectLabelProps =
-    React.LabelHTMLAttributes<HTMLLabelElement>;
+    React.LabelHTMLAttributes<HTMLLabelElement>
 
 const MultipleSelectLabel = React.forwardRef<
     HTMLLabelElement,
@@ -157,10 +157,10 @@ const MultipleSelectLabel = React.forwardRef<
     <Label className={cn("w-fit")} {...props}>
         {children}
     </Label>
-));
-MultipleSelectLabel.displayName = "MultipleSelectLabel";
+))
+MultipleSelectLabel.displayName = "MultipleSelectLabel"
 
-export type MultipleSelectBadgeProps = BadgeProps;
+export type MultipleSelectBadgeProps = BadgeProps
 
 const MultipleSelectBadge = React.forwardRef<
     HTMLDivElement,
@@ -171,21 +171,20 @@ const MultipleSelectBadge = React.forwardRef<
         variant="outline"
         {...props}
     />
-));
-MultipleSelectBadge.displayName = "MultipleSelectBadge";
+))
+MultipleSelectBadge.displayName = "MultipleSelectBadge"
 
-export type MultipleSelectInputProps = InputProps;
+export type MultipleSelectInputProps = InputProps
 
 const MultipleSelectInput = React.forwardRef<
     HTMLInputElement,
     MultipleSelectInputProps
 >(({ className, children, ...props }, ref) => (
     <Input className={cn("w-full", className)} ref={ref} {...props} />
-));
-MultipleSelectInput.displayName = "MultipleSelectInput";
+))
+MultipleSelectInput.displayName = "MultipleSelectInput"
 
-export type MultipleSelectDropdownProps =
-    React.HTMLAttributes<HTMLUListElement>;
+export type MultipleSelectDropdownProps = React.HTMLAttributes<HTMLUListElement>
 
 const MultipleSelectDropdown = React.forwardRef<
     HTMLUListElement,
@@ -201,12 +200,12 @@ const MultipleSelectDropdown = React.forwardRef<
     >
         {children}
     </ul>
-));
-MultipleSelectDropdown.displayName = "MultipleSelectDropdown";
+))
+MultipleSelectDropdown.displayName = "MultipleSelectDropdown"
 
 export interface MultipleSelectDropdownItemProps
     extends React.HTMLAttributes<HTMLLIElement> {
-    highlighted?: boolean;
+    highlighted?: boolean
 }
 
 const MultipleSelectDropdownItem = React.forwardRef<
@@ -224,8 +223,8 @@ const MultipleSelectDropdownItem = React.forwardRef<
     >
         {children}
     </li>
-));
-MultipleSelectDropdownItem.displayName = "MultipleSelectDropdownItem";
+))
+MultipleSelectDropdownItem.displayName = "MultipleSelectDropdownItem"
 
 export {
     useMultipleSelect,
@@ -235,4 +234,4 @@ export {
     MultipleSelectInput,
     MultipleSelectDropdown,
     MultipleSelectDropdownItem,
-};
+}

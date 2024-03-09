@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import { useInfiniteQuery } from "@tanstack/react-query"
+import axios from "axios"
+import { useState } from "react"
+import { useShallow } from "zustand/react/shallow"
 
-import TagCombobox from "@/Components/form/tag-combobox";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Separator } from "@/Components/ui/separator";
-import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
-import { useFilterStore } from "@/Stores/filter-store";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { CursorPagination, Tag } from "@/types";
+import TagCombobox from "@/Components/form/tag-combobox"
+import { Input } from "@/Components/ui/input"
+import { Label } from "@/Components/ui/label"
+import { Separator } from "@/Components/ui/separator"
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
+import { useFilterStore } from "@/Stores/filter-store"
+import { CursorPagination, Tag } from "@/types"
 
 export default function MenuFilters() {
     const [tagSearch, setTagSearch] = useState("")
@@ -30,45 +30,43 @@ export default function MenuFilters() {
             showBookmark: state.showBookmark,
             selectedTags: state.selectedTags,
         })),
-    );
+    )
 
-    const {
-        data,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage
-      } = useInfiniteQuery<CursorPagination<Tag>>({
-        queryKey: ["tags", {tagSearch}],
-        queryFn: async ({ pageParam }) => {
-            const params = {
-                cursor: (pageParam as string),
-                "filter[label]": tagSearch,
-            };
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+        useInfiniteQuery<CursorPagination<Tag>>({
+            queryKey: ["tags", { tagSearch }],
+            queryFn: async ({ pageParam }) => {
+                const params = {
+                    cursor: pageParam as string,
+                    "filter[label]": tagSearch,
+                }
 
-            const cleanParams = Object.fromEntries(
-                Object.entries(params).filter(([value]) => value !== ""),
-            );
+                const cleanParams = Object.fromEntries(
+                    Object.entries(params).filter(([value]) => value !== ""),
+                )
 
-            const urlParams = new URLSearchParams(cleanParams);
+                const urlParams = new URLSearchParams(cleanParams)
 
-            const result = await axios.get(`${route("api.tags")}?${urlParams.toString()}`)
+                const result = await axios.get(
+                    `${route("api.tags")}?${urlParams.toString()}`,
+                )
 
-            return result.data
-        },
-        initialPageParam: null,
-        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
-      })
+                return result.data
+            },
+            initialPageParam: null,
+            getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+        })
 
-      const handleEndReached = () => {
+    const handleEndReached = () => {
         if (!hasNextPage || isFetchingNextPage) {
             return
         }
-       fetchNextPage()
-      }
+        fetchNextPage()
+    }
 
-    const rows = data ? data.pages.flatMap((d) => d.data) : [];
+    const rows = data ? data.pages.flatMap((d) => d.data) : []
 
-    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }));
+    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }))
 
     return (
         <div className="space-y-4">
@@ -80,7 +78,7 @@ export default function MenuFilters() {
                     placeholder="Recherchez un titre..."
                     value={search}
                     onChange={(e) => {
-                        updateSearch(e.target.value);
+                        updateSearch(e.target.value)
                     }}
                 />
             </div>
@@ -118,5 +116,5 @@ export default function MenuFilters() {
                 </ToggleGroup>
             </div>
         </div>
-    );
+    )
 }

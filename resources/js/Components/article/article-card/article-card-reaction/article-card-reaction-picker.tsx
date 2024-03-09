@@ -1,18 +1,18 @@
-import { RocketIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { RocketIcon } from "@radix-ui/react-icons"
+import { useState } from "react"
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/button"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/Components/ui/popover";
-import { Reaction } from "@/types";
+} from "@/Components/ui/popover"
+import { Reaction } from "@/types"
 
 interface ArticleCardReactionPickerProps {
-    allReactions: Reaction[];
-    userReactions: { id: string }[];
-    reactTo: (reaction: Reaction, add: boolean) => void;
+    allReactions: Reaction[]
+    userReactions: { id: string }[]
+    reactTo: (reaction: Reaction, add: boolean) => void
 }
 
 export default function ArticleCardReactionPicker({
@@ -20,7 +20,7 @@ export default function ArticleCardReactionPicker({
     userReactions,
     reactTo,
 }: ArticleCardReactionPickerProps) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -33,7 +33,7 @@ export default function ArticleCardReactionPicker({
                 {allReactions.map((reaction) => {
                     const reacted = userReactions.find(
                         (userReaction) => userReaction.id === reaction.id,
-                    );
+                    )
                     return (
                         <Button
                             key={reaction.id}
@@ -47,9 +47,9 @@ export default function ArticleCardReactionPicker({
                         >
                             {reaction.image}
                         </Button>
-                    );
+                    )
                 })}
             </PopoverContent>
         </Popover>
-    );
+    )
 }

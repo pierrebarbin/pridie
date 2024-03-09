@@ -1,25 +1,25 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "@inertiajs/react";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { ReactElement, useState } from "react";
-import { Simulate } from "react-dom/test-utils";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router } from "@inertiajs/react"
+import { useQueryClient } from "@tanstack/react-query"
+import React, { ReactElement, useState } from "react"
+import { Simulate } from "react-dom/test-utils"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Checkbox } from "@/Components/ui/checkbox";
+import { Checkbox } from "@/Components/ui/checkbox"
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
     FormMessage,
-} from "@/Components/ui/form";
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { useFilterStore } from "@/Stores/filter-store";
-import { Article } from "@/types";
+} from "@/Components/ui/form"
+import { ScrollArea } from "@/Components/ui/scroll-area"
+import { cn } from "@/lib/utils"
+import { useFilterStore } from "@/Stores/filter-store"
+import { Article } from "@/types"
 
-import load = Simulate.load;
+import load = Simulate.load
 
 const formSchema = z.object({
     threads: z.array(
@@ -28,15 +28,12 @@ const formSchema = z.object({
             name: z.string(),
         }),
     ),
-});
+})
 
 interface ArticleCardBookmarkFormProps {
-    article: Article;
-    onSuccess?: () => void;
-    footer: (props: {
-        loading: boolean;
-        cannotSubmit: boolean;
-    }) => ReactElement;
+    article: Article
+    onSuccess?: () => void
+    footer: (props: { loading: boolean; cannotSubmit: boolean }) => ReactElement
 }
 
 export default function ArticleCardBookmarkForm({
@@ -44,20 +41,20 @@ export default function ArticleCardBookmarkForm({
     onSuccess,
     footer,
 }: ArticleCardBookmarkFormProps) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
 
-    const threads = useFilterStore((state) => state.threads);
+    const threads = useFilterStore((state) => state.threads)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             threads: article.threads,
         },
-    });
-    const queryClient = useQueryClient();
+    })
+    const queryClient = useQueryClient()
 
     const bookmark = async (values: z.infer<typeof formSchema>) => {
-        setLoading(true);
+        setLoading(true)
         router.post(
             route("bookmark.store"),
             {
@@ -68,22 +65,22 @@ export default function ArticleCardBookmarkForm({
                 onSuccess: async () => {
                     await queryClient.invalidateQueries({
                         queryKey: ["articles"],
-                    });
-                    onSuccess && onSuccess();
+                    })
+                    onSuccess && onSuccess()
                 },
                 onFinish: () => {
-                    setLoading(false);
+                    setLoading(false)
                 },
             },
-        );
-    };
+        )
+    }
 
-    const itemHeight = 44;
-    const maxItemsVisible = 7;
+    const itemHeight = 44
+    const maxItemsVisible = 7
     const scrollAreaHeight =
         (threads.length < maxItemsVisible ? threads.length : maxItemsVisible) *
-        itemHeight;
-    const cannotSubmit = loading || threads.length === 0;
+        itemHeight
+    const cannotSubmit = loading || threads.length === 0
 
     return (
         <Form {...form}>
@@ -143,7 +140,7 @@ export default function ArticleCardBookmarkForm({
                                                                           value.id !==
                                                                           thread.id,
                                                                   ),
-                                                              );
+                                                              )
                                                     }}
                                                 />
                                             </label>
@@ -158,5 +155,5 @@ export default function ArticleCardBookmarkForm({
                 {footer({ loading, cannotSubmit })}
             </form>
         </Form>
-    );
+    )
 }

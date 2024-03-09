@@ -1,14 +1,14 @@
-import "./bootstrap";
-import "../css/app.css";
+import "./bootstrap"
+import "../css/app.css"
 
-import { createInertiaApp } from "@inertiajs/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { createRoot } from "react-dom/client";
+import { createInertiaApp } from "@inertiajs/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
+import { createRoot } from "react-dom/client"
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || "Laravel"
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient()
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -18,13 +18,13 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.tsx"),
         ),
     setup({ el, App, props }) {
-        const root = createRoot(el);
+        const root = createRoot(el)
 
         root.render(
             <QueryClientProvider client={queryClient}>
                 <App {...props} />
             </QueryClientProvider>,
-        );
+        )
     },
     progress: false,
-});
+})

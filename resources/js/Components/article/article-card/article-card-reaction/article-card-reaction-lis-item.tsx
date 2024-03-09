@@ -1,11 +1,11 @@
-import { Button } from "@/Components/ui/button";
-import { Reaction } from "@/types";
+import { Button } from "@/Components/ui/button"
+import { Reaction } from "@/types"
 
 interface ArticleCardReactionItemProps {
-    reaction: { id: string; count: number };
-    allReactions: Reaction[];
-    userReactions: { id: string }[];
-    reactTo: (reaction: Reaction, add: boolean) => void;
+    reaction: { id: string; count: number }
+    allReactions: Reaction[]
+    userReactions: { id: string }[]
+    reactTo: (reaction: Reaction, add: boolean) => void
 }
 
 export default function ArticleCardReactionLisItem({
@@ -14,13 +14,13 @@ export default function ArticleCardReactionLisItem({
     allReactions,
     reactTo,
 }: ArticleCardReactionItemProps) {
-    const reactionItem = allReactions.find((react) => react.id === reaction.id);
+    const reactionItem = allReactions.find((react) => react.id === reaction.id)
     const reacted = userReactions.find(
         (userReaction) => userReaction.id === reaction.id,
-    );
+    )
 
     if (!reactionItem || reaction.count <= 0) {
-        return null;
+        return null
     }
 
     if (reacted !== undefined) {
@@ -35,7 +35,7 @@ export default function ArticleCardReactionLisItem({
                 <span>{reactionItem.image}</span>
                 <span className="font-semibold">{reaction.count}</span>
             </Button>
-        );
+        )
     }
 
     return (
@@ -49,5 +49,5 @@ export default function ArticleCardReactionLisItem({
             <span>{reactionItem.image}</span>
             <span className="font-semibold">{reaction.count}</span>
         </Button>
-    );
+    )
 }

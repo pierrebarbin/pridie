@@ -1,26 +1,26 @@
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons"
 
-import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import {
     useTernaryDarkMode,
     TernaryDarkModeResult,
-} from "@/Hooks/use-ternary-dark-mode";
+} from "@/Hooks/use-ternary-dark-mode"
 
 interface DarkModePickerProps {
-    useTernaryDarkModeOutput?: TernaryDarkModeResult;
+    useTernaryDarkModeOutput?: TernaryDarkModeResult
 }
 
 export default function DarkModePicker({
     useTernaryDarkModeOutput,
 }: DarkModePickerProps) {
     const { ternaryDarkMode, setTernaryDarkMode } =
-        useTernaryDarkModeOutput ?? useTernaryDarkMode();
+        useTernaryDarkModeOutput ?? useTernaryDarkMode()
 
-    type TernaryDarkMode = typeof ternaryDarkMode;
+    type TernaryDarkMode = typeof ternaryDarkMode
 
     const onChange = (value: string) => {
-        setTernaryDarkMode(value as TernaryDarkMode);
-    };
+        setTernaryDarkMode(value as TernaryDarkMode)
+    }
 
     return (
         <ToggleGroup
@@ -38,5 +38,5 @@ export default function DarkModePicker({
                 <SunIcon className="h-4 w-4" />
             </ToggleGroupItem>
         </ToggleGroup>
-    );
+    )
 }

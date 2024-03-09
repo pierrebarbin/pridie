@@ -1,17 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "@inertiajs/react";
-import {
-    BookmarkFilledIcon,
-    PlusIcon,
-    ReloadIcon,
-} from "@radix-ui/react-icons";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { useShallow } from "zustand/react/shallow";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router } from "@inertiajs/react"
+import { BookmarkFilledIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+import { useShallow } from "zustand/react/shallow"
 
-import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thread-list-item";
+import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thread-list-item"
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -20,8 +16,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/Components/ui/alert-dialog";
-import { Button } from "@/Components/ui/button";
+} from "@/Components/ui/alert-dialog"
+import { Button } from "@/Components/ui/button"
 import {
     Form,
     FormControl,
@@ -29,17 +25,17 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
     navigationMenuTriggerStyle,
-} from "@/Components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import { useFilterStore } from "@/Stores/filter-store";
+} from "@/Components/ui/navigation-menu"
+import { cn } from "@/lib/utils"
+import { useFilterStore } from "@/Stores/filter-store"
 
 const formSchema = z.object({
     name: z
@@ -48,38 +44,38 @@ const formSchema = z.object({
             message: "Le nom est requis",
         })
         .max(255, "Le nom est trop long"),
-});
+})
 
 export default function ThreadList() {
-    const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
         },
-    });
+    })
     const { threads, currentThread, removeCurrentThread } = useFilterStore(
         useShallow((state) => ({
             threads: state.threads,
             currentThread: state.currentThread,
             removeCurrentThread: state.removeCurrentThread,
         })),
-    );
+    )
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
+        setLoading(true)
         router.post(route("threads.store"), values, {
             onSuccess: () => {
-                setOpen(false);
-                form.reset();
-                toast(`Flux ${values.name} créé`);
+                setOpen(false)
+                form.reset()
+                toast(`Flux ${values.name} créé`)
             },
             onFinish: () => {
-                setLoading(false);
+                setLoading(false)
             },
-        });
+        })
     }
 
     return (
@@ -155,5 +151,5 @@ export default function ThreadList() {
                 </AlertDialogContent>
             </AlertDialog>
         </>
-    );
+    )
 }

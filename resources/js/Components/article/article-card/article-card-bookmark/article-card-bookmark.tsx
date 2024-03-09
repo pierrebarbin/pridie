@@ -1,8 +1,8 @@
-import { ReloadIcon } from "@radix-ui/react-icons";
-import React, { useState } from "react";
+import { ReloadIcon } from "@radix-ui/react-icons"
+import React, { useState } from "react"
 
-import ArticleCardBookmarkForm from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form";
-import ArticleCardBookmarkIndicator from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator";
+import ArticleCardBookmarkForm from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form"
+import ArticleCardBookmarkIndicator from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator"
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -12,8 +12,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/Components/ui/alert-dialog";
-import { Button } from "@/Components/ui/button";
+} from "@/Components/ui/alert-dialog"
+import { Button } from "@/Components/ui/button"
 import {
     Drawer,
     DrawerClose,
@@ -23,20 +23,20 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-} from "@/Components/ui/drawer";
-import { useIsMobileBreakpoint } from "@/Hooks/use-media-query";
-import { Article } from "@/types";
+} from "@/Components/ui/drawer"
+import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
+import { Article } from "@/types"
 
 interface ArticleCardBookmarkProps {
-    article: Article;
+    article: Article
 }
 
 export default function ArticleCardBookmark({
     article,
 }: ArticleCardBookmarkProps) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
-    const { isMobile } = useIsMobileBreakpoint();
+    const { isMobile } = useIsMobileBreakpoint()
 
     if (isMobile) {
         return (
@@ -84,7 +84,7 @@ export default function ArticleCardBookmark({
                     </div>
                 </DrawerContent>
             </Drawer>
-        );
+        )
     }
 
     return (
@@ -122,5 +122,5 @@ export default function ArticleCardBookmark({
                 />
             </AlertDialogContent>
         </AlertDialog>
-    );
+    )
 }

@@ -1,35 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "@inertiajs/react";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router } from "@inertiajs/react"
 import {
     BookmarkFilledIcon,
     BookmarkIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
     ReloadIcon,
-} from "@radix-ui/react-icons";
-import { motion } from "framer-motion";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { useShallow } from "zustand/react/shallow";
+} from "@radix-ui/react-icons"
+import { motion } from "framer-motion"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+import { useShallow } from "zustand/react/shallow"
 
-import { Drawer, DrawerContent, DrawerTrigger } from "@/Components/ui/drawer";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from "@/Components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-
-import { useFilterStore } from "@/Stores/filter-store";
-
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { Separator } from "@/Components/ui/separator";
-import { Button } from "@/Components/ui/button";
-import { useWindowSize } from "@/Hooks/use-window-size";
+import { Button } from "@/Components/ui/button"
+import { Drawer, DrawerContent, DrawerTrigger } from "@/Components/ui/drawer"
 import {
     Form,
     FormControl,
@@ -37,8 +23,20 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    navigationMenuTriggerStyle,
+} from "@/Components/ui/navigation-menu"
+import { ScrollArea } from "@/Components/ui/scroll-area"
+import { Separator } from "@/Components/ui/separator"
+import { useWindowSize } from "@/Hooks/use-window-size"
+import { cn } from "@/lib/utils"
+import { useFilterStore } from "@/Stores/filter-store"
 
 const formSchema = z.object({
     name: z
@@ -47,21 +45,21 @@ const formSchema = z.object({
             message: "Le nom est requis",
         })
         .max(255, "Le nom est trop long"),
-});
+})
 
 export default function ThreadListMobile() {
-    const [tab, setTab] = useState("list");
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [tab, setTab] = useState("list")
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
         },
-    });
+    })
 
-    const { width } = useWindowSize();
+    const { width } = useWindowSize()
 
     const {
         threads,
@@ -75,23 +73,23 @@ export default function ThreadListMobile() {
             removeCurrentThread: state.removeCurrentThread,
             changeCurrentThreadTo: state.changeCurrentThreadTo,
         })),
-    );
+    )
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
+        setLoading(true)
         router.post(route("threads.store"), values, {
             onSuccess: () => {
-                setTab("list");
-                form.reset();
-                toast(`Flux ${values.name} créé`);
+                setTab("list")
+                form.reset()
+                toast(`Flux ${values.name} créé`)
             },
             onFinish: () => {
-                setLoading(false);
+                setLoading(false)
             },
-        });
+        })
     }
 
-    const x = tab === "list" ? 0 : -width;
+    const x = tab === "list" ? 0 : -width
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>
@@ -118,7 +116,7 @@ export default function ThreadListMobile() {
                                             "relative h-auto w-full cursor-pointer gap-2 py-3",
                                         )}
                                         onSelect={() => {
-                                            setTab("create");
+                                            setTab("create")
                                         }}
                                     >
                                         Ajouter un flux{" "}
@@ -139,8 +137,8 @@ export default function ThreadListMobile() {
                                         )}
                                         active={currentThread === null}
                                         onSelect={() => {
-                                            removeCurrentThread();
-                                            setOpen(false);
+                                            removeCurrentThread()
+                                            setOpen(false)
                                         }}
                                     >
                                         Veille principale
@@ -164,8 +162,8 @@ export default function ThreadListMobile() {
                                                 thread.id === currentThread?.id
                                             }
                                             onSelect={() => {
-                                                changeCurrentThreadTo(thread);
-                                                setOpen(false);
+                                                changeCurrentThreadTo(thread)
+                                                setOpen(false)
                                             }}
                                         >
                                             {thread.name}
@@ -233,5 +231,5 @@ export default function ThreadListMobile() {
                 </motion.div>
             </DrawerContent>
         </Drawer>
-    );
+    )
 }

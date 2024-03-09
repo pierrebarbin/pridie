@@ -1,23 +1,23 @@
-import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
-import React from "react";
+import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons"
+import React from "react"
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/button"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/Components/ui/tooltip";
-import { Article } from "@/types";
+} from "@/Components/ui/tooltip"
+import { Article } from "@/types"
 
 interface ArticleCardBookmarkIndicator {
-    article: Article;
+    article: Article
 }
 
 export default function ArticleCardBookmarkIndicator({
     article,
 }: ArticleCardBookmarkIndicator) {
-    const bookmarked = article.threads.length > 0;
+    const bookmarked = article.threads.length > 0
 
     return (
         <TooltipProvider>
@@ -43,5 +43,5 @@ export default function ArticleCardBookmarkIndicator({
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
-    );
+    )
 }

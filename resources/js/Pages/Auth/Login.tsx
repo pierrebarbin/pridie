@@ -1,10 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Head, router } from "@inertiajs/react";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Head, router } from "@inertiajs/react"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/button"
 import {
     Form,
     FormControl,
@@ -12,16 +12,13 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
-import GuestLayout from "@/Layouts/guest-layout";
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import GuestLayout from "@/Layouts/guest-layout"
 
 const formSchema = z.object({
-    email: z
-        .string()
-        .email()
-        .max(255, "Votre nom est trop long"),
-});
+    email: z.string().email().max(255, "Votre nom est trop long"),
+})
 
 export default function Login({ status }: { status?: string }) {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -29,14 +26,14 @@ export default function Login({ status }: { status?: string }) {
         defaultValues: {
             email: "",
         },
-    });
+    })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         router.post(route("login"), values, {
             onSuccess: () => {
-                form.reset();
+                form.reset()
             },
-        });
+        })
     }
 
     return (
@@ -59,9 +56,7 @@ export default function Login({ status }: { status?: string }) {
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <div className="flex">
-                                        <Input
-                                            {...field}
-                                        />
+                                        <Input {...field} />
                                     </div>
                                 </FormControl>
                                 <FormMessage />
@@ -77,5 +72,5 @@ export default function Login({ status }: { status?: string }) {
                 </form>
             </Form>
         </GuestLayout>
-    );
+    )
 }

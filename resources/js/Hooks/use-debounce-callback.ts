@@ -1,7 +1,7 @@
-import debounce from "lodash.debounce";
-import { useEffect, useMemo, useRef } from "react";
+import debounce from "lodash.debounce"
+import { useEffect, useMemo, useRef } from "react"
 
-import { useUnmount } from "@/Hooks/use-unmount";
+import { useUnmount } from "@/Hooks/use-unmount"
 
 /**
  * Configuration options for controlling the behavior of the debounced function.
@@ -10,15 +10,15 @@ export interface DebounceOptions {
     /**
      * Determines whether the function should be invoked on the leading edge of the timeout.
      */
-    leading?: boolean;
+    leading?: boolean
     /**
      * Determines whether the function should be invoked on the trailing edge of the timeout.
      */
-    trailing?: boolean;
+    trailing?: boolean
     /**
      * The maximum time the specified function is allowed to be delayed before it is invoked.
      */
-    maxWait?: number;
+    maxWait?: number
 }
 
 /**
@@ -28,16 +28,16 @@ interface ControlFunctions {
     /**
      * Cancels pending function invocations.
      */
-    cancel: () => void;
+    cancel: () => void
     /**
      * Immediately invokes pending function invocations.
      */
-    flush: () => void;
+    flush: () => void
     /**
      * Checks if there are any pending function invocations.
      * @returns `true` if there are pending invocations, otherwise `false`.
      */
-    isPending: () => boolean;
+    isPending: () => boolean
 }
 
 /**
@@ -49,7 +49,7 @@ interface ControlFunctions {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface DebouncedState<T extends (...args: any) => ReturnType<T>>
     extends ControlFunctions {
-    (...args: Parameters<T>): ReturnType<T> | undefined;
+    (...args: Parameters<T>): ReturnType<T> | undefined
 }
 
 /**
@@ -78,40 +78,40 @@ export function useDebounceCallback<T extends (...args: any) => ReturnType<T>>(
     delay = 500,
     options?: DebounceOptions,
 ): DebouncedState<T> {
-    const debouncedFunc = useRef<ReturnType<typeof debounce>>();
+    const debouncedFunc = useRef<ReturnType<typeof debounce>>()
 
     useUnmount(() => {
         if (debouncedFunc.current) {
-            debouncedFunc.current.cancel();
+            debouncedFunc.current.cancel()
         }
-    });
+    })
 
     const debounced = useMemo(() => {
-        const debouncedFuncInstance = debounce(func, delay, options);
+        const debouncedFuncInstance = debounce(func, delay, options)
 
         const wrappedFunc: DebouncedState<T> = (...args: Parameters<T>) => {
-            return debouncedFuncInstance(...args);
-        };
+            return debouncedFuncInstance(...args)
+        }
 
         wrappedFunc.cancel = () => {
-            debouncedFuncInstance.cancel();
-        };
+            debouncedFuncInstance.cancel()
+        }
 
         wrappedFunc.isPending = () => {
-            return !!debouncedFunc.current;
-        };
+            return !!debouncedFunc.current
+        }
 
         wrappedFunc.flush = () => {
-            return debouncedFuncInstance.flush();
-        };
+            return debouncedFuncInstance.flush()
+        }
 
-        return wrappedFunc;
-    }, [func, delay, options]);
+        return wrappedFunc
+    }, [func, delay, options])
 
     // Update the debounced function ref whenever func, wait, or options change
     useEffect(() => {
-        debouncedFunc.current = debounce(func, delay, options);
-    }, [func, delay, options]);
+        debouncedFunc.current = debounce(func, delay, options)
+    }, [func, delay, options])
 
-    return debounced;
+    return debounced
 }

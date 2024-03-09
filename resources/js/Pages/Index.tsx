@@ -1,13 +1,13 @@
-import { Head } from "@inertiajs/react";
-import React, { useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
+import { Head } from "@inertiajs/react"
+import React, { useEffect } from "react"
+import { useShallow } from "zustand/react/shallow"
 
-import ArticleList from "@/Components/article/article-list/article-list";
-import { Item } from "@/Components/form/multiple-select";
-import Menu from "@/Components/menu/menu";
-import AppLayout from "@/Layouts/app-layout";
-import { useFilterStore } from "@/Stores/filter-store";
-import { PageProps, Pagination, Tag, Thread } from "@/types";
+import ArticleList from "@/Components/article/article-list/article-list"
+import { Item } from "@/Components/form/multiple-select"
+import Menu from "@/Components/menu/menu"
+import AppLayout from "@/Layouts/app-layout"
+import { useFilterStore } from "@/Stores/filter-store"
+import { PageProps, Pagination, Tag, Thread } from "@/types"
 
 export default function Index({
     tags,
@@ -16,15 +16,15 @@ export default function Index({
     defaultTags,
 }: PageProps<{
     filters: {
-        cursor?: string;
+        cursor?: string
         filter: {
-            title?: string;
-            bookmark?: string;
-            tags?: Item[];
-        };
-    };
-    threads: Thread[];
-    defaultTags: Tag[];
+            title?: string
+            bookmark?: string
+            tags?: Item[]
+        }
+    }
+    threads: Thread[]
+    defaultTags: Tag[]
 }>) {
     const {
         setThreads,
@@ -40,30 +40,30 @@ export default function Index({
             updateSelectedTags: state.updateSelectedTags,
             updateDefaultTags: state.updateDefaultTags,
         })),
-    );
+    )
 
     useEffect(() => {
-        updateSearch(filters.filter.title ?? "");
-        updateShowBookmark(filters.filter.bookmark ?? "yes");
-    }, []);
+        updateSearch(filters.filter.title ?? "")
+        updateShowBookmark(filters.filter.bookmark ?? "yes")
+    }, [])
 
     useEffect(() => {
-        setThreads(threads);
-    }, [threads]);
+        setThreads(threads)
+    }, [threads])
 
     useEffect(() => {
-        let selectedTags = filters.filter.tags;
+        let selectedTags = filters.filter.tags
 
         if (!selectedTags || selectedTags?.length === 0) {
             selectedTags = defaultTags.map((tag) => ({
                 key: tag.id,
                 value: tag.label,
-            }));
+            }))
         }
 
-        updateSelectedTags(selectedTags);
-        updateDefaultTags(defaultTags);
-    }, [defaultTags, filters.filter.tags]);
+        updateSelectedTags(selectedTags)
+        updateDefaultTags(defaultTags)
+    }, [defaultTags, filters.filter.tags])
 
     return (
         <AppLayout className="relative min-h-screen">
@@ -71,5 +71,5 @@ export default function Index({
             <Menu />
             <ArticleList cursor={filters.cursor} />
         </AppLayout>
-    );
+    )
 }

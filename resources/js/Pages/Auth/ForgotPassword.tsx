@@ -1,21 +1,21 @@
-import { Head, useForm } from "@inertiajs/react";
-import { FormEventHandler } from "react";
+import { Head, useForm } from "@inertiajs/react"
+import { FormEventHandler } from "react"
 
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
-import GuestLayout from "@/Layouts/guest-layout";
+import InputError from "@/Components/InputError"
+import PrimaryButton from "@/Components/PrimaryButton"
+import TextInput from "@/Components/TextInput"
+import GuestLayout from "@/Layouts/guest-layout"
 
 export default function ForgotPassword({ status }: { status?: string }) {
     const { data, setData, post, processing, errors } = useForm({
         email: "",
-    });
+    })
 
     const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        post(route("password.email"));
-    };
+        post(route("password.email"))
+    }
 
     return (
         <GuestLayout>
@@ -53,5 +53,5 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 </div>
             </form>
         </GuestLayout>
-    );
+    )
 }

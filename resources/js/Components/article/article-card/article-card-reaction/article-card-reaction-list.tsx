@@ -1,21 +1,21 @@
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { useState } from "react"
 
-import ArticleCardReactionLisItem from "@/Components/article/article-card/article-card-reaction/article-card-reaction-lis-item";
-import { Button } from "@/Components/ui/button";
+import ArticleCardReactionLisItem from "@/Components/article/article-card/article-card-reaction/article-card-reaction-lis-item"
+import { Button } from "@/Components/ui/button"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/Components/ui/popover";
-import { useMediaQuery } from "@/Hooks/use-media-query";
-import { Reaction } from "@/types";
+} from "@/Components/ui/popover"
+import { useMediaQuery } from "@/Hooks/use-media-query"
+import { Reaction } from "@/types"
 
 interface ArticleCardReactionListProps {
-    reactions: { id: string; count: number }[];
-    allReactions: Reaction[];
-    userReactions: { id: string }[];
-    reactTo: (reaction: Reaction, add: boolean) => void;
+    reactions: { id: string; count: number }[]
+    allReactions: Reaction[]
+    userReactions: { id: string }[]
+    reactTo: (reaction: Reaction, add: boolean) => void
 }
 
 export default function ArticleCardReactionList({
@@ -24,12 +24,12 @@ export default function ArticleCardReactionList({
     userReactions,
     reactTo,
 }: ArticleCardReactionListProps) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
-    const matches = useMediaQuery("(min-width: 430px)");
+    const matches = useMediaQuery("(min-width: 430px)")
 
     if (reactions.length === 0) {
-        return null;
+        return null
     }
 
     if (matches) {
@@ -41,7 +41,7 @@ export default function ArticleCardReactionList({
                 userReactions={userReactions}
                 reactTo={reactTo}
             />
-        ));
+        ))
     }
 
     return (
@@ -79,5 +79,5 @@ export default function ArticleCardReactionList({
                 </Popover>
             ) : null}
         </>
-    );
+    )
 }

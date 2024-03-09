@@ -1,24 +1,24 @@
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react"
 
-import { useTernaryDarkMode } from "@/Hooks/use-ternary-dark-mode";
-import { cn } from "@/lib/utils";
+import { useTernaryDarkMode } from "@/Hooks/use-ternary-dark-mode"
+import { cn } from "@/lib/utils"
 
 interface AppLayoutProps extends PropsWithChildren {
-    className?: string;
+    className?: string
 }
 
 export default function AppLayout({ children, className }: AppLayoutProps) {
-    const { isDarkMode } = useTernaryDarkMode();
+    const { isDarkMode } = useTernaryDarkMode()
 
     useEffect(() => {
-        const body = document.querySelector("body");
+        const body = document.querySelector("body")
 
         if (body) {
             isDarkMode
                 ? body.classList.add("dark")
-                : body.classList.remove("dark");
+                : body.classList.remove("dark")
         }
-    }, [isDarkMode]);
+    }, [isDarkMode])
 
-    return <div className={cn(className)}>{children}</div>;
+    return <div className={cn(className)}>{children}</div>
 }

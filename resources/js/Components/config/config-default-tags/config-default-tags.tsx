@@ -1,96 +1,97 @@
-import { router, usePage } from "@inertiajs/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import { router, usePage } from "@inertiajs/react"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import axios from "axios"
+import React, { useCallback, useEffect, useState } from "react"
+import { useShallow } from "zustand/react/shallow"
 
-import { Item } from "@/Components/form/multiple-select";
-import TagCombobox from "@/Components/form/tag-combobox";
-import { Label } from "@/Components/ui/label";
-import { Switch } from "@/Components/ui/switch";
-import { useDebounceCallback } from "@/Hooks/use-debounce-callback";
-import { useFilterStore } from "@/Stores/filter-store";
-import { Config, CursorPagination, Tag } from "@/types";
-import axios from "axios";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { Item } from "@/Components/form/multiple-select"
+import TagCombobox from "@/Components/form/tag-combobox"
+import { Label } from "@/Components/ui/label"
+import { Switch } from "@/Components/ui/switch"
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
+import { useFilterStore } from "@/Stores/filter-store"
+import { Config, CursorPagination, Tag } from "@/types"
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
 
     const {
         config: { use_default_tags },
-    } = usePage<{ config: Config }>().props;
+    } = usePage<{ config: Config }>().props
 
-    const [selectedTags, setSelectedTags] = useState<Item[]>([]);
+    const [selectedTags, setSelectedTags] = useState<Item[]>([])
     const { defaultTags } = useFilterStore(
         useShallow((state) => ({
             defaultTags: state.defaultTags,
         })),
-    );
+    )
 
-    const debounceCallback = useCallback((selectedTags: Item[]) => {
-        if (selectedTags.length === defaultTags.length) {
-            return;
-        }
-        router.put(route("config.tags.update"), {
-            tags: selectedTags.map((tag) => tag.key),
-        });
-    }, [selectedTags, defaultTags])
-
-    const debounced = useDebounceCallback(debounceCallback,500);
-
-    const {
-        data,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage
-      } = useInfiniteQuery<CursorPagination<Tag>>({
-        queryKey: ["tags", {tagSearch}],
-        queryFn: async ({ pageParam }) => {
-            const params = {
-                cursor: (pageParam as string),
-                "filter[label]": tagSearch,
-            };
-
-            const cleanParams = Object.fromEntries(
-                Object.entries(params).filter(([value]) => value !== ""),
-            );
-
-            const urlParams = new URLSearchParams(cleanParams);
-
-            const result = await axios.get(`${route("api.tags")}?${urlParams.toString()}`)
-
-            return result.data
+    const debounceCallback = useCallback(
+        (selectedTags: Item[]) => {
+            if (selectedTags.length === defaultTags.length) {
+                return
+            }
+            router.put(route("config.tags.update"), {
+                tags: selectedTags.map((tag) => tag.key),
+            })
         },
-        initialPageParam: null,
-        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
-      })
+        [selectedTags, defaultTags],
+    )
+
+    const debounced = useDebounceCallback(debounceCallback, 500)
+
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+        useInfiniteQuery<CursorPagination<Tag>>({
+            queryKey: ["tags", { tagSearch }],
+            queryFn: async ({ pageParam }) => {
+                const params = {
+                    cursor: pageParam as string,
+                    "filter[label]": tagSearch,
+                }
+
+                const cleanParams = Object.fromEntries(
+                    Object.entries(params).filter(([value]) => value !== ""),
+                )
+
+                const urlParams = new URLSearchParams(cleanParams)
+
+                const result = await axios.get(
+                    `${route("api.tags")}?${urlParams.toString()}`,
+                )
+
+                return result.data
+            },
+            initialPageParam: null,
+            getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+        })
 
     const updateTags = (tags: Item[]) => {
-        setSelectedTags(tags);
-        debounced(tags);
-    };
+        setSelectedTags(tags)
+        debounced(tags)
+    }
 
     useEffect(() => {
         updateTags(
             defaultTags.map((tag) => ({ key: tag.id, value: tag.label })),
-        );
-    }, [defaultTags]);
+        )
+    }, [defaultTags])
 
     const toggle = (checked: boolean) => {
         router.post(route("config.tags.store"), {
             state: checked,
-        });
+        })
     }
 
     const handleEndReached = () => {
         if (!hasNextPage || isFetchingNextPage) {
             return
         }
-       fetchNextPage()
-      }
+        fetchNextPage()
+    }
 
-    const rows = data ? data.pages.flatMap((d) => d.data) : [];
+    const rows = data ? data.pages.flatMap((d) => d.data) : []
 
-    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }));
+    const items = rows.map((tag) => ({ key: tag.id, value: tag.label }))
 
     return (
         <div className="rounded-lg border p-3 shadow-sm">
@@ -122,5 +123,5 @@ export default function ConfigDefaultTags() {
                 />
             </div>
         </div>
-    );
+    )
 }

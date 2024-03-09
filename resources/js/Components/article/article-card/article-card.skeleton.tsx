@@ -1,12 +1,7 @@
-import React from "react";
+import React from "react"
 
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from "@/Components/ui/card";
-import { Skeleton } from "@/Components/ui/skeleton";
+import { Card, CardContent, CardFooter, CardHeader } from "@/Components/ui/card"
+import { Skeleton } from "@/Components/ui/skeleton"
 
 export default function ArticleCardSkeleton() {
     return (
@@ -23,5 +18,5 @@ export default function ArticleCardSkeleton() {
                 <Skeleton className="h-[32px] w-[38px]" />
             </CardFooter>
         </Card>
-    );
+    )
 }

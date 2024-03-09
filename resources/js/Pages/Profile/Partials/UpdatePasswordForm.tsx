@@ -1,19 +1,19 @@
-import { Transition } from "@headlessui/react";
-import { useForm } from "@inertiajs/react";
-import { useRef, FormEventHandler } from "react";
+import { Transition } from "@headlessui/react"
+import { useForm } from "@inertiajs/react"
+import { useRef, FormEventHandler } from "react"
 
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import InputError from "@/Components/InputError"
+import InputLabel from "@/Components/InputLabel"
+import PrimaryButton from "@/Components/PrimaryButton"
+import TextInput from "@/Components/TextInput"
 
 export default function UpdatePasswordForm({
     className = "",
 }: {
-    className?: string;
+    className?: string
 }) {
-    const passwordInput = useRef<HTMLInputElement>();
-    const currentPasswordInput = useRef<HTMLInputElement>();
+    const passwordInput = useRef<HTMLInputElement>()
+    const currentPasswordInput = useRef<HTMLInputElement>()
 
     const {
         data,
@@ -27,27 +27,27 @@ export default function UpdatePasswordForm({
         current_password: "",
         password: "",
         password_confirmation: "",
-    });
+    })
 
     const updatePassword: FormEventHandler = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         put(route("password.update"), {
             preserveScroll: true,
             onSuccess: () => reset(),
             onError: (errors) => {
                 if (errors.password) {
-                    reset("password", "password_confirmation");
-                    passwordInput.current?.focus();
+                    reset("password", "password_confirmation")
+                    passwordInput.current?.focus()
                 }
 
                 if (errors.current_password) {
-                    reset("current_password");
-                    currentPasswordInput.current?.focus();
+                    reset("current_password")
+                    currentPasswordInput.current?.focus()
                 }
             },
-        });
-    };
+        })
+    }
 
     return (
         <section className={className}>
@@ -141,5 +141,5 @@ export default function UpdatePasswordForm({
                 </div>
             </form>
         </section>
-    );
+    )
 }

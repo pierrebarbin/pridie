@@ -1,11 +1,11 @@
-import { Head } from "@inertiajs/react";
+import { Head } from "@inertiajs/react"
 
-import AuthenticatedLayout from "@/Layouts/authenticated-layout";
-import { PageProps } from "@/types";
+import AuthenticatedLayout from "@/Layouts/authenticated-layout"
+import { PageProps } from "@/types"
 
-import DeleteUserForm from "./Partials/DeleteUserForm";
-import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
-import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
+import DeleteUserForm from "./Partials/DeleteUserForm"
+import UpdatePasswordForm from "./Partials/UpdatePasswordForm"
+import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm"
 
 export default function Edit({
     auth,
@@ -36,5 +36,5 @@ export default function Edit({
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }
