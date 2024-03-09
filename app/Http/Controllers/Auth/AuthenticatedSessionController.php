@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
     {
         $request->ensureIsNotRateLimited();
 
-        $email = str($request->safe()->name)->append('@glanum.com')->toString();
+        $email = $request->safe()->email;
 
         $oneTimeCode = OneTimeCode::query()
             ->where('email', $email)

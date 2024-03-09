@@ -17,11 +17,9 @@ import { Input } from "@/Components/ui/input";
 import GuestLayout from "@/Layouts/guest-layout";
 
 const formSchema = z.object({
-    name: z
+    email: z
         .string()
-        .min(1, {
-            message: "Votre nom est requis",
-        })
+        .email()
         .max(255, "Votre nom est trop long"),
 });
 
@@ -29,7 +27,7 @@ export default function Login({ status }: { status?: string }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
+            email: "",
         },
     });
 
@@ -55,7 +53,7 @@ export default function Login({ status }: { status?: string }) {
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="email"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
@@ -63,11 +61,7 @@ export default function Login({ status }: { status?: string }) {
                                     <div className="flex">
                                         <Input
                                             {...field}
-                                            className="rounded-r-none"
                                         />
-                                        <div className="boder-input flex items-center border border-l-0 px-3 py-1 text-sm">
-                                            @glanum.com
-                                        </div>
                                     </div>
                                 </FormControl>
                                 <FormMessage />
