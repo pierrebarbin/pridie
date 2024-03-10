@@ -2,7 +2,7 @@ import { ReactElement } from "react"
 
 import {
     AlertDialog,
-    AlertDialogAction,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogFooter,
     AlertDialogHeader,
@@ -10,6 +10,7 @@ import {
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
 import ProfileDeleteForm from "../profile-delete-form/profile-delete-form"
+import ProfilePersonalInfoForm from "../profile-personal-info-form/profile-personal-info-form"
 
 interface ProfileModalProps {
     children: ReactElement
@@ -24,10 +25,12 @@ export default function ProfileModal({ children }: ProfileModalProps) {
                     <AlertDialogTitle>Profile</AlertDialogTitle>
                 </AlertDialogHeader>
 
+                <ProfilePersonalInfoForm />
+
                 <ProfileDeleteForm />
 
                 <AlertDialogFooter>
-                    <AlertDialogAction>Fermer</AlertDialogAction>
+                    <AlertDialogCancel>Fermer</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

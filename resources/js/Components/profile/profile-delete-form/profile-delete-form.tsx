@@ -14,7 +14,7 @@ export default function ProfileDeleteForm() {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="destructive">Supprimer</Button>
+                <Button variant="destructive">Supprimer mon compte</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
