@@ -5,6 +5,7 @@ import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, usePage } from "@inertiajs/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -41,6 +42,7 @@ export default function ProfilePersonalInfoForm() {
             preserveState: true,
             onSuccess: () => {
                 toast.success("Vos informations ont été correctement modifié")
+                form.reset(values)
             },
             onError: () => {
                 toast.error("Une erreur est survenue, veuillez contacter un administrateur")
@@ -50,6 +52,8 @@ export default function ProfilePersonalInfoForm() {
             }
         })
     }
+
+    const cannotSubmit = loading || !form.formState.isDirty
 
     return (
         <Form {...form}>
@@ -91,7 +95,8 @@ export default function ProfilePersonalInfoForm() {
                 />
                 <Button
                     type="submit"
-                    disabled={loading}
+                    className={clsx(cannotSubmit && "cursor-not-allowed")}
+                    disabled={cannotSubmit}
                 >
                     {loading ? (
                         <>

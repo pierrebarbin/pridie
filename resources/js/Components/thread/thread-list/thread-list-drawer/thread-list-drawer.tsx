@@ -47,7 +47,7 @@ const formSchema = z.object({
         .max(255, "Le nom est trop long"),
 })
 
-export default function ThreadListMobile() {
+export default function ThreadListDrawer() {
     const [tab, setTab] = useState("list")
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)

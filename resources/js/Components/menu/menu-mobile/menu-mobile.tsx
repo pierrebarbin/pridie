@@ -4,13 +4,11 @@ import {
     MixerVerticalIcon,
     PersonIcon,
 } from "@radix-ui/react-icons"
-import React from "react"
 import { useShallow } from "zustand/react/shallow"
 
-import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
 import ConfigDefaultTags from "@/Components/config/config-default-tags/config-default-tags"
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters"
-import ThreadListMobile from "@/Components/thread/thread-list/thread-list-mobile/thread-list-mobile"
+import ThreadListDrawer from "@/Components/thread/thread-list/thread-list-drawer/thread-list-drawer"
 import { Button, buttonVariants } from "@/Components/ui/button"
 import {
     Drawer,
@@ -29,6 +27,8 @@ import {
 import { useMediaQuery } from "@/Hooks/use-media-query"
 import { cn } from "@/lib/utils"
 import { useFilterStore } from "@/Stores/filter-store"
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
+import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
 
 export default function MenuMobile() {
     const { removeCurrentThread } = useFilterStore(
@@ -59,6 +59,9 @@ export default function MenuMobile() {
                                     </div>
                                 </DrawerTrigger>
                                 <DrawerContent className="h-[90%] p-4 pt-0">
+                                    <div className="mt-6">
+                                        <DarkModePicker />
+                                    </div>
                                     <div className="mt-4">
                                         <ConfigDefaultTags />
                                     </div>
@@ -74,32 +77,7 @@ export default function MenuMobile() {
                                 "h-auto",
                             )}
                         >
-                            <Drawer>
-                                <DrawerTrigger asChild>
-                                    <div className="flex flex-col items-center gap-1">
-                                        <PersonIcon className="h-5 w-5" />
-                                        <span className="text-xs">Profil</span>
-                                    </div>
-                                </DrawerTrigger>
-                                <DrawerContent className="h-1/3 p-4 pt-0">
-                                    <div className="mt-6">
-                                        <DarkModePicker />
-                                    </div>
-                                    <DrawerFooter>
-                                        <form
-                                            action={route("logout")}
-                                            method="post"
-                                        >
-                                            <Button
-                                                variant="destructive"
-                                                className="w-full"
-                                            >
-                                                Déconnexion
-                                            </Button>
-                                        </form>
-                                    </DrawerFooter>
-                                </DrawerContent>
-                            </Drawer>
+                            <ProfileDrawer />
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     {matches ? (
@@ -126,7 +104,7 @@ export default function MenuMobile() {
                                 "h-auto flex-col gap-1",
                             )}
                         >
-                            <ThreadListMobile />
+                            <ThreadListDrawer />
                             <span className="text-xs">Flux</span>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
