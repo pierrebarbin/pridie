@@ -12,7 +12,10 @@ class Config extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $casts = [
-        'use_default_tags' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'use_default_tags' => 'boolean',
+        ];
+    }
 }

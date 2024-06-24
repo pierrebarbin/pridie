@@ -17,9 +17,13 @@ class OneTimeCode extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'expire_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'expire_at' => 'datetime',
+        ];
+    }
 
     public function account(): HasOne
     {

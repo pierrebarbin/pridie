@@ -30,7 +30,7 @@ class HandleInertiaRequests extends Middleware
      * @return array<string, mixed>
      */
     public function share(Request $request): array
-    {
+    {dump($request->session()->token());
         return [
             ...parent::share($request),
             'auth' => [
