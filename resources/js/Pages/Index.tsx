@@ -69,7 +69,7 @@ export default function Index({
         <AppLayout className="relative min-h-screen">
             <Head title="For the watch" />
             <Menu />
-            <ArticleList cursor={filters.cursor} />
+            <ArticleList />
         </AppLayout>
     )
 }

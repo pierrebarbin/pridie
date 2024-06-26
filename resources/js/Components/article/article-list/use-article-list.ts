@@ -12,22 +12,16 @@ interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
     cardHeight: number
     cardBottomMargin: number
-    cursor?: string
 }
 
 export function useArticleList({
     parentRef,
     cardHeight,
     cardBottomMargin,
-    cursor,
 }: UseArticleProps) {
     const [currentFetchDirection, setCurrentFetchDirection] = useState<
         "backward" | "forward" | null
     >(null)
-    const [queryKeyCache, setQueryKeyCache] = useState("")
-    const [initialCursor, setInitialCursor] = useState<string | null>(
-        cursor ?? null,
-    )
 
     const { search, currentThread, showBookmark, selectedTags } =
         useFilterStore(
@@ -53,22 +47,12 @@ export function useArticleList({
                 thread: currentThread?.id,
             },
         ],
-        queryFn: async ({ pageParam, queryKey, direction }) => {
-            const key = JSON.stringify(queryKey)
-            let cursor = {}
-
-            if (queryKeyCache === key || initialCursor) {
-                cursor = {
-                    cursor: (pageParam as string) ?? "",
-                }
-                setInitialCursor(null)
-            }
-
-            setQueryKeyCache(key)
-            setCurrentFetchDirection(direction)
+        queryFn: async ({ pageParam}) => {
+            const param = pageParam as {cursor: string|null, direction: "backward"|"forward"|null}
+            setCurrentFetchDirection(param.direction)
 
             const params = {
-                ...cursor,
+                cursor: param.cursor,
                 "filter[title]": debouncedSearch,
                 "filter[tags]": selectedTags
                     .reduce((acc, tag) => `${acc}${tag.key},`, "")
@@ -83,16 +67,24 @@ export function useArticleList({
 
             const urlParams = new URLSearchParams(cleanParams)
 
-            // window.history.replaceState({}, "", '?' + urlParams.toString())
-
             const res = await axios.get(
                 `${route("api.articles")}?${urlParams.toString()}`,
             )
             return res.data
         },
-        initialPageParam: initialCursor,
-        getPreviousPageParam: (lastPage, pages) => lastPage.meta.prev_cursor,
-        getNextPageParam: (lastPage, pages) => lastPage.meta.next_cursor,
+        initialPageParam: ({
+            cursor: null,
+            direction: null,
+        }),
+
+        getPreviousPageParam: (lastPage, pages) => (lastPage.meta.prev_cursor ? {
+            cursor: lastPage.meta.prev_cursor,
+            direction: "backward",
+        }: null),
+        getNextPageParam: (lastPage, pages) => ( lastPage.meta.next_cursor ? {
+            cursor: lastPage.meta.next_cursor,
+            direction: "forward",
+        }: null),
         maxPages,
     })
 
@@ -114,6 +106,11 @@ export function useArticleList({
         estimateSize: () => cardHeight + cardBottomMargin,
         overscan: 5,
     })
+
+    const topMargin = hasPreviousPage
+        ? cardHeight + cardBottomMargin
+        : cardBottomMargin
+    const containerHeight = rowVirtualizer.getTotalSize() + topMargin
 
     useEffect(() => {
         setDebouncedSearch(search)
@@ -178,9 +175,12 @@ export function useArticleList({
     ])
 
     useEffect(() => {
-        if (data && data.pages.length === 1) {
+        if (data && data.pages.length === 1 && currentFetchDirection === null) {
             parentRef?.current?.scrollTo(0, hasPreviousPage ? cardHeight : 0)
-        } else if (
+            return
+        }
+
+        if (
             currentFetchDirection === "forward" &&
             data &&
             data.pages.length === maxPages
@@ -188,18 +188,23 @@ export function useArticleList({
             setCurrentFetchDirection(null)
             parentRef?.current?.scrollTo(
                 0,
-                parentRef?.current?.scrollTop -
-                    (cardHeight + cardBottomMargin) * 10,
+                containerHeight -
+                    (cardHeight + cardBottomMargin) * 25.5, // need to change that magic number to some variables + handle last page without max card
             )
-        } else if (currentFetchDirection === "backward") {
+            return
+        }
+
+        if (currentFetchDirection === "backward") {
+            console.log('3')
             setCurrentFetchDirection(null)
             parentRef?.current?.scrollTo(
                 0,
                 parentRef?.current?.scrollTop +
                     (cardHeight + cardBottomMargin) * 10,
             )
+            return
         }
     }, [data, currentFetchDirection])
 
-    return { ...infiniteProps, rowVirtualizer }
+    return { ...infiniteProps, rowVirtualizer, containerHeight, topMargin }
 }

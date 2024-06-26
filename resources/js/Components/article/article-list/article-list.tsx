@@ -9,11 +9,7 @@ import { Button } from "@/Components/ui/button"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { useFilterStore } from "@/Stores/filter-store"
 
-interface ArticleListProps {
-    cursor?: string
-}
-
-export default function ArticleList({ cursor }: ArticleListProps) {
+export default function ArticleList() {
     const parentRef = React.useRef<HTMLDivElement>(null)
 
     const { currentThread, resetFilters, removeCurrentThread } = useFilterStore(
@@ -34,17 +30,15 @@ export default function ArticleList({ cursor }: ArticleListProps) {
         hasPreviousPage,
         hasNextPage,
         rowVirtualizer,
+        containerHeight,
+        topMargin
     } = useArticleList({
-        cursor,
         parentRef,
-        cardBottomMargin,
         cardHeight,
+        cardBottomMargin,
     })
 
     const rows = data ? data.pages.flatMap((d) => d.data) : []
-    const topMargin = hasPreviousPage
-        ? cardHeight + cardBottomMargin
-        : cardBottomMargin
 
     if (status === "pending") {
         return (
@@ -110,7 +104,7 @@ export default function ArticleList({ cursor }: ArticleListProps) {
             <div
                 className="relative mx-auto w-full max-w-[500px]"
                 style={{
-                    height: `${rowVirtualizer.getTotalSize() + topMargin}px`,
+                    height: containerHeight + 'px',
                 }}
             >
                 {hasPreviousPage ? (

@@ -19,7 +19,7 @@ class ArticleController extends Controller
     {
         try {
             $articles = QueryBuilder::for(Article::class)
-                ->defaultSorts(['-created_at'])
+                ->defaultSorts(['-created_at', 'title'])
                 ->allowedFilters([
                     'title',
                     AllowedFilter::scope('tags', 'by_tags'),
