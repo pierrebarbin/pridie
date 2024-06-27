@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import axios from "axios"
-import { RefObject, useEffect, useState } from "react"
+import {RefObject, useEffect, useLayoutEffect, useState} from "react"
 import { useShallow } from "zustand/react/shallow"
 
 import { useDebounceValue } from "@/Hooks/use-debounce-value"
@@ -14,15 +14,14 @@ interface UseArticleProps {
     cardBottomMargin: number
 }
 
+const maxPages = 3
+const cardPerPage = 10
+
 export function useArticleList({
     parentRef,
     cardHeight,
     cardBottomMargin,
 }: UseArticleProps) {
-    const [currentFetchDirection, setCurrentFetchDirection] = useState<
-        "backward" | "forward" | null
-    >(null)
-
     const { search, currentThread, showBookmark, selectedTags } =
         useFilterStore(
             useShallow((state) => ({
@@ -34,8 +33,6 @@ export function useArticleList({
         )
 
     const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
-
-    const maxPages = 3
 
     const infiniteProps = useInfiniteQuery<CursorPagination<Article>>({
         queryKey: [
@@ -49,7 +46,6 @@ export function useArticleList({
         ],
         queryFn: async ({ pageParam}) => {
             const param = pageParam as {cursor: string|null, direction: "backward"|"forward"|null}
-            setCurrentFetchDirection(param.direction)
 
             const params = {
                 cursor: param.cursor,
@@ -96,8 +92,9 @@ export function useArticleList({
         hasPreviousPage,
         isFetchingNextPage,
         isFetchingPreviousPage,
+        isRefetching
     } = infiniteProps
-
+console.log(infiniteProps)
     const rows = data ? data.pages.flatMap((d) => d.data) : []
 
     const rowVirtualizer = useVirtualizer({
@@ -132,8 +129,7 @@ export function useArticleList({
         if (
             currentScroll < cardHeight &&
             hasPreviousPage &&
-            !isFetchingPreviousPage &&
-            currentFetchDirection !== "backward"
+            !isFetchingPreviousPage
         ) {
             fetchPreviousPage()
         }
@@ -175,36 +171,36 @@ export function useArticleList({
     ])
 
     useEffect(() => {
-        if (data && data.pages.length === 1 && currentFetchDirection === null) {
+        const param = data?.pageParams[0] as {cursor: string|null, direction: "backward"|"forward"|null}|null
+
+        if (data && data.pages.length === 1 && param?.direction === null) {
             parentRef?.current?.scrollTo(0, hasPreviousPage ? cardHeight : 0)
             return
         }
 
         if (
-            currentFetchDirection === "forward" &&
             data &&
-            data.pages.length === maxPages
+            data.pages.length === maxPages &&
+            param?.direction === "forward" &&
+            !isRefetching
         ) {
-            setCurrentFetchDirection(null)
             parentRef?.current?.scrollTo(
                 0,
                 containerHeight -
-                    (cardHeight + cardBottomMargin) * 25.5, // need to change that magic number to some variables + handle last page without max card
+                    (cardHeight + cardBottomMargin) * (cardPerPage * 2 - 5.5), // need to change that magic number to some variables + handle last page without max card
             )
             return
         }
 
-        if (currentFetchDirection === "backward") {
-            console.log('3')
-            setCurrentFetchDirection(null)
+        if (param?.direction === "backward" && !isRefetching) {
             parentRef?.current?.scrollTo(
                 0,
                 parentRef?.current?.scrollTop +
-                    (cardHeight + cardBottomMargin) * 10,
+                    (cardHeight + cardBottomMargin) * (cardPerPage * 2 - 1),
             )
             return
         }
-    }, [data, currentFetchDirection])
+    }, [data, isRefetching])
 
     return { ...infiniteProps, rowVirtualizer, containerHeight, topMargin }
 }

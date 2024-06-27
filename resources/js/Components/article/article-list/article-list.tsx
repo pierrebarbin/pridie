@@ -122,7 +122,7 @@ export default function ArticleList() {
                             key={virtualRow.index}
                             className="absolute left-0 top-0 w-full"
                             style={{
-                                height: `${virtualRow.size}px`,
+                                height: virtualRow.size + 'px',
                                 transform: `translateY(${virtualRow.start + topMargin}px)`,
                             }}
                         >
