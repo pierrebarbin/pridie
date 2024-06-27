@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
 import { useQueryClient } from "@tanstack/react-query"
 import React, { ReactElement, useState } from "react"
-import { Simulate } from "react-dom/test-utils"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -16,10 +15,9 @@ import {
 } from "@/Components/ui/form"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { useFilterStore } from "@/Stores/filter-store"
 import { Article } from "@/types"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
-import load = Simulate.load
 
 const formSchema = z.object({
     threads: z.array(
@@ -43,7 +41,7 @@ export default function ArticleCardBookmarkForm({
 }: ArticleCardBookmarkFormProps) {
     const [loading, setLoading] = useState(false)
 
-    const threads = useFilterStore((state) => state.threads)
+    const threads =  useFilterStoreContext((state) => state.threads)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

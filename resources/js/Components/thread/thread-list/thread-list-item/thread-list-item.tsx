@@ -2,7 +2,6 @@ import { router } from "@inertiajs/react"
 import { BookmarkFilledIcon } from "@radix-ui/react-icons"
 import React from "react"
 import { toast } from "sonner"
-import { useShallow } from "zustand/react/shallow"
 
 import {
     ContextMenu,
@@ -18,20 +17,16 @@ import {
     navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-import { useFilterStore } from "@/Stores/filter-store"
 import { Thread } from "@/types"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 interface ThreadListItemProps {
     thread: Thread
 }
 
 export default function ThreadListItem({ thread }: ThreadListItemProps) {
-    const { currentThread, changeCurrentThreadTo } = useFilterStore(
-        useShallow((state) => ({
-            currentThread: state.currentThread,
-            changeCurrentThreadTo: state.changeCurrentThreadTo,
-        })),
-    )
+    const currentThread =  useFilterStoreContext((state) => state.currentThread)
+    const changeCurrentThreadTo =  useFilterStoreContext((state) => state.changeCurrentThreadTo)
 
     const remove = () => {
         router.delete(route("threads.destroy", { thread: thread.id }), {

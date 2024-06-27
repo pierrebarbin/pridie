@@ -1,24 +1,19 @@
 import { ArchiveIcon, Cross2Icon, PinLeftIcon } from "@radix-ui/react-icons"
 import React from "react"
-import { useShallow } from "zustand/react/shallow"
 
 import ArticleCard from "@/Components/article/article-card/article-card"
 import ArticleCardSkeleton from "@/Components/article/article-card/article-card.skeleton"
 import { useArticleList } from "@/Components/article/article-list/use-article-list"
 import { Button } from "@/Components/ui/button"
 import { ScrollArea } from "@/Components/ui/scroll-area"
-import { useFilterStore } from "@/Stores/filter-store"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 export default function ArticleList() {
     const parentRef = React.useRef<HTMLDivElement>(null)
 
-    const { currentThread, resetFilters, removeCurrentThread } = useFilterStore(
-        useShallow((state) => ({
-            currentThread: state.currentThread,
-            resetFilters: state.resetFilters,
-            removeCurrentThread: state.removeCurrentThread,
-        })),
-    )
+    const currentThread =  useFilterStoreContext((state) => state.currentThread)
+    const resetFilters =  useFilterStoreContext((state) => state.resetFilters)
+    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
 
     const cardHeight = 400
     const cardBottomMargin = 30

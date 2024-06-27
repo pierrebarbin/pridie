@@ -12,7 +12,6 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-import { useShallow } from "zustand/react/shallow"
 
 import { Button } from "@/Components/ui/button"
 import { Drawer, DrawerContent, DrawerTrigger } from "@/Components/ui/drawer"
@@ -36,7 +35,7 @@ import { ScrollArea } from "@/Components/ui/scroll-area"
 import { Separator } from "@/Components/ui/separator"
 import { useWindowSize } from "@/Hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import { useFilterStore } from "@/Stores/filter-store"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 const formSchema = z.object({
     name: z
@@ -61,19 +60,10 @@ export default function ThreadListDrawer() {
 
     const { width } = useWindowSize()
 
-    const {
-        threads,
-        currentThread,
-        removeCurrentThread,
-        changeCurrentThreadTo,
-    } = useFilterStore(
-        useShallow((state) => ({
-            threads: state.threads,
-            currentThread: state.currentThread,
-            removeCurrentThread: state.removeCurrentThread,
-            changeCurrentThreadTo: state.changeCurrentThreadTo,
-        })),
-    )
+    const threads =  useFilterStoreContext((state) => state.threads)
+    const currentThread =  useFilterStoreContext((state) => state.currentThread)
+    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+    const changeCurrentThreadTo =  useFilterStoreContext((state) => state.changeCurrentThreadTo)
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)

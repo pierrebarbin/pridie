@@ -2,9 +2,7 @@ import {
     GearIcon,
     HomeIcon,
     MixerVerticalIcon,
-    PersonIcon,
 } from "@radix-ui/react-icons"
-import { useShallow } from "zustand/react/shallow"
 
 import ConfigDefaultTags from "@/Components/config/config-default-tags/config-default-tags"
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters"
@@ -26,16 +24,12 @@ import {
 } from "@/Components/ui/navigation-menu"
 import { useMediaQuery } from "@/Hooks/use-media-query"
 import { cn } from "@/lib/utils"
-import { useFilterStore } from "@/Stores/filter-store"
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
 import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 export default function MenuMobile() {
-    const { removeCurrentThread } = useFilterStore(
-        useShallow((state) => ({
-            removeCurrentThread: state.removeCurrentThread,
-        })),
-    )
+    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
 
     const matches = useMediaQuery("(min-width: 360px)")
 

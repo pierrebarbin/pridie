@@ -1,12 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import axios from "axios"
-import {RefObject, useEffect, useLayoutEffect, useState} from "react"
-import { useShallow } from "zustand/react/shallow"
+import {RefObject, useEffect} from "react"
 
 import { useDebounceValue } from "@/Hooks/use-debounce-value"
-import { useFilterStore } from "@/Stores/filter-store"
 import { Article, CursorPagination } from "@/types"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
@@ -22,15 +21,11 @@ export function useArticleList({
     cardHeight,
     cardBottomMargin,
 }: UseArticleProps) {
-    const { search, currentThread, showBookmark, selectedTags } =
-        useFilterStore(
-            useShallow((state) => ({
-                search: state.search,
-                currentThread: state.currentThread,
-                showBookmark: state.showBookmark,
-                selectedTags: state.selectedTags,
-            })),
-        )
+
+    const search =  useFilterStoreContext((state) => state.search)
+    const currentThread =  useFilterStoreContext((state) => state.currentThread)
+    const showBookmark =  useFilterStoreContext((state) => state.showBookmark)
+    const selectedTags =  useFilterStoreContext((state) => state.selectedTags)
 
     const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
 
@@ -45,7 +40,7 @@ export function useArticleList({
             },
         ],
         queryFn: async ({ pageParam}) => {
-            const param = pageParam as {cursor: string|null, direction: "backward"|"forward"|null}
+            const param = pageParam as {cursor: string|null}
 
             const params = {
                 cursor: param.cursor,
@@ -94,7 +89,7 @@ export function useArticleList({
         isFetchingPreviousPage,
         isRefetching
     } = infiniteProps
-console.log(infiniteProps)
+
     const rows = data ? data.pages.flatMap((d) => d.data) : []
 
     const rowVirtualizer = useVirtualizer({

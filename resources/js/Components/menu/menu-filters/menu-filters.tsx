@@ -1,36 +1,24 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useState } from "react"
-import { useShallow } from "zustand/react/shallow"
 
 import TagCombobox from "@/Components/form/tag-combobox"
 import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Separator } from "@/Components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
-import { useFilterStore } from "@/Stores/filter-store"
 import { CursorPagination, Tag } from "@/types"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 export default function MenuFilters() {
     const [tagSearch, setTagSearch] = useState("")
 
-    const {
-        search,
-        updateSearch,
-        updateSelectedTags,
-        showBookmark,
-        selectedTags,
-        updateShowBookmark,
-    } = useFilterStore(
-        useShallow((state) => ({
-            search: state.search,
-            updateSearch: state.updateSearch,
-            updateSelectedTags: state.updateSelectedTags,
-            updateShowBookmark: state.updateShowBookmark,
-            showBookmark: state.showBookmark,
-            selectedTags: state.selectedTags,
-        })),
-    )
+    const search =  useFilterStoreContext((state) => state.search)
+    const showBookmark =  useFilterStoreContext((state) => state.showBookmark)
+    const selectedTags =  useFilterStoreContext((state) => state.selectedTags)
+    const updateShowBookmark =  useFilterStoreContext((state) => state.updateShowBookmark)
+    const updateSearch =  useFilterStoreContext((state) => state.updateSearch)
+    const updateSelectedTags =  useFilterStoreContext((state) => state.updateSelectedTags)
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
         useInfiniteQuery<CursorPagination<Tag>>({

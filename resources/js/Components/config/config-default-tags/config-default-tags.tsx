@@ -2,15 +2,14 @@ import { router, usePage } from "@inertiajs/react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
 import React, { useCallback, useEffect, useState } from "react"
-import { useShallow } from "zustand/react/shallow"
 
 import { Item } from "@/Components/form/multiple-select"
 import TagCombobox from "@/Components/form/tag-combobox"
 import { Label } from "@/Components/ui/label"
 import { Switch } from "@/Components/ui/switch"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
-import { useFilterStore } from "@/Stores/filter-store"
 import { Config, CursorPagination, Tag } from "@/types"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
@@ -20,11 +19,8 @@ export default function ConfigDefaultTags() {
     } = usePage<{ config: Config }>().props
 
     const [selectedTags, setSelectedTags] = useState<Item[]>([])
-    const { defaultTags } = useFilterStore(
-        useShallow((state) => ({
-            defaultTags: state.defaultTags,
-        })),
-    )
+
+    const defaultTags =  useFilterStoreContext((state) => state.defaultTags)
 
     const debounceCallback = useCallback(
         (selectedTags: Item[]) => {

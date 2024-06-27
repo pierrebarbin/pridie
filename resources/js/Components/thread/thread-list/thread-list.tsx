@@ -5,7 +5,6 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-import { useShallow } from "zustand/react/shallow"
 
 import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thread-list-item"
 import {
@@ -35,7 +34,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-import { useFilterStore } from "@/Stores/filter-store"
+import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 const formSchema = z.object({
     name: z
@@ -50,19 +49,16 @@ export default function ThreadList() {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
+    const threads =  useFilterStoreContext((state) => state.threads)
+    const currentThread =  useFilterStoreContext((state) => state.currentThread)
+    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
         },
     })
-    const { threads, currentThread, removeCurrentThread } = useFilterStore(
-        useShallow((state) => ({
-            threads: state.threads,
-            currentThread: state.currentThread,
-            removeCurrentThread: state.removeCurrentThread,
-        })),
-    )
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
