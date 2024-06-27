@@ -54,7 +54,7 @@ export function useArticleList({
 
             const cleanParams = Object.fromEntries(
                 Object.entries(params).filter(([value]) => value !== ""),
-            )
+            ) as Record<string, string>
 
             const urlParams = new URLSearchParams(cleanParams)
 

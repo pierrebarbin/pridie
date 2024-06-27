@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { createStore} from "zustand"
+import {createStore, StoreApi} from "zustand"
 
 import { Item } from "@/Components/form/multiple-select"
 import { Tag, Thread } from "@/types"
@@ -74,4 +74,4 @@ export const createFilterStore = (initProps?: Partial<FilterProps & ThreadProps>
     }))
 }
 
-export const FilterContext = createContext<FilterState & ThreadState | null>(null)
+export const FilterContext = createContext<StoreApi<FilterState & ThreadState> | null>(null)
