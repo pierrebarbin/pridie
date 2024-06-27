@@ -13,12 +13,11 @@ import {useFilterStoreContext} from "@/Stores/use-filter-store";
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
+    const [selectedTags, setSelectedTags] = useState<Item[]>([])
 
     const {
         config: { use_default_tags },
     } = usePage<{ config: Config }>().props
-
-    const [selectedTags, setSelectedTags] = useState<Item[]>([])
 
     const defaultTags =  useFilterStoreContext((state) => state.defaultTags)
 

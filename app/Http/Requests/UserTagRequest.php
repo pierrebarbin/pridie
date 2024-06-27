@@ -25,7 +25,7 @@ class UserTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tags' => 'required|array',
+            'tags' => 'array',
             'tags.*' => 'string|exists:'.Tag::class.',id',
         ];
     }
