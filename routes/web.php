@@ -74,6 +74,9 @@ Route::withoutMiddleware(HandleInertiaRequests::class)
 
         Route::get('/threads', [App\Http\Controllers\Api\ThreadController::class, 'index'])
             ->name('api.threads');
+
+        Route::get('/reactions', [App\Http\Controllers\Api\ReactionController::class, 'index'])
+            ->name('api.reactions');
 });
 
 

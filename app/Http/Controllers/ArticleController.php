@@ -20,10 +20,8 @@ class ArticleController extends Controller
     public function index(Request $request): Response
     {
         $config = $request->user()->config;
-        $reactions = Reaction::all();
 
         return Inertia::render('Index', [
-            'reactions' =>  fn () => $reactions,
             'defaultTags' =>  fn () => $config->use_default_tags ? $request->user()->defaultTags : [],
             'config' =>  fn () => [
                 'useDefaultConfig' => $config->use_default_tags,
