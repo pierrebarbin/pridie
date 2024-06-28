@@ -4,7 +4,7 @@ import ConfigDefaultTags from "@/Components/config/config-default-tags/config-de
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogContent,
+    AlertDialogContent, AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -23,6 +23,7 @@ export default function ConfigModal({ children }: ConfigModalProps) {
             <AlertDialogContent className="max-w-screen-lg">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Configuration</AlertDialogTitle>
+                    <AlertDialogDescription>Configurez votre application</AlertDialogDescription>
                 </AlertDialogHeader>
                 <Tabs
                     defaultValue="tags"

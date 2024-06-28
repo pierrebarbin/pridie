@@ -53,7 +53,7 @@ export default function ProfilePersonalInfoForm() {
         })
     }
 
-    const cannotSubmit = loading || !form.formState.isDirty
+    const cannotSubmit = loading
 
     return (
         <Form {...form}>

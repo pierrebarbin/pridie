@@ -3,7 +3,7 @@ import { ReactElement } from "react"
 import {
     AlertDialog,
     AlertDialogCancel,
-    AlertDialogContent,
+    AlertDialogContent, AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -25,6 +25,7 @@ export default function ProfileModal({ children }: ProfileModalProps) {
             <AlertDialogContent className="max-w-screen-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Mon profil</AlertDialogTitle>
+                    <AlertDialogDescription>Edition de mon profil</AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <div>

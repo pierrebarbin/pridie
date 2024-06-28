@@ -102,7 +102,6 @@ export default function Authenticated({
             </nav>
 
             <main>{children}</main>
-            <Toaster />
         </AppLayout>
     )
 }
