@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
-import { useQueryClient } from "@tanstack/react-query"
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query"
 import React, { ReactElement, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -15,9 +15,7 @@ import {
 } from "@/Components/ui/form"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { Article } from "@/types"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
-
+import {Article, Pagination, Thread} from "@/types"
 
 const formSchema = z.object({
     threads: z.array(
@@ -41,7 +39,13 @@ export default function ArticleCardBookmarkForm({
 }: ArticleCardBookmarkFormProps) {
     const [loading, setLoading] = useState(false)
 
-    const threads =  useFilterStoreContext((state) => state.threads)
+    const {data} = useSuspenseQuery<Pagination<Thread>>({
+        queryKey: ['threads', 1],
+        queryFn: async () =>
+            window.axios
+                .get(route("api.threads"),)
+                .then((res) => res.data),
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -76,9 +80,9 @@ export default function ArticleCardBookmarkForm({
     const itemHeight = 44
     const maxItemsVisible = 7
     const scrollAreaHeight =
-        (threads.length < maxItemsVisible ? threads.length : maxItemsVisible) *
+        (data.data.length < maxItemsVisible ? data.data.length : maxItemsVisible) *
         itemHeight
-    const cannotSubmit = loading || threads.length === 0
+    const cannotSubmit = loading || data.data.length === 0
 
     return (
         <Form {...form}>
@@ -93,7 +97,7 @@ export default function ArticleCardBookmarkForm({
                                     style={{ height: scrollAreaHeight }}
                                     type="always"
                                 >
-                                    {threads.map((thread) => (
+                                    {data.data.map((thread) => (
                                         <div
                                             className="mb-1 pr-3"
                                             key={thread.id}

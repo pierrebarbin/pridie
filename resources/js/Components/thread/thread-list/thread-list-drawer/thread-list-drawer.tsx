@@ -1,12 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
-import {
-    BookmarkFilledIcon,
-    BookmarkIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    ReloadIcon,
-} from "@radix-ui/react-icons"
 import { motion } from "framer-motion"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -36,6 +29,9 @@ import { Separator } from "@/Components/ui/separator"
 import { useWindowSize } from "@/Hooks/use-window-size"
 import { cn } from "@/lib/utils"
 import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Loader} from "lucide-react";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
+import {Pagination, Thread} from "@/types";
 
 const formSchema = z.object({
     name: z
@@ -60,10 +56,19 @@ export default function ThreadListDrawer() {
 
     const { width } = useWindowSize()
 
-    const threads =  useFilterStoreContext((state) => state.threads)
     const currentThread =  useFilterStoreContext((state) => state.currentThread)
     const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
     const changeCurrentThreadTo =  useFilterStoreContext((state) => state.changeCurrentThreadTo)
+
+    const {data} = useSuspenseQuery<Pagination<Thread>>({
+        queryKey: ['threads', 1],
+        queryFn: async () =>
+            window.axios
+                .get(route("api.threads"),)
+                .then((res) => res.data),
+    })
+
+    const queryClient = useQueryClient()
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
@@ -71,7 +76,10 @@ export default function ThreadListDrawer() {
             onSuccess: () => {
                 setTab("list")
                 form.reset()
-                toast(`Flux ${values.name} créé`)
+                toast.success(`Flux ${values.name} créé`)
+                queryClient.invalidateQueries({
+                    queryKey: ['threads', 1],
+                })
             },
             onFinish: () => {
                 setLoading(false)
@@ -84,7 +92,7 @@ export default function ThreadListDrawer() {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <BookmarkIcon className="h-5 w-5" />
+                <Bookmark className="h-5 w-5" />
             </DrawerTrigger>
             <DrawerContent className="block h-[90%]">
                 <motion.div
@@ -110,7 +118,7 @@ export default function ThreadListDrawer() {
                                         }}
                                     >
                                         Ajouter un flux{" "}
-                                        <ChevronRightIcon className="absolute right-[30px] h-4 w-4" />
+                                        <ChevronRight className="absolute right-[30px] h-4 w-4" />
                                     </NavigationMenuLink>
                                     <Separator />
                                 </NavigationMenuItem>
@@ -133,11 +141,11 @@ export default function ThreadListDrawer() {
                                     >
                                         Veille principale
                                         {currentThread === null ? (
-                                            <BookmarkFilledIcon />
+                                            <BookmarkCheck className="w-5 h-5" />
                                         ) : null}
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
-                                {threads.map((thread) => (
+                                {data.data.map((thread) => (
                                     <NavigationMenuItem
                                         key={thread.id}
                                         className="w-full"
@@ -158,7 +166,7 @@ export default function ThreadListDrawer() {
                                         >
                                             {thread.name}
                                             {thread.id === currentThread?.id ? (
-                                                <BookmarkFilledIcon />
+                                                <BookmarkCheck className="w-5 h-5" />
                                             ) : null}
                                         </NavigationMenuLink>
                                     </NavigationMenuItem>
@@ -173,7 +181,7 @@ export default function ThreadListDrawer() {
                                 className="absolute left-0"
                                 onClick={() => setTab("list")}
                             >
-                                <ChevronLeftIcon className="h-5 w-5" />
+                                <ChevronLeft className="h-5 w-5" />
                             </Button>
                             <span className="inline-block align-middle">
                                 Ajouter un flux
@@ -208,7 +216,7 @@ export default function ThreadListDrawer() {
                                 >
                                     {loading ? (
                                         <>
-                                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                            <Loader className="mr-2 h-4 w-4 animate-spin" />
                                             Ajout en cours
                                         </>
                                     ) : (

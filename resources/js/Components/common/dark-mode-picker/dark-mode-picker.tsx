@@ -1,10 +1,9 @@
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons"
-
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import {
     useTernaryDarkMode,
     TernaryDarkModeResult,
 } from "@/Hooks/use-ternary-dark-mode"
+import {Monitor, Moon, Sun} from "lucide-react";
 
 interface DarkModePickerProps {
     useTernaryDarkModeOutput?: TernaryDarkModeResult
@@ -29,13 +28,13 @@ export default function DarkModePicker({
             onValueChange={onChange}
         >
             <ToggleGroupItem value="dark">
-                <MoonIcon className="h-4 w-4" />
+                <Moon className="h-4 w-4" />
             </ToggleGroupItem>
             <ToggleGroupItem value="system">
-                <DesktopIcon className="h-4 w-4" />
+                <Monitor className="h-4 w-4" />
             </ToggleGroupItem>
             <ToggleGroupItem value="light">
-                <SunIcon className="h-4 w-4" />
+                <Sun className="h-4 w-4" />
             </ToggleGroupItem>
         </ToggleGroup>
     )

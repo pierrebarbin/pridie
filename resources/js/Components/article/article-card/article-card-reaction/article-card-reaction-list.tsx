@@ -1,4 +1,3 @@
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useState } from "react"
 
 import ArticleCardReactionLisItem from "@/Components/article/article-card/article-card-reaction/article-card-reaction-lis-item"
@@ -10,6 +9,7 @@ import {
 } from "@/Components/ui/popover"
 import { useMediaQuery } from "@/Hooks/use-media-query"
 import { Reaction } from "@/types"
+import {Ellipsis} from "lucide-react";
 
 interface ArticleCardReactionListProps {
     reactions: { id: string; count: number }[]
@@ -59,7 +59,7 @@ export default function ArticleCardReactionList({
                             variant={open ? "secondary" : "ghost"}
                             size="sm"
                         >
-                            <DotsHorizontalIcon className="h-4 w-4" />
+                            <Ellipsis className="h-4 w-4" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent

@@ -71,6 +71,9 @@ Route::withoutMiddleware(HandleInertiaRequests::class)
 
         Route::get('/tags', [App\Http\Controllers\Api\TagController::class, 'index'])
             ->name('api.tags');
+
+        Route::get('/threads', [App\Http\Controllers\Api\ThreadController::class, 'index'])
+            ->name('api.threads');
 });
 
 

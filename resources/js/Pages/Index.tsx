@@ -10,7 +10,6 @@ import { PageProps, Tag, Thread } from "@/types"
 
 export default function Index({
     filters,
-    threads,
     defaultTags,
 }: PageProps<{
     filters: {
@@ -21,12 +20,10 @@ export default function Index({
             tags?: Item[]
         }
     }
-    threads: Thread[]
     defaultTags: Tag[]
 }>) {
 
     const store = useRef(createFilterStore({
-        threads,
         defaultTags,
         selectedTags: (() => {
             let selectedTags = filters.filter.tags

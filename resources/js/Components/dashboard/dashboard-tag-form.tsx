@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, usePage } from "@inertiajs/react"
-import { Cross2Icon } from "@radix-ui/react-icons"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -19,6 +18,7 @@ import {
 } from "@/Components/ui/form"
 import { Input } from "@/Components/ui/input"
 import { Tag } from "@/types"
+import {X} from "lucide-react";
 
 const formSchema = z.object({
     label: z
@@ -43,7 +43,7 @@ export default function DashboardTagForm() {
         router.post(route("tags.store"), values, {
             onSuccess: () => {
                 form.reset()
-                toast(`Article ${values.label} ajouté`)
+                toast.success(`Article ${values.label} ajouté`)
             },
         })
     }
@@ -51,7 +51,7 @@ export default function DashboardTagForm() {
     function remove(tag: Tag) {
         router.post(route("tags.destroy", { tag: tag.id }), undefined, {
             onSuccess: () => {
-                toast(`Tag ${tag.label} supprimé`)
+                toast.success(`Tag ${tag.label} supprimé`)
             },
         })
     }
@@ -97,7 +97,7 @@ export default function DashboardTagForm() {
                                 variant="ghost"
                                 onClick={() => remove(tag)}
                             >
-                                <Cross2Icon className="h-4 w-4" />
+                                <X className="h-4 w-4" />
                             </Button>
                         </Badge>
                     ))}

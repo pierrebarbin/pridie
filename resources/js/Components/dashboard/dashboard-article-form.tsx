@@ -83,7 +83,7 @@ export default function DashboardArticleForm() {
                     form.reset()
                     updateArticle(null)
                     selectedItems[1]([])
-                    toast(`Article ${values.title} ajouté`)
+                    toast.success(`Article ${values.title} ajouté`)
                 },
             },
         )

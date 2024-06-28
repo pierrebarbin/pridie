@@ -4,12 +4,12 @@ import { Input } from "@/Components/ui/input";
 import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, usePage } from "@inertiajs/react";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import {Loader} from "lucide-react";
 
 const formSchema = z.object({
     name: z
@@ -100,7 +100,7 @@ export default function ProfilePersonalInfoForm() {
                 >
                     {loading ? (
                         <>
-                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
                             Modifier mes informations
                         </>
                     ) : (

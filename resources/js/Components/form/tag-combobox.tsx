@@ -1,5 +1,4 @@
-import { Cross2Icon } from "@radix-ui/react-icons"
-import { UIEvent, useCallback, useEffect } from "react"
+import { UIEvent, useCallback } from "react"
 
 import {
     Item,
@@ -15,6 +14,7 @@ import {
 import { Button } from "@/Components/ui/button"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
 import { cn } from "@/lib/utils"
+import {X} from "lucide-react";
 
 interface TagComboboxProps extends useMultipleSelectProps {
     onSelectedItems?: (items: Item[]) => void
@@ -104,7 +104,7 @@ export default function TagCombobox({
                                         )
                                     }}
                                 >
-                                    <Cross2Icon className="h-4 w-4" />
+                                    <X className="h-4 w-4" />
                                 </Button>
                             </MultipleSelectBadge>
                         )

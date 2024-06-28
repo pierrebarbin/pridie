@@ -1,23 +1,21 @@
 import { Button } from "@/Components/ui/button"
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
-    DrawerFooter,
     DrawerTrigger,
 } from "@/Components/ui/drawer"
-import { PersonIcon } from "@radix-ui/react-icons"
 import ProfileDeleteForm from "@/Components/profile/profile-delete-form/profile-delete-form"
 import ProfilePersonalInfoForm from "@/Components/profile/profile-personal-info-form/profile-personal-info-form"
 import { Separator } from "@/Components/ui/separator"
 import { ScrollArea } from "@/Components/ui/scroll-area"
+import {User} from "lucide-react";
 
 export default function ProfileDrawer() {
     return (
         <Drawer>
             <DrawerTrigger asChild>
                 <div className="flex flex-col items-center gap-1">
-                    <PersonIcon className="h-5 w-5" />
+                    <User className="h-5 w-5" />
                     <span className="text-xs">Profil</span>
                 </div>
             </DrawerTrigger>

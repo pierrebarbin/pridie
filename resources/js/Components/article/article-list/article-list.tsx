@@ -1,4 +1,3 @@
-import { ArchiveIcon, Cross2Icon, PinLeftIcon } from "@radix-ui/react-icons"
 import React from "react"
 
 import ArticleCard from "@/Components/article/article-card/article-card"
@@ -7,6 +6,7 @@ import { useArticleList } from "@/Components/article/article-list/use-article-li
 import { Button } from "@/Components/ui/button"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {ArrowLeftToLine, FileX, ServerCrash, X} from "lucide-react";
 
 export default function ArticleList() {
     const parentRef = React.useRef<HTMLDivElement>(null)
@@ -50,7 +50,7 @@ export default function ArticleList() {
     if (error) {
         return (
             <div className="pt-20 text-center">
-                <Cross2Icon className="mx-auto h-12 w-12 text-destructive" />
+                <ServerCrash className="mx-auto h-12 w-12 text-destructive" />
                 <h3 className="mt-2 text-sm font-semibold">
                     Une erreur est survenue
                 </h3>
@@ -64,7 +64,7 @@ export default function ArticleList() {
     if (rows.length === 0) {
         return (
             <div className="pt-20 text-center">
-                <ArchiveIcon className="mx-auto h-12 w-12" />
+                <FileX className="mx-auto h-12 w-12" />
                 <h3 className="mt-2 text-sm font-semibold">Aucun article</h3>
                 <p className="mt-1 text-sm text-gray-500">
                     Recherchez avec d'autres critères.
@@ -76,7 +76,7 @@ export default function ArticleList() {
                             className="gap-2"
                             onClick={removeCurrentThread}
                         >
-                            <PinLeftIcon className="h-4 w-4" />
+                            <ArrowLeftToLine className="h-4 w-4" />
                             Flux principal
                         </Button>
                     ) : (
@@ -85,7 +85,7 @@ export default function ArticleList() {
                             className="gap-2"
                             onClick={resetFilters}
                         >
-                            <Cross2Icon className="h-4 w-4" />
+                            <X className="h-4 w-4" />
                             Retirer les filtres
                         </Button>
                     )}

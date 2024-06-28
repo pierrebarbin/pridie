@@ -1,5 +1,4 @@
 import { router } from "@inertiajs/react"
-import { BookmarkFilledIcon } from "@radix-ui/react-icons"
 import React from "react"
 import { toast } from "sonner"
 
@@ -19,6 +18,7 @@ import {
 import { cn } from "@/lib/utils"
 import { Thread } from "@/types"
 import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {BookmarkCheck} from "lucide-react";
 
 interface ThreadListItemProps {
     thread: Thread
@@ -31,7 +31,7 @@ export default function ThreadListItem({ thread }: ThreadListItemProps) {
     const remove = () => {
         router.delete(route("threads.destroy", { thread: thread.id }), {
             onSuccess: () => {
-                toast(`Flux ${thread.name} supprimé`)
+                toast.success(`Flux ${thread.name} supprimé`)
             },
         })
     }
@@ -49,9 +49,6 @@ export default function ThreadListItem({ thread }: ThreadListItemProps) {
                         onSelect={() => changeCurrentThreadTo(thread)}
                     >
                         {thread.name}
-                        {thread.id === currentThread?.id ? (
-                            <BookmarkFilledIcon className="ml-2 h-3 w-3" />
-                        ) : null}
                     </NavigationMenuLink>
                 </NavigationMenuItem>
             </ContextMenuTrigger>

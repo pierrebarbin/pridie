@@ -36,7 +36,6 @@ class ArticleController extends Controller
         return Inertia::render('Index', [
             'filters' =>  fn () => $params,
             'reactions' =>  fn () => $reactions,
-            'threads' =>  fn () => $request->user()->threads,
             'defaultTags' =>  fn () => $config->use_default_tags ? $request->user()->defaultTags : [],
             'config' =>  fn () => $config,
         ]);

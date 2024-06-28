@@ -1,4 +1,3 @@
-import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons"
 import React from "react"
 
 import { Button } from "@/Components/ui/button"
@@ -9,6 +8,7 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip"
 import { Article } from "@/types"
+import {Bookmark, BookmarkCheck} from "lucide-react";
 
 interface ArticleCardBookmarkIndicator {
     article: Article
@@ -25,9 +25,9 @@ export default function ArticleCardBookmarkIndicator({
                 <TooltipTrigger asChild>
                     <Button size="icon" variant="ghost">
                         {bookmarked ? (
-                            <BookmarkFilledIcon className="h-5 w-5" />
+                            <BookmarkCheck className="h-5 w-5" />
                         ) : (
-                            <BookmarkIcon className="h-5 w-5" />
+                            <Bookmark className="h-5 w-5" />
                         )}
                     </Button>
                 </TooltipTrigger>

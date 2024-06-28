@@ -18,6 +18,7 @@ import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
 import { User } from "@/types"
 
 import ProfileModal from "../profile/profile-modal/profile-modal"
+import {Suspense} from "react";
 
 export default function Menu() {
     const { user } = usePage().props.auth as unknown as { user: User }
@@ -79,7 +80,9 @@ export default function Menu() {
             </div>
             <div className="absolute right-0 top-0 z-10 flex flex-col items-end p-8 lg:w-40">
                 <DarkModePickerPopover />
-                <ThreadList />
+                <Suspense>
+                    <ThreadList />
+                </Suspense>
             </div>
         </>
     )

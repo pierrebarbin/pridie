@@ -1,5 +1,4 @@
-import { ReloadIcon } from "@radix-ui/react-icons"
-import React, { useState } from "react"
+import React, {Suspense, useState} from "react"
 
 import ArticleCardBookmarkForm from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form"
 import ArticleCardBookmarkIndicator from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator"
@@ -26,6 +25,7 @@ import {
 } from "@/Components/ui/drawer"
 import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
 import { Article } from "@/types"
+import {Loader} from "lucide-react";
 
 interface ArticleCardBookmarkProps {
     article: Article
@@ -55,32 +55,34 @@ export default function ArticleCardBookmark({
                                 veilles
                             </DrawerDescription>
                         </DrawerHeader>
-                        <ArticleCardBookmarkForm
-                            article={article}
-                            onSuccess={() => setOpen(false)}
-                            footer={({ loading, cannotSubmit }) => (
-                                <DrawerFooter>
-                                    <Button
-                                        type="submit"
-                                        disabled={cannotSubmit}
-                                    >
-                                        {loading ? (
-                                            <>
-                                                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                                Mise à jour
-                                            </>
-                                        ) : (
-                                            "Mettre à jour"
-                                        )}
-                                    </Button>
-                                    <DrawerClose asChild>
-                                        <Button variant="outline">
-                                            Cancel
+                        <Suspense>
+                            <ArticleCardBookmarkForm
+                                article={article}
+                                onSuccess={() => setOpen(false)}
+                                footer={({ loading, cannotSubmit }) => (
+                                    <DrawerFooter>
+                                        <Button
+                                            type="submit"
+                                            disabled={cannotSubmit}
+                                        >
+                                            {loading ? (
+                                                <>
+                                                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                                    Mise à jour
+                                                </>
+                                            ) : (
+                                                "Mettre à jour"
+                                            )}
                                         </Button>
-                                    </DrawerClose>
-                                </DrawerFooter>
-                            )}
-                        />
+                                        <DrawerClose asChild>
+                                            <Button variant="outline">
+                                                Cancel
+                                            </Button>
+                                        </DrawerClose>
+                                    </DrawerFooter>
+                                )}
+                            />
+                        </Suspense>
                     </div>
                 </DrawerContent>
             </Drawer>
@@ -101,25 +103,27 @@ export default function ArticleCardBookmark({
                         Ajouter l'article à un ou plusieurs flux de veilles
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <ArticleCardBookmarkForm
-                    article={article}
-                    onSuccess={() => setOpen(false)}
-                    footer={({ loading, cannotSubmit }) => (
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <Button type="submit" disabled={cannotSubmit}>
-                                {loading ? (
-                                    <>
-                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                        Mise à jour
-                                    </>
-                                ) : (
-                                    "Mettre à jour"
-                                )}
-                            </Button>
-                        </AlertDialogFooter>
-                    )}
-                />
+                <Suspense>
+                    <ArticleCardBookmarkForm
+                        article={article}
+                        onSuccess={() => setOpen(false)}
+                        footer={({ loading, cannotSubmit }) => (
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                <Button type="submit" disabled={cannotSubmit}>
+                                    {loading ? (
+                                        <>
+                                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                            Mise à jour
+                                        </>
+                                    ) : (
+                                        "Mettre à jour"
+                                    )}
+                                </Button>
+                            </AlertDialogFooter>
+                        )}
+                    />
+                </Suspense>
             </AlertDialogContent>
         </AlertDialog>
     )

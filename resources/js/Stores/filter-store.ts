@@ -21,19 +21,16 @@ export interface FilterState extends FilterProps {
 
 interface ThreadProps {
     currentThread: Thread | null
-    threads: Thread[]
 }
 
 export interface ThreadState extends  ThreadProps{
     changeCurrentThreadTo: (tread: Thread) => void
     removeCurrentThread: () => void
-    setThreads: (threads: Thread[]) => void
 }
 
 export const createFilterStore = (initProps?: Partial<FilterProps & ThreadProps>) => {
     const DEFAULT_PROPS: FilterProps & ThreadProps = {
         currentThread: null,
-        threads: [],
         defaultTags: [],
         search: "",
         showBookmark: "yes",
@@ -63,7 +60,6 @@ export const createFilterStore = (initProps?: Partial<FilterProps & ThreadProps>
                 })),
             })
         },
-        setThreads: (threads) => set({ threads }),
         resetFilters: () => {
             set({
                 search: "",

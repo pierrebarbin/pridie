@@ -1,9 +1,3 @@
-import {
-    GearIcon,
-    HomeIcon,
-    MixerVerticalIcon,
-} from "@radix-ui/react-icons"
-
 import ConfigDefaultTags from "@/Components/config/config-default-tags/config-default-tags"
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters"
 import ThreadListDrawer from "@/Components/thread/thread-list/thread-list-drawer/thread-list-drawer"
@@ -27,6 +21,7 @@ import { cn } from "@/lib/utils"
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
 import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
 import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {House, Settings, SlidersVertical} from "lucide-react";
 
 export default function MenuMobile() {
     const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
@@ -48,7 +43,7 @@ export default function MenuMobile() {
                             <Drawer>
                                 <DrawerTrigger asChild>
                                     <div className="flex flex-col items-center gap-1">
-                                        <GearIcon className="h-5 w-5" />
+                                        <Settings className="h-5 w-5" />
                                         <span className="text-xs">Config</span>
                                     </div>
                                 </DrawerTrigger>
@@ -86,7 +81,7 @@ export default function MenuMobile() {
                                     removeCurrentThread()
                                 }}
                             >
-                                <HomeIcon className="h-5 w-5" />
+                                <House className="h-5 w-5" />
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     ) : null}
@@ -113,7 +108,7 @@ export default function MenuMobile() {
                             <Drawer>
                                 <DrawerTrigger asChild>
                                     <div className="flex flex-col items-center gap-1">
-                                        <MixerVerticalIcon className="h-5 w-5" />
+                                        <SlidersVertical className="h-5 w-5" />
                                         <span className="text-xs">Filtres</span>
                                     </div>
                                 </DrawerTrigger>

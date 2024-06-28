@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
-import { BookmarkFilledIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -10,7 +9,7 @@ import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thr
 import {
     AlertDialog,
     AlertDialogCancel,
-    AlertDialogContent,
+    AlertDialogContent, AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -35,6 +34,9 @@ import {
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {Loader, Plus} from "lucide-react";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
+import {Pagination, Thread} from "@/types";
 
 const formSchema = z.object({
     name: z
@@ -49,9 +51,16 @@ export default function ThreadList() {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
-    const threads =  useFilterStoreContext((state) => state.threads)
     const currentThread =  useFilterStoreContext((state) => state.currentThread)
     const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+
+    const {data} = useSuspenseQuery<Pagination<Thread>>({
+        queryKey: ['threads', 1],
+        queryFn: async () =>
+            window.axios
+                .get(route("api.threads"),)
+                .then((res) => res.data),
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -60,13 +69,18 @@ export default function ThreadList() {
         },
     })
 
+    const queryClient = useQueryClient()
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
         router.post(route("threads.store"), values, {
             onSuccess: () => {
                 setOpen(false)
                 form.reset()
-                toast(`Flux ${values.name} créé`)
+                toast.success(`Flux ${values.name} créé`)
+                queryClient.invalidateQueries({
+                    queryKey: ['threads', 1],
+                })
             },
             onFinish: () => {
                 setLoading(false)
@@ -88,12 +102,9 @@ export default function ThreadList() {
                             onSelect={() => removeCurrentThread()}
                         >
                             Veille principale
-                            {currentThread === null ? (
-                                <BookmarkFilledIcon className="ml-2 h-3 w-3" />
-                            ) : null}
                         </NavigationMenuLink>
                     </NavigationMenuItem>
-                    {threads.map((thread) => (
+                    {data.data.map((thread) => (
                         <ThreadListItem thread={thread} key={thread.id} />
                     ))}
                 </NavigationMenuList>
@@ -101,12 +112,13 @@ export default function ThreadList() {
             <AlertDialog open={open} onOpenChange={setOpen}>
                 <AlertDialogTrigger asChild>
                     <Button variant="ghost" className="-mr-6 mt-2 flex">
-                        Ajouter un flux <PlusIcon className="ml-2 h-3 w-3" />
+                        Ajouter un flux <Plus className="ml-2 h-3 w-3" />
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Ajouter un flux</AlertDialogTitle>
+                        <AlertDialogTitle>Nouveau flux</AlertDialogTitle>
+                        <AlertDialogDescription>Ajouter un  nouveau flux</AlertDialogDescription>
                     </AlertDialogHeader>
                     <Form {...form}>
                         <form
@@ -134,7 +146,7 @@ export default function ThreadList() {
                                 <Button type="submit" disabled={loading}>
                                     {loading ? (
                                         <>
-                                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                            <Loader className="mr-2 h-4 w-4 animate-spin" />
                                             Ajout en cours
                                         </>
                                     ) : (
