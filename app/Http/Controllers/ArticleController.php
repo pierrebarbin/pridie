@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
+use App\Http\Resources\TagResource;
 use App\Models\Article;
 use App\Models\Reaction;
 use App\Models\Tag;
@@ -22,7 +23,7 @@ class ArticleController extends Controller
         $config = $request->user()->config;
 
         return Inertia::render('Index', [
-            'defaultTags' =>  fn () => $config->use_default_tags ? $request->user()->defaultTags : [],
+            'defaultTags' =>  fn () => $config->use_default_tags ? TagResource::collection($request->user()->defaultTags)->resolve($request) : [],
             'config' =>  fn () => [
                 'useDefaultConfig' => $config->use_default_tags,
             ],

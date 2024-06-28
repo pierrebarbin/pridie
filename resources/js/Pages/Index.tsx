@@ -17,6 +17,9 @@ export default function Index({
 
     const store = useRef(createAppStore({
         defaultTags,
+        selectedTags: (() => {
+            return defaultTags.map((tag) => ({key: tag.id, value: tag.label }))
+        })(),
         ...config
     })).current
 
