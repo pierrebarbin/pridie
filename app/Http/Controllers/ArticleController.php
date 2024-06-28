@@ -22,22 +22,12 @@ class ArticleController extends Controller
         $config = $request->user()->config;
         $reactions = Reaction::all();
 
-        $selectedTagsId = Arr::get($request->query('filter', []), 'tags', '');
-        $selectedTags = Tag::query()
-            ->whereIn('id', explode(',', $selectedTagsId))
-            ->get()
-            ->map(fn ($item) => ['key' => $item->id, 'value' => $item->label])
-            ->toArray();
-
-        $params = $request->query();
-
-        Arr::set($params, 'filter.tags', $selectedTags);
-
         return Inertia::render('Index', [
-            'filters' =>  fn () => $params,
             'reactions' =>  fn () => $reactions,
             'defaultTags' =>  fn () => $config->use_default_tags ? $request->user()->defaultTags : [],
-            'config' =>  fn () => $config,
+            'config' =>  fn () => [
+                'useDefaultConfig' => $config->use_default_tags,
+            ],
         ]);
     }
 

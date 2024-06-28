@@ -20,11 +20,11 @@ import { useMediaQuery } from "@/Hooks/use-media-query"
 import { cn } from "@/lib/utils"
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
 import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 import {House, Settings, SlidersVertical} from "lucide-react";
 
 export default function MenuMobile() {
-    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
 
     const matches = useMediaQuery("(min-width: 360px)")
 

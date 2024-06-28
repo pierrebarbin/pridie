@@ -17,7 +17,7 @@ import {
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import { Thread } from "@/types"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 import {BookmarkCheck} from "lucide-react";
 
 interface ThreadListItemProps {
@@ -25,8 +25,8 @@ interface ThreadListItemProps {
 }
 
 export default function ThreadListItem({ thread }: ThreadListItemProps) {
-    const currentThread =  useFilterStoreContext((state) => state.currentThread)
-    const changeCurrentThreadTo =  useFilterStoreContext((state) => state.changeCurrentThreadTo)
+    const currentThread =  useAppStoreContext((state) => state.currentThread)
+    const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
 
     const remove = () => {
         router.delete(route("threads.destroy", { thread: thread.id }), {

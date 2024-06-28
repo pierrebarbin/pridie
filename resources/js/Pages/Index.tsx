@@ -2,51 +2,31 @@ import { Head } from "@inertiajs/react"
 import React, {useRef} from "react"
 
 import ArticleList from "@/Components/article/article-list/article-list"
-import { Item } from "@/Components/form/multiple-select"
 import Menu from "@/Components/menu/menu"
 import AppLayout from "@/Layouts/app-layout"
-import {createFilterStore, FilterContext} from "@/Stores/filter-store"
-import { PageProps, Tag, Thread } from "@/types"
+import {createAppStore, AppContext} from "@/Stores/filter-store"
+import {Config, PageProps, Tag} from "@/types"
 
 export default function Index({
-    filters,
+    config,
     defaultTags,
 }: PageProps<{
-    filters: {
-        cursor?: string
-        filter: {
-            title?: string
-            bookmark?: string
-            tags?: Item[]
-        }
-    }
+    config: Config,
     defaultTags: Tag[]
 }>) {
 
-    const store = useRef(createFilterStore({
+    const store = useRef(createAppStore({
         defaultTags,
-        selectedTags: (() => {
-            let selectedTags = filters.filter.tags
-
-            if (!selectedTags || selectedTags?.length === 0) {
-                selectedTags = defaultTags.map((tag) => ({
-                    key: tag.id,
-                    value: tag.label,
-                }))
-            }
-            return selectedTags
-        })(),
-        search: filters.filter.title ?? "",
-        showBookmark: filters.filter.bookmark ?? ""
+        ...config
     })).current
 
     return (
-        <FilterContext.Provider value={store}>
+        <AppContext.Provider value={store}>
             <AppLayout className="relative min-h-screen">
                 <Head title="For the watch" />
                 <Menu />
                 <ArticleList />
             </AppLayout>
-        </FilterContext.Provider>
+        </AppContext.Provider>
     )
 }

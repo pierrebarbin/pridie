@@ -8,17 +8,17 @@ import { Label } from "@/Components/ui/label"
 import { Separator } from "@/Components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import { CursorPagination, Tag } from "@/types"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 
 export default function MenuFilters() {
     const [tagSearch, setTagSearch] = useState("")
 
-    const search =  useFilterStoreContext((state) => state.search)
-    const showBookmark =  useFilterStoreContext((state) => state.showBookmark)
-    const selectedTags =  useFilterStoreContext((state) => state.selectedTags)
-    const updateShowBookmark =  useFilterStoreContext((state) => state.updateShowBookmark)
-    const updateSearch =  useFilterStoreContext((state) => state.updateSearch)
-    const updateSelectedTags =  useFilterStoreContext((state) => state.updateSelectedTags)
+    const search =  useAppStoreContext((state) => state.search)
+    const showBookmark =  useAppStoreContext((state) => state.showBookmark)
+    const selectedTags =  useAppStoreContext((state) => state.selectedTags)
+    const updateShowBookmark =  useAppStoreContext((state) => state.updateShowBookmark)
+    const updateSearch =  useAppStoreContext((state) => state.updateSearch)
+    const updateSelectedTags =  useAppStoreContext((state) => state.updateSelectedTags)
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
         useInfiniteQuery<CursorPagination<Tag>>({

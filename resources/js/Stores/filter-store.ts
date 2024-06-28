@@ -4,11 +4,22 @@ import {createStore, StoreApi} from "zustand"
 import { Item } from "@/Components/form/multiple-select"
 import { Tag, Thread } from "@/types"
 
+interface DefaultValuesProps {
+    defaultTags: Tag[]
+}
+
+type DefaultValuesState = DefaultValuesProps
+
+interface ConfigProps {
+    useDefaultTags: boolean
+}
+
+type ConfigState = ConfigProps
+
 interface FilterProps {
     search: string
     showBookmark: string
     selectedTags: Item[]
-    defaultTags: Tag[]
 }
 
 export interface FilterState extends FilterProps {
@@ -28,15 +39,19 @@ export interface ThreadState extends  ThreadProps{
     removeCurrentThread: () => void
 }
 
-export const createFilterStore = (initProps?: Partial<FilterProps & ThreadProps>) => {
-    const DEFAULT_PROPS: FilterProps & ThreadProps = {
+export type AppProps = FilterProps & ThreadProps & DefaultValuesProps & ConfigProps
+export type AppState = FilterState & ThreadState & DefaultValuesState & ConfigState
+
+export const createAppStore = (initProps?: Partial<AppProps>) => {
+    const DEFAULT_PROPS: AppProps = {
+        useDefaultTags: true,
         currentThread: null,
         defaultTags: [],
+        selectedTags: [],
         search: "",
         showBookmark: "yes",
-        selectedTags: [],
     }
-    return createStore<FilterState & ThreadState>()((set, get) => ({
+    return createStore<AppState>()((set, get) => ({
         ...DEFAULT_PROPS,
         ...initProps,
         updateSearch: (search) => set({ search }),
@@ -70,4 +85,4 @@ export const createFilterStore = (initProps?: Partial<FilterProps & ThreadProps>
     }))
 }
 
-export const FilterContext = createContext<StoreApi<FilterState & ThreadState> | null>(null)
+export const AppContext = createContext<StoreApi<AppState> | null>(null)

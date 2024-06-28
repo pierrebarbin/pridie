@@ -8,18 +8,15 @@ import TagCombobox from "@/Components/form/tag-combobox"
 import { Label } from "@/Components/ui/label"
 import { Switch } from "@/Components/ui/switch"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
-import { Config, CursorPagination, Tag } from "@/types"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import { CursorPagination, Tag } from "@/types"
+import {useAppStoreContext} from "@/Stores/use-app-store";
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
     const [selectedTags, setSelectedTags] = useState<Item[]>([])
 
-    const {
-        config: { use_default_tags },
-    } = usePage<{ config: Config }>().props
-
-    const defaultTags =  useFilterStoreContext((state) => state.defaultTags)
+    const defaultTags =  useAppStoreContext((state) => state.defaultTags)
+    const useDefaultTags =  useAppStoreContext((state) => state.useDefaultTags)
 
     const debounceCallback = useCallback(
         (selectedTags: Item[]) => {
@@ -101,13 +98,13 @@ export default function ConfigDefaultTags() {
                 <div>
                     <Switch
                         id="default-tags"
-                        defaultChecked={use_default_tags}
+                        defaultChecked={useDefaultTags}
                         onCheckedChange={toggle}
                     />
                 </div>
             </div>
             <div className="relative mt-6 flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                {!use_default_tags ? (
+                {!useDefaultTags ? (
                     <div className="absolute inset-0 z-10 bg-muted/50" />
                 ) : null}
                 <TagCombobox

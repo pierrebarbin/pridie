@@ -5,15 +5,15 @@ import ArticleCardSkeleton from "@/Components/article/article-card/article-card.
 import { useArticleList } from "@/Components/article/article-list/use-article-list"
 import { Button } from "@/Components/ui/button"
 import { ScrollArea } from "@/Components/ui/scroll-area"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 import {ArrowLeftToLine, FileX, ServerCrash, X} from "lucide-react";
 
 export default function ArticleList() {
     const parentRef = React.useRef<HTMLDivElement>(null)
 
-    const currentThread =  useFilterStoreContext((state) => state.currentThread)
-    const resetFilters =  useFilterStoreContext((state) => state.resetFilters)
-    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+    const currentThread =  useAppStoreContext((state) => state.currentThread)
+    const resetFilters =  useAppStoreContext((state) => state.resetFilters)
+    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
 
     const cardHeight = 400
     const cardBottomMargin = 30

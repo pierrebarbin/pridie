@@ -5,7 +5,7 @@ import {RefObject, useEffect} from "react"
 
 import { useDebounceValue } from "@/Hooks/use-debounce-value"
 import { Article, CursorPagination } from "@/types"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 
 interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
@@ -22,10 +22,10 @@ export function useArticleList({
     cardBottomMargin,
 }: UseArticleProps) {
 
-    const search =  useFilterStoreContext((state) => state.search)
-    const currentThread =  useFilterStoreContext((state) => state.currentThread)
-    const showBookmark =  useFilterStoreContext((state) => state.showBookmark)
-    const selectedTags =  useFilterStoreContext((state) => state.selectedTags)
+    const search =  useAppStoreContext((state) => state.search)
+    const currentThread =  useAppStoreContext((state) => state.currentThread)
+    const showBookmark =  useAppStoreContext((state) => state.showBookmark)
+    const selectedTags =  useAppStoreContext((state) => state.selectedTags)
 
     const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
 

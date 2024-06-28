@@ -33,7 +33,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 import {Loader, Plus} from "lucide-react";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {Pagination, Thread} from "@/types";
@@ -51,8 +51,8 @@ export default function ThreadList() {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
-    const currentThread =  useFilterStoreContext((state) => state.currentThread)
-    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
+    const currentThread =  useAppStoreContext((state) => state.currentThread)
+    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
 
     const {data} = useSuspenseQuery<Pagination<Thread>>({
         queryKey: ['threads', 1],

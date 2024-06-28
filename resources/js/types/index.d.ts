@@ -76,8 +76,7 @@ export interface CursorPagination<T> {
 }
 
 export interface Config {
-    id: string
-    use_default_tags: boolean
+    useDefaultTags: boolean
 }
 
 export type PageProps<

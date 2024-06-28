@@ -28,7 +28,7 @@ import { ScrollArea } from "@/Components/ui/scroll-area"
 import { Separator } from "@/Components/ui/separator"
 import { useWindowSize } from "@/Hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import {useFilterStoreContext} from "@/Stores/use-filter-store";
+import {useAppStoreContext} from "@/Stores/use-app-store";
 import {Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Loader} from "lucide-react";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {Pagination, Thread} from "@/types";
@@ -56,9 +56,9 @@ export default function ThreadListDrawer() {
 
     const { width } = useWindowSize()
 
-    const currentThread =  useFilterStoreContext((state) => state.currentThread)
-    const removeCurrentThread =  useFilterStoreContext((state) => state.removeCurrentThread)
-    const changeCurrentThreadTo =  useFilterStoreContext((state) => state.changeCurrentThreadTo)
+    const currentThread =  useAppStoreContext((state) => state.currentThread)
+    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
+    const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
 
     const {data} = useSuspenseQuery<Pagination<Thread>>({
         queryKey: ['threads', 1],
