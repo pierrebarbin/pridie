@@ -1,5 +1,3 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
-import axios from "axios"
 import { useState } from "react"
 
 import TagCombobox from "@/Components/form/tag-combobox"
@@ -7,8 +5,8 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Separator } from "@/Components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
-import { CursorPagination, Tag } from "@/types"
 import {useAppStoreContext} from "@/Stores/use-app-store";
+import {useTags} from "@/Hooks/use-tags";
 
 export default function MenuFilters() {
     const [tagSearch, setTagSearch] = useState("")
@@ -20,30 +18,12 @@ export default function MenuFilters() {
     const updateSearch =  useAppStoreContext((state) => state.updateSearch)
     const updateSelectedTags =  useAppStoreContext((state) => state.updateSelectedTags)
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-        useInfiniteQuery<CursorPagination<Tag>>({
-            queryKey: ["tags", { tagSearch }],
-            queryFn: async ({ pageParam }) => {
-                const params = {
-                    cursor: pageParam as string,
-                    "filter[label]": tagSearch,
-                }
-
-                const cleanParams = Object.fromEntries(
-                    Object.entries(params).filter(([value]) => value !== ""),
-                )
-
-                const urlParams = new URLSearchParams(cleanParams)
-
-                const result = await axios.get(
-                    `${route("api.tags")}?${urlParams.toString()}`,
-                )
-
-                return result.data
-            },
-            initialPageParam: null,
-            getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
-        })
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+    } = useTags({ search: tagSearch })
 
     const handleEndReached = () => {
         if (!hasNextPage || isFetchingNextPage) {

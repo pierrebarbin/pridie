@@ -1,6 +1,4 @@
-import { router, usePage } from "@inertiajs/react"
-import { useInfiniteQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { router } from "@inertiajs/react"
 import React, { useCallback, useEffect, useState } from "react"
 
 import { Item } from "@/Components/form/multiple-select"
@@ -8,8 +6,9 @@ import TagCombobox from "@/Components/form/tag-combobox"
 import { Label } from "@/Components/ui/label"
 import { Switch } from "@/Components/ui/switch"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
-import { CursorPagination, Tag } from "@/types"
 import {useAppStoreContext} from "@/Stores/use-app-store";
+import {toast} from "sonner";
+import {useTags} from "@/Hooks/use-tags";
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
@@ -17,6 +16,7 @@ export default function ConfigDefaultTags() {
 
     const defaultTags =  useAppStoreContext((state) => state.defaultTags)
     const useDefaultTags =  useAppStoreContext((state) => state.useDefaultTags)
+    const updateUseDefaultTags =  useAppStoreContext((state) => state.updateUseDefaultTags)
 
     const debounceCallback = useCallback(
         (selectedTags: Item[]) => {
@@ -32,30 +32,12 @@ export default function ConfigDefaultTags() {
 
     const debounced = useDebounceCallback(debounceCallback, 500)
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-        useInfiniteQuery<CursorPagination<Tag>>({
-            queryKey: ["tags", { tagSearch }],
-            queryFn: async ({ pageParam }) => {
-                const params = {
-                    cursor: pageParam as string,
-                    "filter[label]": tagSearch,
-                }
-
-                const cleanParams = Object.fromEntries(
-                    Object.entries(params).filter(([value]) => value !== ""),
-                )
-
-                const urlParams = new URLSearchParams(cleanParams)
-
-                const result = await axios.get(
-                    `${route("api.tags")}?${urlParams.toString()}`,
-                )
-
-                return result.data
-            },
-            initialPageParam: null,
-            getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
-        })
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+    } = useTags({ search: tagSearch })
 
     const updateTags = (tags: Item[]) => {
         setSelectedTags(tags)
@@ -69,8 +51,14 @@ export default function ConfigDefaultTags() {
     }, [defaultTags])
 
     const toggle = (checked: boolean) => {
+        updateUseDefaultTags(checked)
         router.post(route("config.tags.store"), {
             state: checked,
+        }, {
+            onError: () => {
+                updateUseDefaultTags(!checked)
+                toast.error('La mise à jour de vos tags par défaut n\a pas fonctionné')
+            }
         })
     }
 

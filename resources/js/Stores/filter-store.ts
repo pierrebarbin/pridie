@@ -14,7 +14,9 @@ interface ConfigProps {
     useDefaultTags: boolean
 }
 
-type ConfigState = ConfigProps
+interface ConfigState extends ConfigProps {
+    updateUseDefaultTags: (value: boolean) => void
+}
 
 interface FilterProps {
     search: string
@@ -58,6 +60,7 @@ export const createAppStore = (initProps?: Partial<AppProps>) => {
         updateSelectedTags: (tags) => set({ selectedTags: tags }),
         updateShowBookmark: (show) => set({ showBookmark: show }),
         updateDefaultTags: (tags) => set({ defaultTags: tags }),
+        updateUseDefaultTags: (value) => set({ useDefaultTags: value }),
         changeCurrentThreadTo: (thread) => {
             set({
                 currentThread: thread,
