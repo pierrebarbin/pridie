@@ -78,8 +78,10 @@ export default function Menu() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="absolute right-0 top-0 z-10 flex flex-col items-end p-8 lg:w-40">
-                <DarkModePickerPopover />
+            <div className="absolute right-3 top-0 z-10 flex flex-col items-end pt-8 lg:w-40">
+                <div className="mr-4">
+                    <DarkModePickerPopover />
+                </div>
                 <Suspense>
                     <ThreadList />
                 </Suspense>

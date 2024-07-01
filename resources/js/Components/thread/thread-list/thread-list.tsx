@@ -90,7 +90,7 @@ export default function ThreadList() {
 
     return (
         <>
-            <NavigationMenu className="-mr-6 mt-10 grow-0">
+            <NavigationMenu className="mt-8 grow-0">
                 <NavigationMenuList className="flex-col items-end gap-2 ">
                     <NavigationMenuItem>
                         <NavigationMenuLink
@@ -111,7 +111,7 @@ export default function ThreadList() {
             </NavigationMenu>
             <AlertDialog open={open} onOpenChange={setOpen}>
                 <AlertDialogTrigger asChild>
-                    <Button variant="ghost" className="-mr-6 mt-2 flex">
+                    <Button variant="ghost" className="mt-2 flex">
                         Ajouter un flux <Plus className="ml-2 h-3 w-3" />
                     </Button>
                 </AlertDialogTrigger>
