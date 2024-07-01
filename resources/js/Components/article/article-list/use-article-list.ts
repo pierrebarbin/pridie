@@ -57,6 +57,7 @@ export function useArticleList({
             cursor: lastPage.meta.next_cursor,
             direction: "forward",
         }: null),
+        refetchOnMount: false,
         maxPages,
     })
 
@@ -103,7 +104,7 @@ export function useArticleList({
         }
 
         if (
-            currentScroll < cardHeight &&
+            currentScroll < (cardHeight * 2) &&
             hasPreviousPage &&
             !isFetchingPreviousPage
         ) {
@@ -176,7 +177,7 @@ export function useArticleList({
             )
             return
         }
-    }, [data, isRefetching])
+    }, [data])
 
     return { ...infiniteProps, rowVirtualizer, containerHeight, topMargin }
 }
