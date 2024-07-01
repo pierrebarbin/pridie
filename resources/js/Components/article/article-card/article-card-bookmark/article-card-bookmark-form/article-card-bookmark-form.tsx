@@ -16,6 +16,7 @@ import {
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import {Article, Pagination, Thread} from "@/types"
+import {threadsData} from "@/Data/threads";
 
 const formSchema = z.object({
     threads: z.array(
@@ -40,11 +41,10 @@ export default function ArticleCardBookmarkForm({
     const [loading, setLoading] = useState(false)
 
     const {data} = useSuspenseQuery<Pagination<Thread>>({
-        queryKey: ['threads', 1],
-        queryFn: async () =>
-            window.axios
-                .get(route("api.threads"),)
-                .then((res) => res.data),
+        queryKey: threadsData.pagination.key({ page: 1 }),
+        queryFn: async () => {
+            return await threadsData.pagination.handle({ page: 1 })
+        },
     })
 
     const form = useForm<z.infer<typeof formSchema>>({

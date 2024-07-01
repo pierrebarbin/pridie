@@ -32,6 +32,7 @@ import {useAppStoreContext} from "@/Stores/use-app-store";
 import {Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Loader} from "lucide-react";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {Pagination, Thread} from "@/types";
+import {threadsData} from "@/Data/threads";
 
 const formSchema = z.object({
     name: z
@@ -61,11 +62,10 @@ export default function ThreadListDrawer() {
     const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
 
     const {data} = useSuspenseQuery<Pagination<Thread>>({
-        queryKey: ['threads', 1],
-        queryFn: async () =>
-            window.axios
-                .get(route("api.threads"),)
-                .then((res) => res.data),
+        queryKey: threadsData.pagination.key({ page: 1 }),
+        queryFn: async () => {
+            return await threadsData.pagination.handle({ page: 1 })
+        },
     })
 
     const queryClient = useQueryClient()

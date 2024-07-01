@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import axios from "axios"
 import {RefObject, useEffect} from "react"
 
 import { useDebounceValue } from "@/Hooks/use-debounce-value"
 import { Article, CursorPagination } from "@/types"
 import {useAppStoreContext} from "@/Stores/use-app-store";
+import {articlesData} from "@/Data/articles";
 
 interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
@@ -30,44 +30,25 @@ export function useArticleList({
     const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
 
     const infiniteProps = useInfiniteQuery<CursorPagination<Article>>({
-        queryKey: [
-            "articles",
-            {
+        queryKey: articlesData.infinite.key({
+            tags: selectedTags,
+            search: debouncedSearch,
+            showBookmark,
+            thread: currentThread?.id,
+        }),
+        queryFn: async ({ pageParam}) => {
+            return await articlesData.infinite.handle({
+                pageParam: pageParam as {cursor: string|null},
                 tags: selectedTags,
                 search: debouncedSearch,
                 showBookmark,
                 thread: currentThread?.id,
-            },
-        ],
-        queryFn: async ({ pageParam}) => {
-            const param = pageParam as {cursor: string|null}
-
-            const params = {
-                cursor: param.cursor,
-                "filter[title]": debouncedSearch,
-                "filter[tags]": selectedTags
-                    .reduce((acc, tag) => `${acc}${tag.key},`, "")
-                    .slice(0, -1),
-                "filter[bookmark]": showBookmark,
-                "filter[thread]": currentThread?.id ?? "",
-            }
-
-            const cleanParams = Object.fromEntries(
-                Object.entries(params).filter(([value]) => value !== ""),
-            ) as Record<string, string>
-
-            const urlParams = new URLSearchParams(cleanParams)
-
-            const res = await axios.get(
-                `${route("api.articles")}?${urlParams.toString()}`,
-            )
-            return res.data
+            })
         },
         initialPageParam: ({
             cursor: null,
             direction: null,
         }),
-
         getPreviousPageParam: (lastPage, pages) => (lastPage.meta.prev_cursor ? {
             cursor: lastPage.meta.prev_cursor,
             direction: "backward",

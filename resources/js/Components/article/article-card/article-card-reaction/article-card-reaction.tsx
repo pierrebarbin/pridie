@@ -6,6 +6,7 @@ import ArticleCardReactionPicker from "@/Components/article/article-card/article
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
 import {Article, Pagination, Reaction, Thread} from "@/types"
 import {useSuspenseQuery} from "@tanstack/react-query";
+import {reactionsData} from "@/Data/reactions";
 
 interface ArticleCardReactionProps {
     article: Article
@@ -18,11 +19,10 @@ export default function ArticleCardReaction({
     const [reactions, setReactions] = useState(article.reactions)
 
     const {data: allReactions } = useSuspenseQuery<Pagination<Reaction>>({
-        queryKey: ['reactions', 1],
-        queryFn: async () =>
-            window.axios
-                .get(route("api.reactions"),)
-                .then((res) => res.data),
+        queryKey: reactionsData.pagination.key({ page: 1 }),
+        queryFn: async () => {
+            return await reactionsData.pagination.handle({ page: 1 })
+        },
     })
 
     const debounceCallback = useCallback(
