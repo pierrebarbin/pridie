@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id');
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('use_default_tags')->default(true);
+            $table->boolean('always_display_advanced_filters')->default(false);
             $table->timestamps();
         });
     }

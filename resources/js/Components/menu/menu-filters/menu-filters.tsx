@@ -7,24 +7,35 @@ import { Separator } from "@/Components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import { useTags } from "@/Hooks/use-tags"
 import { useAppStoreContext } from "@/Stores/use-app-store"
+import MenuFiltersAdvanced from "@/Components/menu/menu-filters/menu-filters-advanced/menu-filters-advanced";
+import {Button} from "@/Components/ui/button";
+import {X} from "lucide-react";
 
 export default function MenuFilters() {
+    const alwaysDisplayAdvancedFilters = useAppStoreContext((state) => state.alwaysDisplayAdvancedFilters)
+
+    const [openAdvanced, setOpenAdvanced] = useState(alwaysDisplayAdvancedFilters)
     const [tagSearch, setTagSearch] = useState("")
 
     const search = useAppStoreContext((state) => state.search)
-    const showBookmark = useAppStoreContext((state) => state.showBookmark)
     const selectedTags = useAppStoreContext((state) => state.selectedTags)
-    const updateShowBookmark = useAppStoreContext(
-        (state) => state.updateShowBookmark,
-    )
     const updateSearch = useAppStoreContext((state) => state.updateSearch)
     const updateSelectedTags = useAppStoreContext(
         (state) => state.updateSelectedTags,
     )
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTags({
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+    } = useTags({
         search: tagSearch,
     })
+
+    const toggleAdvancedFilters = () => {
+        setOpenAdvanced((old) => !old)
+    }
 
     const handleEndReached = () => {
         if (!hasNextPage || isFetchingNextPage) {
@@ -58,32 +69,22 @@ export default function MenuFilters() {
                 onSearch={setTagSearch}
                 onEndReached={handleEndReached}
             />
-            <Separator />
-            <div>
-                <Label>Afficher les articles ajoutés à mes flux</Label>
-                <ToggleGroup
-                    type="single"
-                    className="m-2 w-fit gap-2"
-                    defaultValue="yes"
-                    value={showBookmark}
-                    onValueChange={updateShowBookmark}
-                >
-                    <ToggleGroupItem
-                        variant="outline"
-                        value="yes"
-                        aria-label="Afficher les articles ajoutés à ma veille"
-                    >
-                        Oui
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                        variant="outline"
-                        value="no"
-                        aria-label="Cacher les articles ajoutés à ma veille"
-                    >
-                        Non
-                    </ToggleGroupItem>
-                </ToggleGroup>
-            </div>
+
+            {openAdvanced ? (
+                <>
+                    <Separator />
+                    <div className="flex justify-between items-center">
+                        <div className="font-semibold">Filtres avancés</div>
+                        <Button variant="ghost" size="icon" onClick={toggleAdvancedFilters}>
+                            <X className="w-4 h-4" />
+                        </Button>
+                    </div>
+                    <MenuFiltersAdvanced />
+                </>) : (
+                <Button variant="secondary" onClick={toggleAdvancedFilters}>
+                    Afficher les filtres avancés
+                </Button>
+            )}
         </div>
     )
 }

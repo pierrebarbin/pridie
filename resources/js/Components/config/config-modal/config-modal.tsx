@@ -29,19 +29,19 @@ export default function ConfigModal({ children }: ConfigModalProps) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <Tabs
-                    defaultValue="tags"
+                    defaultValue="filters"
                     orientation="vertical"
                     className="flex gap-4"
                 >
                     <TabsList className="flex-col w-32 h-fit">
-                        <TabsTrigger value="tags" className="w-full">
-                            Tags
+                        <TabsTrigger value="filters" className="w-full">
+                            Filters
                         </TabsTrigger>
                         <TabsTrigger value="other" className="w-full">
                             ...
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="tags" className="w-full mt-0 min-h-96">
+                    <TabsContent value="filters" className="w-full mt-0 min-h-96">
                         <ConfigDefaultTags />
                     </TabsContent>
                     <TabsContent value="other" className="w-full mt-0 min-h-96">

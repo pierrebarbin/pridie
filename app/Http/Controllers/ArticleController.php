@@ -23,6 +23,7 @@ class ArticleController extends Controller
             'defaultTags' => fn () => $config->use_default_tags ? TagResource::collection($request->user()->defaultTags)->resolve($request) : [],
             'config' => fn () => [
                 'useDefaultConfig' => $config->use_default_tags,
+                'alwaysDisplayAdvancedFilters' => $config->always_display_advanced_filters,
             ],
         ]);
     }

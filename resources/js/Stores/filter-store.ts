@@ -12,10 +12,12 @@ type DefaultValuesState = DefaultValuesProps
 
 interface ConfigProps {
     useDefaultTags: boolean
+    alwaysDisplayAdvancedFilters: boolean
 }
 
 interface ConfigState extends ConfigProps {
     updateUseDefaultTags: (value: boolean) => void
+    updateAlwaysDisplayAdvancedFilters: (value: boolean) => void
 }
 
 interface FilterProps {
@@ -53,6 +55,7 @@ export type AppState = FilterState &
 export const createAppStore = (initProps?: Partial<AppProps>) => {
     const DEFAULT_PROPS: AppProps = {
         useDefaultTags: true,
+        alwaysDisplayAdvancedFilters: false,
         currentThread: null,
         defaultTags: [],
         selectedTags: [],
@@ -67,6 +70,7 @@ export const createAppStore = (initProps?: Partial<AppProps>) => {
         updateShowBookmark: (show) => set({ showBookmark: show }),
         updateDefaultTags: (tags) => set({ defaultTags: tags }),
         updateUseDefaultTags: (value) => set({ useDefaultTags: value }),
+        updateAlwaysDisplayAdvancedFilters: (value) => set({ alwaysDisplayAdvancedFilters: value }),
         changeCurrentThreadTo: (thread) => {
             set({
                 currentThread: thread,
