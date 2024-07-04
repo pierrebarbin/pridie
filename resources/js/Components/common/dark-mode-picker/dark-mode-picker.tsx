@@ -1,9 +1,10 @@
+import { Monitor, Moon, Sun } from "lucide-react"
+
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import {
     useTernaryDarkMode,
     TernaryDarkModeResult,
 } from "@/Hooks/use-ternary-dark-mode"
-import {Monitor, Moon, Sun} from "lucide-react";
 
 interface DarkModePickerProps {
     useTernaryDarkModeOutput?: TernaryDarkModeResult

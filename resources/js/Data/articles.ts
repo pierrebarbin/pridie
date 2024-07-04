@@ -1,13 +1,19 @@
-import {Item} from "@/Components/form/multiple-select";
-import axios from "axios";
+import axios from "axios"
+
+import { Item } from "@/Components/form/multiple-select"
 
 export const articlesData = {
     infinite: {
-        key: ({ tags, search, showBookmark, thread }: {
-            tags: Item[],
-            search: string,
-            showBookmark: string,
-            thread: string|undefined
+        key: ({
+            tags,
+            search,
+            showBookmark,
+            thread,
+        }: {
+            tags: Item[]
+            search: string
+            showBookmark: string
+            thread: string | undefined
         }) => [
             "articles",
             {
@@ -17,14 +23,20 @@ export const articlesData = {
                 thread,
             },
         ],
-        handle: async ({pageParam, tags, search, showBookmark, thread}: {
-            pageParam: {cursor: string|null},
-            tags: Item[],
-            search: string,
-            showBookmark: string,
-            thread: string|undefined
+        handle: async ({
+            pageParam,
+            tags,
+            search,
+            showBookmark,
+            thread,
+        }: {
+            pageParam: { cursor: string | null }
+            tags: Item[]
+            search: string
+            showBookmark: string
+            thread: string | undefined
         }) => {
-            const param = pageParam as {cursor: string|null}
+            const param = pageParam as { cursor: string | null }
 
             const params = {
                 cursor: param.cursor,
@@ -46,6 +58,6 @@ export const articlesData = {
                 `${route("api.articles")}?${urlParams.toString()}`,
             )
             return res.data
-        }
-    }
+        },
+    },
 }

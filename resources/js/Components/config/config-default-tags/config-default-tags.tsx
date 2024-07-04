@@ -1,22 +1,24 @@
 import { router } from "@inertiajs/react"
 import React, { useCallback, useEffect, useState } from "react"
+import { toast } from "sonner"
 
 import { Item } from "@/Components/form/multiple-select"
 import TagCombobox from "@/Components/form/tag-combobox"
 import { Label } from "@/Components/ui/label"
 import { Switch } from "@/Components/ui/switch"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {toast} from "sonner";
-import {useTags} from "@/Hooks/use-tags";
+import { useTags } from "@/Hooks/use-tags"
+import { useAppStoreContext } from "@/Stores/use-app-store"
 
 export default function ConfigDefaultTags() {
     const [tagSearch, setTagSearch] = useState("")
     const [selectedTags, setSelectedTags] = useState<Item[]>([])
 
-    const defaultTags =  useAppStoreContext((state) => state.defaultTags)
-    const useDefaultTags =  useAppStoreContext((state) => state.useDefaultTags)
-    const updateUseDefaultTags =  useAppStoreContext((state) => state.updateUseDefaultTags)
+    const defaultTags = useAppStoreContext((state) => state.defaultTags)
+    const useDefaultTags = useAppStoreContext((state) => state.useDefaultTags)
+    const updateUseDefaultTags = useAppStoreContext(
+        (state) => state.updateUseDefaultTags,
+    )
 
     const debounceCallback = useCallback(
         (selectedTags: Item[]) => {
@@ -32,12 +34,9 @@ export default function ConfigDefaultTags() {
 
     const debounced = useDebounceCallback(debounceCallback, 500)
 
-    const {
-        data,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage
-    } = useTags({ search: tagSearch })
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTags({
+        search: tagSearch,
+    })
 
     const updateTags = (tags: Item[]) => {
         setSelectedTags(tags)
@@ -52,14 +51,20 @@ export default function ConfigDefaultTags() {
 
     const toggle = (checked: boolean) => {
         updateUseDefaultTags(checked)
-        router.post(route("config.tags.store"), {
-            state: checked,
-        }, {
-            onError: () => {
-                updateUseDefaultTags(!checked)
-                toast.error('La mise à jour de vos tags par défaut n\a pas fonctionné')
-            }
-        })
+        router.post(
+            route("config.tags.store"),
+            {
+                state: checked,
+            },
+            {
+                onError: () => {
+                    updateUseDefaultTags(!checked)
+                    toast.error(
+                        "La mise à jour de vos tags par défaut na pas fonctionné",
+                    )
+                },
+            },
+        )
     }
 
     const handleEndReached = () => {

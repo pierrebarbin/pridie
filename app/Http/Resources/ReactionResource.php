@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -16,7 +18,7 @@ class ReactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'image' => $this->image
+            'image' => $this->image,
         ];
     }
 }

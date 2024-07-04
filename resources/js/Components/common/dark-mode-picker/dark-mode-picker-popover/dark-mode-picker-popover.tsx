@@ -1,3 +1,4 @@
+import { Monitor, Moon, Sun } from "lucide-react"
 import React, { useState } from "react"
 
 import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
@@ -8,7 +9,6 @@ import {
     PopoverTrigger,
 } from "@/Components/ui/popover"
 import { useTernaryDarkMode } from "@/Hooks/use-ternary-dark-mode"
-import {Monitor, Moon, Sun} from "lucide-react";
 
 export default function DarkModePickerPopover() {
     const [open, setOpen] = useState(false)

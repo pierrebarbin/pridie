@@ -27,8 +27,6 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     Route::get('/', [ArticleController::class, 'index'])->name('home');
 
-
-
     Route::post('/articles/{article}/reactions', [ReactionController::class, 'store'])
         ->name('reactions.store');
     Route::post('/bookmark', [BookmarkController::class, 'store'])
@@ -77,7 +75,6 @@ Route::withoutMiddleware(HandleInertiaRequests::class)
 
         Route::get('/reactions', [App\Http\Controllers\Api\ReactionController::class, 'index'])
             ->name('api.reactions');
-});
-
+    });
 
 require __DIR__.'/auth.php';

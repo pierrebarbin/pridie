@@ -1,14 +1,19 @@
-import {DrawerClose, DrawerFooter} from "@/Components/ui/drawer";
-import {Button} from "@/Components/ui/button";
-import {Loader} from "lucide-react";
-import ArticleCardBookmarkForm
-    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form";
-import React, {ChangeEvent, ReactElement, Suspense, useCallback, useState} from "react";
-import {Article} from "@/types";
-import {useDebounceCallback} from "@/Hooks/use-debounce-callback";
-import {Input} from "@/Components/ui/input";
-import ArticleCardBookmarkFormSkeleton
-    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form.skeleton";
+import { Loader } from "lucide-react"
+import React, {
+    ChangeEvent,
+    ReactElement,
+    Suspense,
+    useCallback,
+    useState,
+} from "react"
+
+import ArticleCardBookmarkForm from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form"
+import ArticleCardBookmarkFormSkeleton from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-form/article-card-bookmark-form.skeleton"
+import { Button } from "@/Components/ui/button"
+import { DrawerClose, DrawerFooter } from "@/Components/ui/drawer"
+import { Input } from "@/Components/ui/input"
+import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
+import { Article } from "@/types"
 
 interface ArticleCardBookmarkContentProps {
     article: Article
@@ -16,7 +21,11 @@ interface ArticleCardBookmarkContentProps {
     footer: (props: { loading: boolean; cannotSubmit: boolean }) => ReactElement
 }
 
-export default function ArticleCardBookmarkContent({article, onSuccess, footer}: ArticleCardBookmarkContentProps) {
+export default function ArticleCardBookmarkContent({
+    article,
+    onSuccess,
+    footer,
+}: ArticleCardBookmarkContentProps) {
     const [value, setValue] = useState("")
     const [search, setSearch] = useState("")
 

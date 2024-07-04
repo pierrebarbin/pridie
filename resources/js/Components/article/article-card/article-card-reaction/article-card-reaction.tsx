@@ -1,12 +1,12 @@
 import { router, usePage } from "@inertiajs/react"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 
 import ArticleCardReactionList from "@/Components/article/article-card/article-card-reaction/article-card-reaction-list"
 import ArticleCardReactionPicker from "@/Components/article/article-card/article-card-reaction/article-card-reaction-picker"
+import { reactionsData } from "@/Data/reactions"
 import { useDebounceCallback } from "@/Hooks/use-debounce-callback"
-import {Article, Pagination, Reaction, Thread} from "@/types"
-import {useSuspenseQuery} from "@tanstack/react-query";
-import {reactionsData} from "@/Data/reactions";
+import { Article, Pagination, Reaction, Thread } from "@/types"
 
 interface ArticleCardReactionProps {
     article: Article
@@ -18,7 +18,7 @@ export default function ArticleCardReaction({
     const [userReactions, setUserReactions] = useState(article.user_reactions)
     const [reactions, setReactions] = useState(article.reactions)
 
-    const {data: allReactions } = useSuspenseQuery<Pagination<Reaction>>({
+    const { data: allReactions } = useSuspenseQuery<Pagination<Reaction>>({
         queryKey: reactionsData.pagination.key({ page: 1 }),
         queryFn: async () => {
             return await reactionsData.pagination.handle({ page: 1 })

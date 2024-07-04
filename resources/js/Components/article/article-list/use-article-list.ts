@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import {RefObject, useEffect} from "react"
+import { RefObject, useEffect } from "react"
 
+import { articlesData } from "@/Data/articles"
 import { useDebounceValue } from "@/Hooks/use-debounce-value"
+import { useAppStoreContext } from "@/Stores/use-app-store"
 import { Article, CursorPagination } from "@/types"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {articlesData} from "@/Data/articles";
 
 interface UseArticleProps {
     parentRef: RefObject<HTMLDivElement>
@@ -21,11 +21,10 @@ export function useArticleList({
     cardHeight,
     cardBottomMargin,
 }: UseArticleProps) {
-
-    const search =  useAppStoreContext((state) => state.search)
-    const currentThread =  useAppStoreContext((state) => state.currentThread)
-    const showBookmark =  useAppStoreContext((state) => state.showBookmark)
-    const selectedTags =  useAppStoreContext((state) => state.selectedTags)
+    const search = useAppStoreContext((state) => state.search)
+    const currentThread = useAppStoreContext((state) => state.currentThread)
+    const showBookmark = useAppStoreContext((state) => state.showBookmark)
+    const selectedTags = useAppStoreContext((state) => state.selectedTags)
 
     const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
 
@@ -36,27 +35,33 @@ export function useArticleList({
             showBookmark,
             thread: currentThread?.id,
         }),
-        queryFn: async ({ pageParam}) => {
+        queryFn: async ({ pageParam }) => {
             return await articlesData.infinite.handle({
-                pageParam: pageParam as {cursor: string|null},
+                pageParam: pageParam as { cursor: string | null },
                 tags: selectedTags,
                 search: debouncedSearch,
                 showBookmark,
                 thread: currentThread?.id,
             })
         },
-        initialPageParam: ({
+        initialPageParam: {
             cursor: null,
             direction: null,
-        }),
-        getPreviousPageParam: (lastPage, pages) => (lastPage.meta.prev_cursor ? {
-            cursor: lastPage.meta.prev_cursor,
-            direction: "backward",
-        }: null),
-        getNextPageParam: (lastPage, pages) => ( lastPage.meta.next_cursor ? {
-            cursor: lastPage.meta.next_cursor,
-            direction: "forward",
-        }: null),
+        },
+        getPreviousPageParam: (lastPage, pages) =>
+            lastPage.meta.prev_cursor
+                ? {
+                      cursor: lastPage.meta.prev_cursor,
+                      direction: "backward",
+                  }
+                : null,
+        getNextPageParam: (lastPage, pages) =>
+            lastPage.meta.next_cursor
+                ? {
+                      cursor: lastPage.meta.next_cursor,
+                      direction: "forward",
+                  }
+                : null,
         refetchOnMount: false,
         maxPages,
     })
@@ -69,7 +74,7 @@ export function useArticleList({
         hasPreviousPage,
         isFetchingNextPage,
         isFetchingPreviousPage,
-        isRefetching
+        isRefetching,
     } = infiniteProps
 
     const rows = data ? data.pages.flatMap((d) => d.data) : []
@@ -104,7 +109,7 @@ export function useArticleList({
         }
 
         if (
-            currentScroll < (cardHeight * 2) &&
+            currentScroll < cardHeight * 2 &&
             hasPreviousPage &&
             !isFetchingPreviousPage
         ) {
@@ -148,7 +153,10 @@ export function useArticleList({
     ])
 
     useEffect(() => {
-        const param = data?.pageParams[0] as {cursor: string|null, direction: "backward"|"forward"|null}|null
+        const param = data?.pageParams[0] as {
+            cursor: string | null
+            direction: "backward" | "forward" | null
+        } | null
 
         if (data && data.pages.length === 1 && param?.direction === null) {
             parentRef?.current?.scrollTo(0, hasPreviousPage ? cardHeight : 0)

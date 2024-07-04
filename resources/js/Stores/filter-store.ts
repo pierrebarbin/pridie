@@ -1,5 +1,5 @@
-import { createContext } from 'react'
-import {createStore, StoreApi} from "zustand"
+import { createContext } from "react"
+import { createStore, StoreApi } from "zustand"
 
 import { Item } from "@/Components/form/multiple-select"
 import { Tag, Thread } from "@/types"
@@ -36,13 +36,19 @@ interface ThreadProps {
     currentThread: Thread | null
 }
 
-export interface ThreadState extends  ThreadProps{
+export interface ThreadState extends ThreadProps {
     changeCurrentThreadTo: (tread: Thread) => void
     removeCurrentThread: () => void
 }
 
-export type AppProps = FilterProps & ThreadProps & DefaultValuesProps & ConfigProps
-export type AppState = FilterState & ThreadState & DefaultValuesState & ConfigState
+export type AppProps = FilterProps &
+    ThreadProps &
+    DefaultValuesProps &
+    ConfigProps
+export type AppState = FilterState &
+    ThreadState &
+    DefaultValuesState &
+    ConfigState
 
 export const createAppStore = (initProps?: Partial<AppProps>) => {
     const DEFAULT_PROPS: AppProps = {

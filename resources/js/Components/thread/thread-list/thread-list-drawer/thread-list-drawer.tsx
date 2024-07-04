@@ -1,6 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
+import { useQueryClient, useSuspenseInfiniteQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
+import {
+    Bookmark,
+    BookmarkCheck,
+    ChevronLeft,
+    ChevronRight,
+    Loader,
+} from "lucide-react"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -26,13 +34,11 @@ import {
 } from "@/Components/ui/navigation-menu"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { Separator } from "@/Components/ui/separator"
+import { threadsData } from "@/Data/threads"
 import { useWindowSize } from "@/Hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Loader} from "lucide-react";
-import {useQueryClient, useSuspenseInfiniteQuery} from "@tanstack/react-query";
-import {CursorPagination, Pagination, Thread} from "@/types";
-import {threadsData} from "@/Data/threads";
+import { useAppStoreContext } from "@/Stores/use-app-store"
+import { CursorPagination, Pagination, Thread } from "@/types"
 
 const formSchema = z.object({
     name: z
@@ -57,14 +63,21 @@ export default function ThreadListDrawer() {
 
     const { width } = useWindowSize()
 
-    const currentThread =  useAppStoreContext((state) => state.currentThread)
-    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
-    const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
+    const currentThread = useAppStoreContext((state) => state.currentThread)
+    const removeCurrentThread = useAppStoreContext(
+        (state) => state.removeCurrentThread,
+    )
+    const changeCurrentThreadTo = useAppStoreContext(
+        (state) => state.changeCurrentThreadTo,
+    )
 
-    const {data} = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
+    const { data } = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
         queryKey: threadsData.infinite.key({ search: "" }),
         queryFn: async ({ pageParam }) => {
-            return await threadsData.infinite.handle({ cursor: pageParam as string, search: "" })
+            return await threadsData.infinite.handle({
+                cursor: pageParam as string,
+                search: "",
+            })
         },
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
@@ -80,7 +93,7 @@ export default function ThreadListDrawer() {
                 form.reset()
                 toast.success(`Flux ${values.name} créé`)
                 queryClient.invalidateQueries({
-                    queryKey: ['threads'],
+                    queryKey: ["threads"],
                 })
             },
             onFinish: () => {

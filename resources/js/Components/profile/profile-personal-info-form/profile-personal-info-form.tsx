@@ -1,15 +1,23 @@
-import { Button } from "@/Components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
-import { User } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router, usePage } from "@inertiajs/react";
-import clsx from "clsx";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import {Loader} from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { router, usePage } from "@inertiajs/react"
+import clsx from "clsx"
+import { Loader } from "lucide-react"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Button } from "@/Components/ui/button"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
+import { User } from "@/types"
 
 const formSchema = z.object({
     name: z
@@ -18,21 +26,21 @@ const formSchema = z.object({
             message: "Votre nom est requis",
         })
         .max(255, "Navré mais votre nom est trop long"),
-    email: z
-        .string()
-        .email(),
+    email: z.string().email(),
 })
 
 export default function ProfilePersonalInfoForm() {
     const [loading, setLoading] = useState(false)
 
-    const { auth: {user} } = usePage<{ auth: {user: User} }>().props
+    const {
+        auth: { user },
+    } = usePage<{ auth: { user: User } }>().props
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: user.name,
-            email: user.email
+            email: user.email,
         },
     })
 
@@ -45,11 +53,13 @@ export default function ProfilePersonalInfoForm() {
                 form.reset(values)
             },
             onError: () => {
-                toast.error("Une erreur est survenue, veuillez contacter un administrateur")
+                toast.error(
+                    "Une erreur est survenue, veuillez contacter un administrateur",
+                )
             },
             onFinish: () => {
                 setLoading(false)
-            }
+            },
         })
     }
 
@@ -57,10 +67,7 @@ export default function ProfilePersonalInfoForm() {
 
     return (
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(update)}
-                className="space-y-4"
-            >
+            <form onSubmit={form.handleSubmit(update)} className="space-y-4">
                 <FormField
                     control={form.control}
                     name="name"
@@ -68,10 +75,7 @@ export default function ProfilePersonalInfoForm() {
                         <FormItem>
                             <FormLabel>Nom</FormLabel>
                             <FormControl>
-                                <Input
-                                    placeholder="Nom..."
-                                    {...field}
-                                />
+                                <Input placeholder="Nom..." {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

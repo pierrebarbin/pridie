@@ -1,3 +1,4 @@
+import { ArrowLeftToLine, FileX, ServerCrash, X } from "lucide-react"
 import React from "react"
 
 import ArticleCard from "@/Components/article/article-card/article-card"
@@ -5,15 +6,16 @@ import ArticleCardSkeleton from "@/Components/article/article-card/article-card.
 import { useArticleList } from "@/Components/article/article-list/use-article-list"
 import { Button } from "@/Components/ui/button"
 import { ScrollArea } from "@/Components/ui/scroll-area"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {ArrowLeftToLine, FileX, ServerCrash, X} from "lucide-react";
+import { useAppStoreContext } from "@/Stores/use-app-store"
 
 export default function ArticleList() {
     const parentRef = React.useRef<HTMLDivElement>(null)
 
-    const currentThread =  useAppStoreContext((state) => state.currentThread)
-    const resetFilters =  useAppStoreContext((state) => state.resetFilters)
-    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
+    const currentThread = useAppStoreContext((state) => state.currentThread)
+    const resetFilters = useAppStoreContext((state) => state.resetFilters)
+    const removeCurrentThread = useAppStoreContext(
+        (state) => state.removeCurrentThread,
+    )
 
     const cardHeight = 400
     const cardBottomMargin = 30
@@ -26,7 +28,7 @@ export default function ArticleList() {
         hasNextPage,
         rowVirtualizer,
         containerHeight,
-        topMargin
+        topMargin,
     } = useArticleList({
         parentRef,
         cardHeight,
@@ -99,7 +101,7 @@ export default function ArticleList() {
             <div
                 className="relative mx-auto w-full max-w-[500px]"
                 style={{
-                    height: containerHeight + 'px',
+                    height: containerHeight + "px",
                 }}
             >
                 {hasPreviousPage ? (
@@ -117,7 +119,7 @@ export default function ArticleList() {
                             key={virtualRow.index}
                             className="absolute left-0 top-0 w-full"
                             style={{
-                                height: virtualRow.size + 'px',
+                                height: virtualRow.size + "px",
                                 transform: `translateY(${virtualRow.start + topMargin}px)`,
                             }}
                         >

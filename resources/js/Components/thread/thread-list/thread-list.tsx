@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
+import { useQueryClient, useSuspenseInfiniteQuery } from "@tanstack/react-query"
+import { Loader, Plus } from "lucide-react"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -9,7 +11,8 @@ import ThreadListItem from "@/Components/thread/thread-list/thread-list-item/thr
 import {
     AlertDialog,
     AlertDialogCancel,
-    AlertDialogContent, AlertDialogDescription,
+    AlertDialogContent,
+    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -32,12 +35,10 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
+import { threadsData } from "@/Data/threads"
 import { cn } from "@/lib/utils"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {Loader, Plus} from "lucide-react";
-import {useQueryClient, useSuspenseInfiniteQuery} from "@tanstack/react-query";
-import {CursorPagination, Pagination, Thread} from "@/types";
-import {threadsData} from "@/Data/threads";
+import { useAppStoreContext } from "@/Stores/use-app-store"
+import { CursorPagination, Pagination, Thread } from "@/types"
 
 const formSchema = z.object({
     name: z
@@ -52,13 +53,18 @@ export default function ThreadList() {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
-    const currentThread =  useAppStoreContext((state) => state.currentThread)
-    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
+    const currentThread = useAppStoreContext((state) => state.currentThread)
+    const removeCurrentThread = useAppStoreContext(
+        (state) => state.removeCurrentThread,
+    )
 
-    const {data} = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
+    const { data } = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
         queryKey: threadsData.infinite.key({ search: "" }),
         queryFn: async ({ pageParam }) => {
-            return await threadsData.infinite.handle({ cursor: pageParam as string, search: "" })
+            return await threadsData.infinite.handle({
+                cursor: pageParam as string,
+                search: "",
+            })
         },
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
@@ -81,7 +87,7 @@ export default function ThreadList() {
                 form.reset()
                 toast.success(`Flux ${values.name} créé`)
                 queryClient.invalidateQueries({
-                    queryKey: ['threads'],
+                    queryKey: ["threads"],
                 })
             },
             onFinish: () => {
@@ -122,7 +128,9 @@ export default function ThreadList() {
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Nouveau flux</AlertDialogTitle>
-                        <AlertDialogDescription>Ajouter un  nouveau flux</AlertDialogDescription>
+                        <AlertDialogDescription>
+                            Ajouter un nouveau flux
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
                     <Form {...form}>
                         <form

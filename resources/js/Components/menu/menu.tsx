@@ -1,5 +1,6 @@
 import { router, usePage } from "@inertiajs/react"
 import Avatar from "boring-avatars"
+import { Suspense } from "react"
 
 import DarkModePickerPopover from "@/Components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
 import ConfigModal from "@/Components/config/config-modal/config-modal"
@@ -18,7 +19,6 @@ import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
 import { User } from "@/types"
 
 import ProfileModal from "../profile/profile-modal/profile-modal"
-import {Suspense} from "react";
 
 export default function Menu() {
     const { user } = usePage().props.auth as unknown as { user: User }

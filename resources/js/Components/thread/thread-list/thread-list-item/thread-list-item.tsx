@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react"
+import { BookmarkCheck } from "lucide-react"
 import React from "react"
 import { toast } from "sonner"
 
@@ -16,17 +17,18 @@ import {
     navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
+import { useAppStoreContext } from "@/Stores/use-app-store"
 import { Thread } from "@/types"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {BookmarkCheck} from "lucide-react";
 
 interface ThreadListItemProps {
     thread: Thread
 }
 
 export default function ThreadListItem({ thread }: ThreadListItemProps) {
-    const currentThread =  useAppStoreContext((state) => state.currentThread)
-    const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
+    const currentThread = useAppStoreContext((state) => state.currentThread)
+    const changeCurrentThreadTo = useAppStoreContext(
+        (state) => state.changeCurrentThreadTo,
+    )
 
     const remove = () => {
         router.delete(route("threads.destroy", { thread: thread.id }), {

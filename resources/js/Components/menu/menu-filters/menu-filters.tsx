@@ -5,25 +5,26 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Separator } from "@/Components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {useTags} from "@/Hooks/use-tags";
+import { useTags } from "@/Hooks/use-tags"
+import { useAppStoreContext } from "@/Stores/use-app-store"
 
 export default function MenuFilters() {
     const [tagSearch, setTagSearch] = useState("")
 
-    const search =  useAppStoreContext((state) => state.search)
-    const showBookmark =  useAppStoreContext((state) => state.showBookmark)
-    const selectedTags =  useAppStoreContext((state) => state.selectedTags)
-    const updateShowBookmark =  useAppStoreContext((state) => state.updateShowBookmark)
-    const updateSearch =  useAppStoreContext((state) => state.updateSearch)
-    const updateSelectedTags =  useAppStoreContext((state) => state.updateSelectedTags)
+    const search = useAppStoreContext((state) => state.search)
+    const showBookmark = useAppStoreContext((state) => state.showBookmark)
+    const selectedTags = useAppStoreContext((state) => state.selectedTags)
+    const updateShowBookmark = useAppStoreContext(
+        (state) => state.updateShowBookmark,
+    )
+    const updateSearch = useAppStoreContext((state) => state.updateSearch)
+    const updateSelectedTags = useAppStoreContext(
+        (state) => state.updateSelectedTags,
+    )
 
-    const {
-        data,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage
-    } = useTags({ search: tagSearch })
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTags({
+        search: tagSearch,
+    })
 
     const handleEndReached = () => {
         if (!hasNextPage || isFetchingNextPage) {

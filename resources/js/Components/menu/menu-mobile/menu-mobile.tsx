@@ -1,5 +1,9 @@
+import { House, Settings, SlidersVertical } from "lucide-react"
+
+import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
 import ConfigDefaultTags from "@/Components/config/config-default-tags/config-default-tags"
 import MenuFilters from "@/Components/menu/menu-filters/menu-filters"
+import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
 import ThreadListDrawer from "@/Components/thread/thread-list/thread-list-drawer/thread-list-drawer"
 import { Button, buttonVariants } from "@/Components/ui/button"
 import {
@@ -18,13 +22,12 @@ import {
 } from "@/Components/ui/navigation-menu"
 import { useMediaQuery } from "@/Hooks/use-media-query"
 import { cn } from "@/lib/utils"
-import DarkModePicker from "@/Components/common/dark-mode-picker/dark-mode-picker"
-import ProfileDrawer from "@/Components/profile/profile-drawer/profile-drawer"
-import {useAppStoreContext} from "@/Stores/use-app-store";
-import {House, Settings, SlidersVertical} from "lucide-react";
+import { useAppStoreContext } from "@/Stores/use-app-store"
 
 export default function MenuMobile() {
-    const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
+    const removeCurrentThread = useAppStoreContext(
+        (state) => state.removeCurrentThread,
+    )
 
     const matches = useMediaQuery("(min-width: 360px)")
 

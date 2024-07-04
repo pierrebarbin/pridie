@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
-import React, {ReactElement, useState} from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import React, { ReactElement, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -13,10 +14,9 @@ import {
     FormMessage,
 } from "@/Components/ui/form"
 import { ScrollArea } from "@/Components/ui/scroll-area"
+import { useThreads } from "@/Hooks/use-threads"
 import { cn } from "@/lib/utils"
-import {Article} from "@/types"
-import {useThreads} from "@/Hooks/use-threads";
-import {useQueryClient} from "@tanstack/react-query";
+import { Article } from "@/types"
 
 const formSchema = z.object({
     threads: z.array(
@@ -63,7 +63,7 @@ export default function ArticleCardBookmarkForm({
             {
                 onSuccess: async () => {
                     onSuccess && onSuccess()
-                    queryClient.invalidateQueries({queryKey: ['articles']})
+                    queryClient.invalidateQueries({ queryKey: ["articles"] })
                 },
                 onFinish: () => {
                     setLoading(false)

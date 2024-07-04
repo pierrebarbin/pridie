@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, usePage } from "@inertiajs/react"
+import { X } from "lucide-react"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -18,7 +19,6 @@ import {
 } from "@/Components/ui/form"
 import { Input } from "@/Components/ui/input"
 import { Tag } from "@/types"
-import {X} from "lucide-react";
 
 const formSchema = z.object({
     label: z

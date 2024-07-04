@@ -17,7 +17,6 @@ class OneTimeCode extends Model
 
     protected $guarded = [];
 
-
     protected function casts(): array
     {
         return [

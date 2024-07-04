@@ -1,28 +1,31 @@
-import React, {useState} from "react"
+import { Loader } from "lucide-react"
+import React, { useState } from "react"
 
+import ArticleCardBookmarkContent from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-content/article-card-bookmark-content"
 import ArticleCardBookmarkIndicator from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-indicator/article-card-bookmark-indicator"
 import {
-    AlertDialog, AlertDialogCancel,
+    AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription, AlertDialogFooter,
+    AlertDialogDescription,
+    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
+import { Button } from "@/Components/ui/button"
 import {
-    Drawer, DrawerClose,
+    Drawer,
+    DrawerClose,
     DrawerContent,
-    DrawerDescription, DrawerFooter,
+    DrawerDescription,
+    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
 } from "@/Components/ui/drawer"
 import { useIsMobileBreakpoint } from "@/Hooks/use-media-query"
 import { Article } from "@/types"
-import ArticleCardBookmarkContent
-    from "@/Components/article/article-card/article-card-bookmark/article-card-bookmark-content/article-card-bookmark-content";
-import {Button} from "@/Components/ui/button";
-import {Loader} from "lucide-react";
 
 interface ArticleCardBookmarkProps {
     article: Article

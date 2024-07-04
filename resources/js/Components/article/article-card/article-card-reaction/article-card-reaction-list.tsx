@@ -1,3 +1,4 @@
+import { Ellipsis } from "lucide-react"
 import { useState } from "react"
 
 import ArticleCardReactionLisItem from "@/Components/article/article-card/article-card-reaction/article-card-reaction-lis-item"
@@ -9,7 +10,6 @@ import {
 } from "@/Components/ui/popover"
 import { useMediaQuery } from "@/Hooks/use-media-query"
 import { Reaction } from "@/types"
-import {Ellipsis} from "lucide-react";
 
 interface ArticleCardReactionListProps {
     reactions: { id: string; count: number }[]

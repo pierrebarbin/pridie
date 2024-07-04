@@ -1,3 +1,4 @@
+import { Bookmark, BookmarkCheck } from "lucide-react"
 import React from "react"
 
 import { Button } from "@/Components/ui/button"
@@ -8,7 +9,6 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip"
 import { Article } from "@/types"
-import {Bookmark, BookmarkCheck} from "lucide-react";
 
 interface ArticleCardBookmarkIndicator {
     article: Article

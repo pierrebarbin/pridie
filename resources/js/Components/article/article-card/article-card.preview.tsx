@@ -1,3 +1,4 @@
+import { Bookmark, Rocket } from "lucide-react"
 import { marked } from "marked"
 import React from "react"
 
@@ -11,7 +12,6 @@ import {
     CardTitle,
 } from "@/Components/ui/card"
 import { Article } from "@/types"
-import {Bookmark, Rocket} from "lucide-react";
 
 interface ArticleCardPreviewProps {
     article: Partial<Article> | null
