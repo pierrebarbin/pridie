@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "@inertiajs/react"
-import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query"
-import React, { ReactElement, useState } from "react"
+import React, {ReactElement, useState} from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -15,8 +14,9 @@ import {
 } from "@/Components/ui/form"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import {Article, Pagination, Thread} from "@/types"
-import {threadsData} from "@/Data/threads";
+import {Article} from "@/types"
+import {useThreads} from "@/Hooks/use-threads";
+import {useQueryClient} from "@tanstack/react-query";
 
 const formSchema = z.object({
     threads: z.array(
@@ -29,23 +29,18 @@ const formSchema = z.object({
 
 interface ArticleCardBookmarkFormProps {
     article: Article
+    search: string
     onSuccess?: () => void
     footer: (props: { loading: boolean; cannotSubmit: boolean }) => ReactElement
 }
 
 export default function ArticleCardBookmarkForm({
     article,
+    search,
     onSuccess,
     footer,
 }: ArticleCardBookmarkFormProps) {
     const [loading, setLoading] = useState(false)
-
-    const {data} = useSuspenseQuery<Pagination<Thread>>({
-        queryKey: threadsData.pagination.key({ page: 1 }),
-        queryFn: async () => {
-            return await threadsData.pagination.handle({ page: 1 })
-        },
-    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -53,6 +48,8 @@ export default function ArticleCardBookmarkForm({
             threads: article.threads,
         },
     })
+
+    const { rows: threads, handleScroll } = useThreads({ search })
     const queryClient = useQueryClient()
 
     const bookmark = async (values: z.infer<typeof formSchema>) => {
@@ -65,10 +62,8 @@ export default function ArticleCardBookmarkForm({
             },
             {
                 onSuccess: async () => {
-                    await queryClient.invalidateQueries({
-                        queryKey: ["articles"],
-                    })
                     onSuccess && onSuccess()
+                    queryClient.invalidateQueries({queryKey: ['articles']})
                 },
                 onFinish: () => {
                     setLoading(false)
@@ -80,9 +75,9 @@ export default function ArticleCardBookmarkForm({
     const itemHeight = 44
     const maxItemsVisible = 7
     const scrollAreaHeight =
-        (data.data.length < maxItemsVisible ? data.data.length : maxItemsVisible) *
+        (threads.length < maxItemsVisible ? threads.length : maxItemsVisible) *
         itemHeight
-    const cannotSubmit = loading || data.data.length === 0
+    const cannotSubmit = loading || threads.length === 0
 
     return (
         <Form {...form}>
@@ -95,9 +90,11 @@ export default function ArticleCardBookmarkForm({
                             <FormControl>
                                 <ScrollArea
                                     style={{ height: scrollAreaHeight }}
+                                    className="min-h-80"
                                     type="always"
+                                    onScroll={handleScroll}
                                 >
-                                    {data.data.map((thread) => (
+                                    {threads.map((thread) => (
                                         <div
                                             className="mb-1 pr-3"
                                             key={thread.id}

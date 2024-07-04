@@ -30,8 +30,8 @@ import { useWindowSize } from "@/Hooks/use-window-size"
 import { cn } from "@/lib/utils"
 import {useAppStoreContext} from "@/Stores/use-app-store";
 import {Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Loader} from "lucide-react";
-import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
-import {Pagination, Thread} from "@/types";
+import {useQueryClient, useSuspenseInfiniteQuery} from "@tanstack/react-query";
+import {CursorPagination, Pagination, Thread} from "@/types";
 import {threadsData} from "@/Data/threads";
 
 const formSchema = z.object({
@@ -61,11 +61,13 @@ export default function ThreadListDrawer() {
     const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
     const changeCurrentThreadTo =  useAppStoreContext((state) => state.changeCurrentThreadTo)
 
-    const {data} = useSuspenseQuery<Pagination<Thread>>({
-        queryKey: threadsData.pagination.key({ page: 1 }),
-        queryFn: async () => {
-            return await threadsData.pagination.handle({ page: 1 })
+    const {data} = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
+        queryKey: threadsData.infinite.key({ search: "" }),
+        queryFn: async ({ pageParam }) => {
+            return await threadsData.infinite.handle({ cursor: pageParam as string, search: "" })
         },
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
     })
 
     const queryClient = useQueryClient()
@@ -78,7 +80,7 @@ export default function ThreadListDrawer() {
                 form.reset()
                 toast.success(`Flux ${values.name} créé`)
                 queryClient.invalidateQueries({
-                    queryKey: ['threads', 1],
+                    queryKey: ['threads'],
                 })
             },
             onFinish: () => {
@@ -88,6 +90,7 @@ export default function ThreadListDrawer() {
     }
 
     const x = tab === "list" ? 0 : -width
+    const rows = data ? data.pages.flatMap((d) => d.data) : []
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>
@@ -145,7 +148,7 @@ export default function ThreadListDrawer() {
                                         ) : null}
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
-                                {data.data.map((thread) => (
+                                {rows.map((thread) => (
                                     <NavigationMenuItem
                                         key={thread.id}
                                         className="w-full"

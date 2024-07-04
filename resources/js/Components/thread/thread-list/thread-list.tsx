@@ -35,8 +35,8 @@ import {
 import { cn } from "@/lib/utils"
 import {useAppStoreContext} from "@/Stores/use-app-store";
 import {Loader, Plus} from "lucide-react";
-import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
-import {Pagination, Thread} from "@/types";
+import {useQueryClient, useSuspenseInfiniteQuery} from "@tanstack/react-query";
+import {CursorPagination, Pagination, Thread} from "@/types";
 import {threadsData} from "@/Data/threads";
 
 const formSchema = z.object({
@@ -55,11 +55,13 @@ export default function ThreadList() {
     const currentThread =  useAppStoreContext((state) => state.currentThread)
     const removeCurrentThread =  useAppStoreContext((state) => state.removeCurrentThread)
 
-    const {data} = useSuspenseQuery<Pagination<Thread>>({
-        queryKey: threadsData.pagination.key({page: 1}),
-        queryFn: async () => {
-            return await threadsData.pagination.handle({page: 1})
+    const {data} = useSuspenseInfiniteQuery<CursorPagination<Thread>>({
+        queryKey: threadsData.infinite.key({ search: "" }),
+        queryFn: async ({ pageParam }) => {
+            return await threadsData.infinite.handle({ cursor: pageParam as string, search: "" })
         },
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -79,7 +81,7 @@ export default function ThreadList() {
                 form.reset()
                 toast.success(`Flux ${values.name} créé`)
                 queryClient.invalidateQueries({
-                    queryKey: threadsData.pagination.key({page: 1}),
+                    queryKey: ['threads'],
                 })
             },
             onFinish: () => {
@@ -87,6 +89,8 @@ export default function ThreadList() {
             },
         })
     }
+
+    const rows = data ? data.pages.flatMap((d) => d.data).slice(0, 15) : []
 
     return (
         <>
@@ -104,7 +108,7 @@ export default function ThreadList() {
                             Veille principale
                         </NavigationMenuLink>
                     </NavigationMenuItem>
-                    {data.data.map((thread) => (
+                    {rows.map((thread) => (
                         <ThreadListItem thread={thread} key={thread.id} />
                     ))}
                 </NavigationMenuList>

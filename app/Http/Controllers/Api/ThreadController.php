@@ -21,7 +21,7 @@ class ThreadController extends Controller
                 'name',
             ])
             ->where('user_id', $request->user()->id)
-            ->paginate(15);
+            ->cursorPaginate(15);
 
         return ThreadResource::collection($threads);
     }
